@@ -62,7 +62,7 @@
                                                     <c:when test="${solicitud.getEstado().equals('Resultado Parcial')}">
                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Parcial</a>
                                                     </c:when>
-                                                        <c:when test="${solicitud.getEstado().equals('Completada')}">
+                                                    <c:when test="${solicitud.getEstado().equals('Completada')}">
                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
                                                     </c:when>
                                                 </c:choose>
@@ -127,11 +127,11 @@
                                     </table>
                                 </div>
                             </div>
-                            <c:if test="${(solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')) && helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
+                            <c:if test="${(solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial') || solicitud.getEstado().equals('Completada'))  && helper_permisos.validarPermiso(sessionScope.listaPermisos, 541)}">
                                 <div class="widget widget-table">
                                     <div class="widget-header">
                                         <h3><i class="fa fa-calendar"></i> Agrupaciones de muestras</h3>
-                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 556)}">
+                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 556) && !solicitud.getEstado().equals('Completada')}">
                                             <div class="btn-group widget-header-toolbar">                                    
                                                 <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modal-agregar-grupo">Crear Nueva Agrupación</a>
                                             </div>
@@ -165,7 +165,7 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')}">
+                                                                <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial') || solicitud.getEstado().equals('Completada')}">
                                                                     <c:choose>
                                                                         <c:when test="${ags.getResultados() == null}">
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
@@ -174,10 +174,12 @@
                                                                             </a>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
-                                                                                Repetir
-                                                                            </a>
+                                                                            <c:if test="${!solicitud.getEstado().equals('Completada')}">
+                                                                                <a class="btn btn-primary btn-sm boton-accion" 
+                                                                                   href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
+                                                                                    Repetir
+                                                                                </a>
+                                                                            </c:if>
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
                                                                                href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">
                                                                                 Ver Resultados (${ags.getResultados().size()})
@@ -272,7 +274,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/SolicitudCC-v2.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
 

@@ -12,6 +12,7 @@ import com.icp.sigipro.controlcalidad.modelos.Resultado;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ public class AsociacionSangria extends AsociacionSolicitud {
 
     private Sangria sangria;
     private int dia;
+    private Date fecha;
     private final SangriaDAO sangria_dao = new SangriaDAO();
     private final ResultadoDAO resultado_dao = new ResultadoDAO();
     private final AsociacionLALSangria asociacion_informe = new AsociacionLALSangria(this);
@@ -46,7 +48,18 @@ public class AsociacionSangria extends AsociacionSolicitud {
             request.setAttribute("mensaje", ex.getMessage());
         }
         dia = Integer.parseInt(request.getParameter("dia"));
-        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia);
+        switch (dia){
+            case 1: fecha = sangria.getFecha_dia1();
+                     break;
+            case 2: fecha = sangria.getFecha_dia2();
+                     break;
+            case 3: fecha = sangria.getFecha_dia3();
+                     break;
+            default: fecha = sangria.getFecha();
+                     break;
+
+        }
+        solicitud.setDescripcion("Sangría grupo " + sangria.getGrupo().getNombre() + ", día " + dia + "(" + fecha.toString() + ")");
     }
 
     @Override

@@ -219,7 +219,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="input-group" style="display:table;">
-                                <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >${ubicacion.getDescripcion()}</textarea>
+                                <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" id="observaciones" name="observaciones" >Faltante de Existencias</textarea>
                             </div>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
 
     </jsp:attribute>
     <jsp:attribute name="scripts">
-        <script src="/SIGIPRO/recursos/js/sigipro/solicitudes.js"></script>
+        <script src="/SIGIPRO/recursos/js/sigipro/solicitudes-v2.js"></script>
     </jsp:attribute>
 
 </t:plantilla_general>

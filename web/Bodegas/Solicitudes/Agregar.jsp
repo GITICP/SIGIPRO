@@ -61,7 +61,7 @@
 
   </jsp:attribute>
   <jsp:attribute name="scripts">
-    <script src="/SIGIPRO/recursos/js/sigipro/solicitudes.js"></script>
+    <script src="/SIGIPRO/recursos/js/sigipro/solicitudes-v2.js"></script>
   </jsp:attribute>
 
 </t:plantilla_general>
