@@ -353,7 +353,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2:
-                            w.value(rs.getInt(cont_col));
+                            w.value(rs.getFloat(cont_col));
                             break;
                         case 4:
                             w.value(rs.getInt(cont_col));
@@ -465,7 +465,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2: 
-                            w.agregarEntero(rs.getInt(cont_col));
+                            w.agregarDouble(rs.getFloat(cont_col));
                             break;
                         case 4:
                             w.agregarEntero(rs.getInt(cont_col));
