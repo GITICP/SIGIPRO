@@ -87,7 +87,7 @@
                                     </td>
                                 </tr>
                                 <tr><td> <strong>Número de Caballos:</strong></td> <td>${sangria.getCantidad_de_caballos()} </td></tr>
-                                <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} Kg</td></tr>
+                                <tr><td> <strong>Sangre Total:</strong></td> <td>${sangria.getSangre_total()} Litros</td></tr>
                                 <tr><td> <strong>Peso de Plasma Total:</strong></td> <td>${sangria.getPeso_plasma_total()} Kg</td></tr>
                                 <tr><td> <strong>Volumen de Plasma Total:</strong></td> <td>${sangria.getVolumen_plasma_total()} </td></tr>
                                 <tr><td> <strong>Plasma por Caballo:</strong></td> <td>${sangria.getPlasma_por_caballo()} Kg</td></tr>
@@ -172,7 +172,7 @@
                                                     </td>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia1()}">
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()} Kg</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia1() == 0) ? sin_datos : sangria_caballo.getSangre_dia1()} L</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia1() == 0) ? sin_datos : sangria_caballo.getPlasma_dia1()} Kg</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia1() == null) ? "Pendiente" : sangria_caballo.getLal_dia1()}</td>
                                                         </c:when>
@@ -184,7 +184,7 @@
                                                     </c:choose>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia2()}">
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()} Kg</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia2() == 0) ? sin_datos : sangria_caballo.getSangre_dia2()} L</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia2() == 0) ? sin_datos : sangria_caballo.getPlasma_dia2()} Kg</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia2() == null) ? "Pendiente" : sangria_caballo.getLal_dia2()}</td>
                                                         </c:when>
@@ -196,7 +196,7 @@
                                                     </c:choose>
                                                     <c:choose>
                                                         <c:when test="${sangria_caballo.isParticipo_dia3()}">
-                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia3() == 0) ? sin_datos : sangria_caballo.getSangre_dia3()} Kg</td>
+                                                            <td class="campo-tabla-centrado">${(sangria_caballo.getSangre_dia3() == 0) ? sin_datos : sangria_caballo.getSangre_dia3()} L</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getPlasma_dia3() == 0) ? sin_datos : sangria_caballo.getPlasma_dia3()} Kg</td>
                                                             <td class="campo-tabla-centrado">${(sangria_caballo.getLal_dia3() == null) ? "Pendiente" : sangria_caballo.getLal_dia3()}</td>
                                                         </c:when>
@@ -210,13 +210,13 @@
                                             </c:forEach>
                                             <tr>
                                                 <td class="campo-subtotal">Subtotal</td>
-                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)} Kg</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(1) == 0) ? sin_datos : sangria.getSubtotalSangre(1)} L</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(1) == 0) ? sin_datos : sangria.getSubtotalPlasma(1)} Kg</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
-                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)} Kg</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(2) == 0) ? sin_datos : sangria.getSubtotalSangre(2)} L</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(2) == 0) ? sin_datos : sangria.getSubtotalPlasma(2)} Kg</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
-                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)} Kg</strong></td>
+                                                <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalSangre(3) == 0) ? sin_datos : sangria.getSubtotalSangre(3)} L</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>${(sangria.getSubtotalPlasma(3) == 0) ? sin_datos : sangria.getSubtotalPlasma(3)} Kg</strong></td>
                                                 <td class="campo-tabla-centrado campo-subtotal"><strong>-</strong></td>
                                             </tr>
