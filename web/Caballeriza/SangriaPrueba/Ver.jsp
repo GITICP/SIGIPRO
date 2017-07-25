@@ -72,8 +72,8 @@
                                             <c:forEach items="${sangriap.getLista_sangrias_prueba_caballo()}" var="sangria_prueba_caballo">
                                                 <tr id="${sangria_prueba_caballo.getCaballo().getId_caballo()}">
                                                     <td>${sangria_prueba_caballo.getCaballo().getNombre()} (${sangria_prueba_caballo.getCaballo().getNumero()})</td>
-                                                    <td>${(sangria_prueba_caballo.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHematocrito()}</td>
-                                                    <td>${(sangria_prueba_caballo.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHemoglobina()}</td>
+                                                    <td>${(sangria_prueba_caballo.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHematocritoConUnidad()}</td>
+                                                    <td>${(sangria_prueba_caballo.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangria_prueba_caballo.getHemoglobinaConUnidad()}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

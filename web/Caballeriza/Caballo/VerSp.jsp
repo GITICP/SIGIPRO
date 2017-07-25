@@ -70,8 +70,8 @@
                                                     </a>
                                                 </td>
                                                 <td>${sangriap.getSangria_prueba().getFechaAsString()}</td>
-                                                <td>${(sangriap.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangriap.getHematocrito() }</td>
-                                                <td>${(sangriap.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangriap.getHemoglobina()}</td>
+                                                <td>${(sangriap.getHematocrito() == 0.0) ? "Sin resultado registrado." : sangriap.getHematocritoConUnidad() }</td>
+                                                <td>${(sangriap.getHemoglobina() == 0.0) ? "Sin resultado registrado." : sangriap.getHemoglobinaConUnidad()}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
