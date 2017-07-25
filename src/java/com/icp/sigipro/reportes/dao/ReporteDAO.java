@@ -39,6 +39,7 @@ public class ReporteDAO extends DAO {
             put("caballos", " SELECT id_caballo AS VAL, numero AS TEXTO FROM caballeriza.caballos");
             put("grupos_de_caballos", " SELECT id_grupo_de_caballo AS VAL, nombre AS TEXTO FROM caballeriza.grupos_de_caballos");
             put("tipos_eventos", " SELECT id_tipo_evento AS VAL, nombre AS TEXTO FROM caballeriza.tipos_eventos");
+            put("sangrias_pruebas", " SELECT sp.id_sangria_prueba AS VAL, to_char(sp.fecha,'DD-MM-YYYY') || '-' || g.nombre || ' (id:' || sp.id_sangria_prueba || ')' AS TEXTO FROM caballeriza.sangrias_pruebas sp INNER JOIN caballeriza.grupos_de_caballos g ON sp.id_grupo = g.id_grupo_de_caballo");
         }
     };
 
