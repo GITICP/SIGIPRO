@@ -35,18 +35,6 @@ public class ExcelWriter {
         hoja = archivo.createSheet("Datos");
     }
     
-    /*
-    public ExcelWriter(String columna_inicial, int fila_inicial) {
-        archivo = new XSSFWorkbook();
-        hoja = archivo.createSheet("Datos");
-        
-        this.columna_inicial = columna_inicial;
-        this.fila_inicial = fila_inicial;
-        
-        String celda_por_buscar = columna_inicial.toUpperCase() + String.valueOf(fila_inicial);
-        celda_inicial = new CellReference(celda_por_buscar);
-    }*/
-    
     public XSSFWorkbook getArchivo() {
         return archivo;
     }

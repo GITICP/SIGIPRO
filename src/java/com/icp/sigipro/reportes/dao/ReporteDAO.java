@@ -354,7 +354,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2:
-                            w.value(rs.getFloat(cont_col));
+                            w.value(rs.getDouble(cont_col));
                             break;
                         case 4:
                             w.value(rs.getInt(cont_col));
@@ -372,7 +372,7 @@ public class ReporteDAO extends DAO {
                             w.value(rs.getInt(cont_col));
                             break;
                         case 6:
-                            w.value(rs.getFloat(cont_col));
+                            w.value(rs.getDouble(cont_col));
                             break;
                         case 0:
                             w.value("Valor nulo");
@@ -466,7 +466,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2: 
-                            w.agregarDouble(rs.getFloat(cont_col));
+                            w.agregarDouble(rs.getDouble(cont_col));
                             break;
                         case 4:
                             w.agregarEntero(rs.getInt(cont_col));
@@ -484,7 +484,7 @@ public class ReporteDAO extends DAO {
                             w.agregarEntero(rs.getInt(cont_col));
                             break;
                         case 6:
-                            w.agregarDouble(rs.getFloat(cont_col));
+                            w.agregarDouble(rs.getDouble(cont_col));
                             break;
                         case 0:
                             w.agregarString("Valor nulo");
