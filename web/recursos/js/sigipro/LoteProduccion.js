@@ -6,13 +6,13 @@ function previewFile(id) {
         var imagen = document.getElementById(id); //sames as here
         var size = file.size;
         var reader = new FileReader();
-        if (size > 307200) {
-            document.getElementById(id).setCustomValidity("La imagen debe ser de 300KB o menos. ");
+        //if (size > 307200) {
+        //    document.getElementById(id).setCustomValidity("La imagen debe ser de 300KB o menos. ");
             document.getElementById(id + "_eliminar").style.visibility = "visible";
-        } else {
-            document.getElementById(id).setCustomValidity("");
-            document.getElementById(id + "_eliminar").style.visibility = "visible";
-        }
+        //} else {
+        //    document.getElementById(id).setCustomValidity("");
+        //    document.getElementById(id + "_eliminar").style.visibility = "visible";
+        //}
         reader.onload = function (e) {
             preview.src = reader.result;
             file.value = reader.toString();
