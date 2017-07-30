@@ -50,6 +50,7 @@ $(function () {
         $.ajax({
             url: "/SIGIPRO/Caballeriza/Sangria",
             type: "GET",
+            async: false,
             data: {"accion": "sangriasajax"},
             dataType: "json",
             success: function (datos) {
@@ -67,6 +68,7 @@ $(function () {
         $.ajax({
             url: "/SIGIPRO/Produccion/Lote",
             type: "GET",
+            async: false,
             data: {"accion": "lotesajax"},
             dataType: "json",
             success: function (datos) {
@@ -125,6 +127,7 @@ $(function () {
         $.ajax({
             url: "/SIGIPRO/Produccion/Actividad_Apoyo",
             type: "GET",
+            async: false,
             data: {"accion": "actividadesajax",
                 "id_actividad": id},
             dataType: "json",
@@ -151,6 +154,7 @@ $(function () {
         $.ajax({
             url: "/SIGIPRO/Bodegas/SubBodegas",
             type: "GET",
+            async: false,
             data: {"accion": "subbodegasajax",
                 "id_subbodega": id},
             dataType: "json",
@@ -394,7 +398,8 @@ function remover_link_sangria(e, element) {
 
 function generar_link_lote() {
     var div = ($(this).prop("name"));
-
+div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
     var elemento = $("." + div + " .ver");
 
     var id = ($(this).val());
@@ -406,6 +411,8 @@ function generar_link_lote() {
 
 function generar_link_cc() {
     var div = ($(this).prop("name"));
+    div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
     var elemento = $("." + div + " .ver");
     var id = ($(this).val());
 
@@ -416,7 +423,9 @@ function generar_link_cc() {
 
 function generar_link_aa() {
     var div = ($(this).prop("name"));
-
+    
+    div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
     var elemento = $("." + div + " .ver");
 
     var id = ($(this).val());
