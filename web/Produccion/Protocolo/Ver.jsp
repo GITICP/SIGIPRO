@@ -108,7 +108,7 @@
                                 <c:if test="${protocolo.getObservaciones()!=''}">
                                     <tr><td> <strong>Observaciones de Rechazo:</strong> <td>${protocolo.getObservaciones()} </td></tr>
                                 </c:if>
-                                <tr><td> <strong>Fórmula Maestra:</strong> <td>${protocolo.getFormula_maestra().getNombre()} </td></tr>
+                                <%--<tr><td> <strong>Fórmula Maestra:</strong> <td>${protocolo.getFormula_maestra().getNombre()} </td></tr>--%>
                                 <tr><td> <strong>Producto Terminado:</strong> <td>${protocolo.getProducto().getNombre()} </td></tr>
                             </table>
                             <br>

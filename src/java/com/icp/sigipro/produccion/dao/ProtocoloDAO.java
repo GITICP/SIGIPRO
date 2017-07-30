@@ -34,14 +34,14 @@ public class ProtocoloDAO extends DAO {
             if (rs.next()) {
                 resultado = true;
                 protocolo.setId_protocolo(rs.getInt("id_protocolo"));
-                consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_formula_maestra, id_catalogo_pt) "
-                        + " VALUES (?,1,?,?,?,?) RETURNING id_historial");
+                consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_catalogo_pt) "
+                        + " VALUES (?,1,?,?,?) RETURNING id_historial");
 
                 consulta.setInt(1, protocolo.getId_protocolo());
                 consulta.setString(2, protocolo.getNombre());
                 consulta.setString(3, protocolo.getDescripcion());
-                consulta.setInt(4, protocolo.getFormula_maestra().getId_formula_maestra());
-                consulta.setInt(5, protocolo.getProducto().getId_catalogo_pt());
+                //consulta.setInt(4, protocolo.getFormula_maestra().getId_formula_maestra());
+                consulta.setInt(4, protocolo.getProducto().getId_catalogo_pt());
                 rs = consulta.executeQuery();
                 if (rs.next()) {
                     resultado = true;
@@ -89,14 +89,14 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             getConexion().setAutoCommit(false);
-            consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_formula_maestra, id_catalogo_pt) "
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_historial");
+            consulta = getConexion().prepareStatement(" INSERT INTO produccion.historial_protocolo (id_protocolo, version, nombre, descripcion, id_catalogo_pt) "
+                    + " VALUES (?,?,?,?,?) RETURNING id_historial");
             consulta.setInt(1, protocolo.getId_protocolo());
             consulta.setInt(2, version);
             consulta.setString(3, protocolo.getNombre());
             consulta.setString(4, protocolo.getDescripcion());
-            consulta.setInt(5, protocolo.getFormula_maestra().getId_formula_maestra());
-            consulta.setInt(6, protocolo.getProducto().getId_catalogo_pt());
+            //consulta.setInt(5, protocolo.getFormula_maestra().getId_formula_maestra());
+            consulta.setInt(5, protocolo.getProducto().getId_catalogo_pt());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -207,11 +207,11 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT pro.*, h.*, pt.id_catalogo_pt, pt.nombre as nombrept, fm.id_formula_maestra, fm.nombre as nombrefm "
+            consulta = getConexion().prepareStatement(" SELECT pro.*, h.*, pt.id_catalogo_pt, pt.nombre as nombrept "
                     + "FROM produccion.protocolo as pro "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (pro.id_protocolo = h.id_protocolo AND pro.version = h.version) "
                     + "LEFT JOIN produccion.catalogo_pt as pt ON pt.id_catalogo_pt = h.id_catalogo_pt "
-                    + "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
+                    //+ "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
                     + "WHERE pro.id_protocolo = ?; ");
             consulta.setInt(1, id_protocolo);
             rs = consulta.executeQuery();
@@ -230,10 +230,10 @@ public class ProtocoloDAO extends DAO {
                 pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
                 pt.setNombre(rs.getString("nombrept"));
                 resultado.setProducto(pt);
-                Formula_Maestra fm = new Formula_Maestra();
+                /*Formula_Maestra fm = new Formula_Maestra();
                 fm.setId_formula_maestra(rs.getInt("id_formula_maestra"));
                 fm.setNombre(rs.getString("nombrefm"));
-                resultado.setFormula_maestra(fm);
+                resultado.setFormula_maestra(fm);*/
 
                 consulta = getConexion().prepareStatement(" SELECT h.id_historial, h.version "
                         + "FROM produccion.historial_protocolo as h "
@@ -308,10 +308,10 @@ public class ProtocoloDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT h.*, pt.id_catalogo_pt, pt.nombre as nombrept, fm.id_formula_maestra, fm.nombre as nombrefm "
+            consulta = getConexion().prepareStatement(" SELECT h.*, pt.id_catalogo_pt, pt.nombre as nombrept "
                     + "FROM produccion.historial_protocolo as h "
                     + "LEFT JOIN produccion.catalogo_pt as pt ON pt.id_catalogo_pt = h.id_catalogo_pt "
-                    + "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
+                    //+ "LEFT JOIN produccion.formula_maestra as fm ON fm.id_formula_maestra = h.id_formula_maestra "
                     + "WHERE h.id_historial = ?; ");
             consulta.setInt(1, id_historial);
             System.out.println(consulta);
@@ -326,10 +326,10 @@ public class ProtocoloDAO extends DAO {
                 pt.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
                 pt.setNombre(rs.getString("nombrept"));
                 resultado.setProducto(pt);
-                Formula_Maestra fm = new Formula_Maestra();
+                /*Formula_Maestra fm = new Formula_Maestra();
                 fm.setId_formula_maestra(rs.getInt("id_formula_maestra"));
                 fm.setNombre(rs.getString("nombrefm"));
-                resultado.setFormula_maestra(fm);
+                resultado.setFormula_maestra(fm);*/
 
                 consulta = getConexion().prepareStatement(" SELECT h.id_historial,p.id_paso, h.nombre, pxp.requiere_ap, pxp.posicion "
                         + "FROM produccion.historial_protocolo as hpro "

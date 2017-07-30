@@ -47,7 +47,7 @@
                                 <tr><td> <strong>Nombre:</strong></td> <td>${protocolo.getNombre()} </td></tr>
                                 <tr><td> <strong>Descripción:</strong> <td>${protocolo.getDescripcion()} </td></tr>
                                 <tr><td> <strong>Versión:</strong> <td>${protocolo.getVersion()} </td></tr>
-                                <tr><td> <strong>Fórmula Maestra:</strong> <td>${protocolo.getFormula_maestra().getNombre()} </td></tr>
+                                <%--<tr><td> <strong>Fórmula Maestra:</strong> <td>${protocolo.getFormula_maestra().getNombre()} </td></tr>--%>
                                 <tr><td> <strong>Producto Terminado:</strong> <td>${protocolo.getProducto().getNombre()} </td></tr>
                                 <tr><td><strong>Estado:</strong><td>Inactivo</td></tr>
                             </table>

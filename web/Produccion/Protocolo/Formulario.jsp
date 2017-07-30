@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-
+            <%--
             <label for="formula" class="control-label">*Fórmula Maestra</label>
             <div class="form-group">
                 <div class="col-sm-12">
@@ -53,6 +53,7 @@
                     </div>
                 </div>
             </div>
+            --%>
             <label for="formula" class="control-label">*Producto Terminado</label>
             <div class="form-group">
                 <div class="col-sm-12">

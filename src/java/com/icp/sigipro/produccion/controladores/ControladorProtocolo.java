@@ -36,7 +36,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
     private final int[] permisos = {640, 641, 642, 643, 644, 645,646};
     //-----------------
     private final ProtocoloDAO dao = new ProtocoloDAO();
-    private final Formula_MaestraDAO formuladao = new Formula_MaestraDAO();
+    //private final Formula_MaestraDAO formuladao = new Formula_MaestraDAO();
     private final Catalogo_PTDAO catalogodao = new Catalogo_PTDAO();
     private final PasoDAO pasodao = new PasoDAO();
 
@@ -68,11 +68,11 @@ public class ControladorProtocolo extends SIGIPROServlet {
 
         String redireccion = "Protocolo/Agregar.jsp";
         Protocolo p = new Protocolo();
-        List<Formula_Maestra> formulas_maestras = formuladao.obtenerFormulas_Maestras();
+        //List<Formula_Maestra> formulas_maestras = formuladao.obtenerFormulas_Maestras();
         request.setAttribute("protocolo", p);
         request.setAttribute("contador", 0);
         request.setAttribute("orden", "");
-        request.setAttribute("formulas_maestras", formulas_maestras);
+        //request.setAttribute("formulas_maestras", formulas_maestras);
         request.setAttribute("catalogo_pt", catalogodao.obtenerCatalogos_PT());
         request.setAttribute("pasos", this.parseListaPasos(pasodao.obtenerPasos()));
         request.setAttribute("accion", "Agregar");
@@ -126,7 +126,7 @@ public class ControladorProtocolo extends SIGIPROServlet {
         request.setAttribute("contador", p.getPasos().size());
         request.setAttribute("orden", this.parseOrdenPasos(p.getPasos()));
         request.setAttribute("protocolo", p);
-        request.setAttribute("formulas_maestras", formuladao.obtenerFormulas_Maestras());
+        //request.setAttribute("formulas_maestras", formuladao.obtenerFormulas_Maestras());
         request.setAttribute("catalogo_pt", catalogodao.obtenerCatalogos_PT());
         request.setAttribute("pasosEditar", pasos );
         request.setAttribute("pasos", this.parseListaPasos(pasos));
@@ -318,9 +318,9 @@ public class ControladorProtocolo extends SIGIPROServlet {
         Catalogo_PT pt = new Catalogo_PT();
         pt.setId_catalogo_pt(Integer.parseInt(request.getParameter("id_catalogo_pt")));
         p.setProducto(pt);
-        Formula_Maestra fm = new Formula_Maestra();
+        /*Formula_Maestra fm = new Formula_Maestra();
         fm.setId_formula_maestra(Integer.parseInt(request.getParameter("id_formula_maestra")));
-        p.setFormula_maestra(fm);
+        p.setFormula_maestra(fm);*/
         p.setVersion(Integer.parseInt(request.getParameter("version")));
         String orden = request.getParameter("orden");
         String[] listaOrden = orden.split(",");
