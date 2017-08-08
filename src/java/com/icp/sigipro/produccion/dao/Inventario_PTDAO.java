@@ -9,7 +9,6 @@ import com.icp.sigipro.produccion.modelos.Inventario_PT;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.produccion.modelos.Catalogo_PT;
-import com.icp.sigipro.produccion.modelos.Protocolo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -28,16 +27,15 @@ public class Inventario_PTDAO extends DAO {
     boolean resultado = false;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.inventario_pt (lote, cantidad, fecha_vencimiento, id_protocolo, id_catalogo_pt, cantidad_disponible, reservado)"
-              + " VALUES (?,?,?,?,?,?,?) RETURNING id_inventario_pt");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.inventario_pt (lote, cantidad, fecha_vencimiento, id_catalogo_pt, cantidad_disponible, reservado)"
+              + " VALUES (?,?,?,?,?,?) RETURNING id_inventario_pt");
 
       consulta.setString(1, p.getLote());
       consulta.setInt(2, p.getCantidad());
       consulta.setDate(3, p.getFecha_vencimiento());
-      consulta.setInt(4, p.getProtocolo().getId_protocolo());
-      consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-      consulta.setInt(6, p.getCantidad());
-      consulta.setInt(7, 0);
+      consulta.setInt(4, p.getProducto().getId_catalogo_pt());
+      consulta.setInt(5, p.getCantidad());
+      consulta.setInt(6, 0);
       
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
@@ -61,17 +59,16 @@ public class Inventario_PTDAO extends DAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.inventario_pt "
-              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_protocolo=?, id_catalogo_pt=?, cantidad_disponible=?"
+              + " SET  lote=?, cantidad=?, fecha_vencimiento=?, id_catalogo_pt=?, cantidad_disponible=?"
               + " WHERE id_inventario_pt=?; "
       );
 
      consulta.setString(1, p.getLote());
      consulta.setInt(2, p.getCantidad());
      consulta.setDate(3, p.getFecha_vencimiento());
-     consulta.setInt(4, p.getProtocolo().getId_protocolo());
-     consulta.setInt(5, p.getProducto().getId_catalogo_pt());
-     consulta.setInt(6, p.getCantidad());
-     consulta.setInt(7, p.getId_inventario_pt());
+     consulta.setInt(4, p.getProducto().getId_catalogo_pt());
+     consulta.setInt(5, p.getCantidad());
+     consulta.setInt(6, p.getId_inventario_pt());
      
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -116,10 +113,11 @@ public class Inventario_PTDAO extends DAO {
     Inventario_PT inventario_pt = new Inventario_PT();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT pt.id_inventario_pt, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.reservado, pt.cantidad_disponible, p.id_protocolo, "
-              + "h.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
-              + "FROM produccion.inventario_pt pt, produccion.catalogo_pt c, produccion.protocolo p, produccion.historial_protocolo h "
-              + "where pt.id_inventario_pt = ? AND pt.id_protocolo = p.id_protocolo AND pt.id_catalogo_pt = c.id_catalogo_pt AND p.id_protocolo = h.id_protocolo AND p.version = h.version");
+      PreparedStatement consulta = getConexion().prepareStatement(
+              "SELECT pt.id_inventario_pt, pt.lote, pt.fecha_vencimiento, pt.cantidad, pt.reservado, pt.cantidad_disponible, "
+              + "c.id_catalogo_pt, c.nombre "
+              + "FROM produccion.inventario_pt pt, produccion.catalogo_pt c "
+              + "where pt.id_inventario_pt = ? AND pt.id_catalogo_pt = c.id_catalogo_pt ");
 
       consulta.setInt(1, id);
 
@@ -132,13 +130,9 @@ public class Inventario_PTDAO extends DAO {
         inventario_pt.setCantidad(rs.getInt("cantidad"));
         inventario_pt.setReservado(rs.getInt("reservado"));
         inventario_pt.setCantidad_disponible(rs.getInt("cantidad_disponible"));
-        Protocolo p = new Protocolo();
-        p.setId_protocolo(rs.getInt("id_protocolo"));
-        p.setNombre(rs.getString("nombre_protocolo"));
         Catalogo_PT c = new Catalogo_PT();
         c.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
         c.setNombre(rs.getString("nombre"));
-        inventario_pt.setProtocolo(p);
         inventario_pt.setProducto(c);
       }
       rs.close();
@@ -157,11 +151,10 @@ public class Inventario_PTDAO extends DAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT pt.id_inventario_pt, pt.lote, pt.reservado, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "h.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
-              + "FROM produccion.inventario_pt pt Inner Join produccion.protocolo p ON p.id_protocolo = pt.id_protocolo "
+      consulta = getConexion().prepareStatement(" SELECT pt.id_inventario_pt, pt.lote, pt.reservado, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, "
+              + " c.id_catalogo_pt, c.nombre "
+              + "FROM produccion.inventario_pt pt  "
               + "INNER JOIN produccion.catalogo_pt c on c.id_catalogo_pt = pt.id_catalogo_pt "
-              + "LEFT JOIN produccion.historial_protocolo as h ON (p.id_protocolo = h.id_protocolo AND p.version = h.version) "
               + "WHERE NOT (pt.cantidad_disponible = 0 AND pt.id_inventario_pt NOT IN (SELECT id_inventario_pt FROM produccion.reservaciones_inventario))");
  
       ResultSet rs = consulta.executeQuery();
@@ -174,13 +167,9 @@ public class Inventario_PTDAO extends DAO {
         inventario_pt.setCantidad(rs.getInt("cantidad"));
         inventario_pt.setReservado(rs.getInt("reservado"));
         inventario_pt.setCantidad_disponible(rs.getInt("cantidad_disponible"));
-        Protocolo p = new Protocolo();
-        p.setId_protocolo(rs.getInt("id_protocolo"));
-        p.setNombre(rs.getString("nombre_protocolo"));
         Catalogo_PT c = new Catalogo_PT();
         c.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
         c.setNombre(rs.getString("nombre"));
-        inventario_pt.setProtocolo(p);
         inventario_pt.setProducto(c);
         resultado.add(inventario_pt);
       }
@@ -199,11 +188,10 @@ public class Inventario_PTDAO extends DAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement(" SELECT pt.id_inventario_pt, pt.lote, pt.reservado, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, p.id_protocolo, "
-              + "h.nombre AS nombre_protocolo, c.id_catalogo_pt, c.nombre "
-              + "FROM produccion.inventario_pt pt Inner Join produccion.protocolo p ON p.id_protocolo = pt.id_protocolo "
+      consulta = getConexion().prepareStatement(" SELECT pt.id_inventario_pt, pt.lote, pt.reservado, pt.fecha_vencimiento, pt.cantidad, pt.cantidad_disponible, "
+              + "c.id_catalogo_pt, c.nombre "
+              + "FROM produccion.inventario_pt pt "
               + "INNER JOIN produccion.catalogo_pt c on c.id_catalogo_pt = pt.id_catalogo_pt "
-              + "LEFT JOIN produccion.historial_protocolo as h ON (p.id_protocolo = h.id_protocolo AND p.version = h.version) "
               + "WHERE pt.cantidad_disponible = 0 AND pt.id_inventario_pt NOT IN (SELECT id_inventario_pt FROM produccion.reservaciones_inventario)");
  
       ResultSet rs = consulta.executeQuery();
@@ -216,13 +204,9 @@ public class Inventario_PTDAO extends DAO {
         inventario_pt.setCantidad(rs.getInt("cantidad"));
         inventario_pt.setReservado(rs.getInt("reservado"));
         inventario_pt.setCantidad_disponible(rs.getInt("cantidad_disponible"));
-        Protocolo p = new Protocolo();
-        p.setId_protocolo(rs.getInt("id_protocolo"));
-        p.setNombre(rs.getString("nombre_protocolo"));
         Catalogo_PT c = new Catalogo_PT();
         c.setId_catalogo_pt(rs.getInt("id_catalogo_pt"));
         c.setNombre(rs.getString("nombre"));
-        inventario_pt.setProtocolo(p);
         inventario_pt.setProducto(c);
         resultado.add(inventario_pt);
       }

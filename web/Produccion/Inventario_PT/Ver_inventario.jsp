@@ -55,7 +55,6 @@
                                 <tr><td> <strong>Producto:</strong> <td>${inventario.getProducto().getNombre()} </td></tr>
                                 <tr><td> <strong>Fecha de vencimiento:</strong> <td>${inventario.getFecha_vencimiento_S()} </td></tr>
                                 <tr><td> <strong>Cantidad:</strong> <td>${inventario.getCantidad()} </td></tr>
-                                <tr><td> <strong>Protocolo:</strong> <td>${inventario.getProtocolo().getNombre()} </td></tr>
                                 <tr><td> <strong>Cantidad Disponible:</strong> <td>${inventario.getCantidad_disponible()} </td></tr>     
                             </table>
                         </div>
