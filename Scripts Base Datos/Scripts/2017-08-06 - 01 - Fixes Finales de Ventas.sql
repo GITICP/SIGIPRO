@@ -46,3 +46,8 @@ WHERE id_menu_principal = 714; -- Lista de Espera
 UPDATE seguridad.entradas_menu_principal
 SET orden = 1
 WHERE id_menu_principal = 714; -- Lista de Espera
+
+
+-- Fix quitar la referencia de Número de Lote a Productos de Venta
+alter table ventas.producto_venta
+drop column lote
