@@ -18,7 +18,6 @@ public class Inventario_PT {
   private String lote;
   private int cantidad;
   private Date fecha_vencimiento;
-  private Protocolo protocolo;
   private int cantidad_disponible;
   private Catalogo_PT producto;
   private int reservado;
@@ -46,7 +45,6 @@ public class Inventario_PT {
                     JSON.put("id_objeto", field.get(this));
                 }
             }
-            JSON.put("id_protocolo",this.protocolo.getId_protocolo());
             JSON.put("id_producto",this.producto.getId_catalogo_pt());
         }catch (Exception e){
             
@@ -99,13 +97,6 @@ public class Inventario_PT {
     else
     {return "";}}
 
-  public Protocolo getProtocolo() {
-    return protocolo;
-  }
-
-  public void setProtocolo(Protocolo protocolo) {
-    this.protocolo = protocolo;
-  }
   private String formatearFecha(Date fecha)
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");

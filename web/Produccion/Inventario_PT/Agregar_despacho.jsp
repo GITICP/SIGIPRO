@@ -79,8 +79,7 @@
           <label for="cantidad" class="control-label">*Cantidad</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group" style="display:table;">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <div class="input-group" style="display:table;width:100%;">
                 <input type="number"  id="agregarcantidad" class="form-control" name="agregarcantidad"  required
                        oninvalid="setCustomValidity('Este campo es requerido. La cantidad debe ser mayor a uno')"
                        onchange="setCustomValidity('')">
@@ -106,8 +105,7 @@
           <label for="cantidad" class="control-label">*Cantidad</label>
           <div class="form-group">
             <div class="col-sm-12">
-              <div class="input-group" style="display:table;">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <div class="input-group" style="display:table;width:100%;">
                 <input type="number"  id="editarcantidad" class="form-control" name="editarcantidad"  required
                        oninvalid="setCustomValidity('Este campo es requerido. La cantidad debe ser mayor a uno')"
                        onchange="setCustomValidity('')">
