@@ -61,7 +61,19 @@ public class Intencion_ventaDAO extends DAO {
             ex.printStackTrace();
             throw new SIGIPROException("Se produjo un error al procesar la solicitud");
         }
-        return resultado;
+        
+        //Sort para que el ID más nuevo salga de primero en la lista
+        List<Intencion_venta> resultadoIDsorted = new ArrayList<Intencion_venta>();
+        int cantidadIntenciones = resultado.size();
+        int contador = 0; 
+        
+        while (cantidadIntenciones > contador)
+        {
+            resultadoIDsorted.add(resultado.get(contador));
+            contador++;
+        }
+        
+        return resultadoIDsorted;
     }
 
     public Intencion_venta obtenerIntencion_venta(int id_intencion) throws SIGIPROException {

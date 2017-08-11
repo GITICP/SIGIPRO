@@ -62,7 +62,7 @@
                       <c:choose>
                           <c:when test= "${intencion.getCliente() != null}">
                               <td>
-                                <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${intencion.getCliente().getId_cliente()}">
+                                <a href="/SIGIPRO/Ventas/IntencionVenta?accion=ver&id_intencion=${intencion.getId_intencion()}">
                                     <div style="height:100%;width:100%">
                                         ${intencion.getCliente().getNombre()}
                                     </div>

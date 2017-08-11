@@ -126,7 +126,6 @@
                         <tr>
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
-                          <th>Lote</th>
                           <th>Precio Unitario</th>
                           <th>Agregar/Cambiar Precio</th>
                         </tr>
@@ -136,7 +135,6 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
-                            <td>${producto.getProducto().getLote()}</td>
                             <td>${producto.getPrecio()}</td>
                             <td>
                                 <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})"   >Modificar Precio</button>
