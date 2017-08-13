@@ -65,12 +65,12 @@ public class Intencion_ventaDAO extends DAO {
         //Sort para que el ID más nuevo salga de primero en la lista
         List<Intencion_venta> resultadoIDsorted = new ArrayList<Intencion_venta>();
         int cantidadIntenciones = resultado.size();
-        int contador = 0; 
+        int contador = cantidadIntenciones - 1; 
         
-        while (cantidadIntenciones > contador)
+        while (contador >= 0)
         {
             resultadoIDsorted.add(resultado.get(contador));
-            contador++;
+            contador--;
         }
         
         return resultadoIDsorted;

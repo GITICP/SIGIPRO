@@ -50,4 +50,17 @@ WHERE id_menu_principal = 714; -- Lista de Espera
 
 -- Fix quitar la referencia de Número de Lote a Productos de Venta
 alter table ventas.producto_venta
-drop column lote
+drop column lote;
+
+-- Agregar espacio para observaciones en ítems de lista de espera
+alter table ventas.lista
+add column observaciones character varying(150);
+
+-- Fix agregar la referencia de Número de Lote a Orden de Compra
+alter table ventas.orden_compra
+add column lote int;
+
+alter table ventas.orden_compra
+add constraint idlote FOREIGN KEY (lote)
+      REFERENCES produccion.inventario_pt (id_inventario_pt) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE SET NULL;

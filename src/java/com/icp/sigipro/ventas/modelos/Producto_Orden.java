@@ -5,6 +5,7 @@
  */
 package com.icp.sigipro.ventas.modelos;
 
+import com.icp.sigipro.produccion.modelos.Inventario_PT;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -21,7 +22,16 @@ public class Producto_Orden {
     private int cantidad;
     private Date fecha_entrega;
     private int contador; //Por facilidad para duplicar y modificar en la tabla de productos
+    private Inventario_PT lote;
 
+    public Inventario_PT getLote() {
+        return lote;
+    }
+
+    public void setLote(Inventario_PT lote) {
+        this.lote = lote;
+    }
+    
     public int getContador() {
         return contador;
     }
@@ -98,6 +108,7 @@ public class Producto_Orden {
             }          
             JSON.put("id_producto",this.producto.getId_producto());
             JSON.put("id_orden",this.orden.getId_orden());
+            JSON.put("lote",this.lote.getId_inventario_pt());
         }catch (Exception e){
             
         }

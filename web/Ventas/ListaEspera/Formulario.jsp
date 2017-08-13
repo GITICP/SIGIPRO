@@ -142,6 +142,17 @@
                     </div>
                 </div>
             </div>
+            
+            <label for="observaciones" class="control-label"> Observaciones</label>
+            <!-- Observaciones -->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <textarea id="observaciones" name="observaciones" class="form-control">${lista.getObservaciones()}</textarea>
+                    </div>
+                </div>
+            </div>
+                    
             </div>
       </div>
   <div class="form-group">
