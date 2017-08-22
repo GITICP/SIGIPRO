@@ -38,6 +38,11 @@ $(function(){ /* DOM ready */ //
 });
 
 $( document ).ready(function() {
+//  document.getElementById("IDcolumn").className = "sorting_desc";
+//  document.getElementById("IDcolumn").setAttribute("aria-sort","descending");
+    //document.getElementById("tabla_intenciones").className = "table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter";
+    
+    
     //Revisar la lista de productos_intencion en la tabla y cargarlos codificados en capoOcultoRoles
   var tabla = document.getElementById("datatable-column-filter-productos");
   var campoOcultoRoles = $('#listaProductos');

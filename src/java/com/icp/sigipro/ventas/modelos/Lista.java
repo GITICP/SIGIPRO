@@ -24,7 +24,16 @@ public class Lista { //Lista de espera
     private String telefono;
     private String correo;
     private int dias;
+    private String observaciones;
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+    
     public int getDias() {
         return dias;
     }

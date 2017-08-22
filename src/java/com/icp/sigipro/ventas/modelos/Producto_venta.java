@@ -16,7 +16,6 @@ public class Producto_venta {
     private int id_producto;
     private String nombre;
     private String descripcion;
-    private String lote;
     private String tipo;
 
     public String getTipo() {
@@ -49,14 +48,6 @@ public class Producto_venta {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getLote() {
-        return lote;
-    }
-
-    public void setLote(String lote) {
-        this.lote = lote;
     }
 
     

@@ -92,7 +92,6 @@ public class ControladorObtenerProductosIntencionDeVentaAjax extends HttpServlet
                 sb.append("<nombre>").append(n.getProducto().getNombre()).append("</nombre>");
                 sb.append("<cantidad>").append(n.getCantidad()).append("</cantidad>");
                 sb.append("<fecha>").append(n.getFecha_S()).append("</fecha>");
-                sb.append("<lote>").append(n.getProducto().getLote()).append("</lote>");
                 
                 sb.append("</producto>");
                 hayNotificaciones = true;
