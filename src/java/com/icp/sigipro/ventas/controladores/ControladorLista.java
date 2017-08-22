@@ -336,6 +336,8 @@ public class ControladorLista extends SIGIPROServlet {
             java.sql.Date fecha_solicitudSQL2 = new java.sql.Date(result2.getTime());
             lista.setFecha_atencion(fecha_solicitudSQL2);
         }
+        lista.setObservaciones(request.getParameter("observaciones"));
+        
         return lista;
     }
     

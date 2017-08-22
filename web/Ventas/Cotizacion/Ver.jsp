@@ -118,7 +118,6 @@
                         <tr>
                           <th>Producto</th>
                           <th>Cantidad</th>
-                          <th>Lote</th>
                           <th>Precio Unitario</th>
                         </tr>
                       </thead>
@@ -127,7 +126,6 @@
                           <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
-                            <td>${producto.getProducto().getLote()}</td>
                             <td>${producto.getPrecio()}</td>
                           </tr>
                         </c:forEach>

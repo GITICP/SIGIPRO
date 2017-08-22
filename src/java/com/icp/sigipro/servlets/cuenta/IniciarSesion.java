@@ -129,7 +129,7 @@ public class IniciarSesion extends HttpServlet
             session.setAttribute("barraFuncionalidad", barra);
             
             session.setMaxInactiveInterval(30*60);      // Asignación de máximo 30 minutos de inactividad de la sesión.
-            String redireccion = "/SIGIPRO/Inicio";
+            String redireccion = "/SIGIPRO";
             response.sendRedirect(redireccion);
           }
           catch (Exception e) {

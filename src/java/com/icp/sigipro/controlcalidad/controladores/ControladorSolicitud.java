@@ -320,6 +320,8 @@ public class ControladorSolicitud extends SIGIPROServlet {
         String objeto_por_asociar = request.getParameter("objeto-relacionado");
         s.setTipoAsociacion(objeto_por_asociar);
         s.asociar(request);
+        
+        dao.actualizarDescripcion(s);
 
         if (s.tieneTipoAsociacion()) {
             dao.editarSolicitud(s);

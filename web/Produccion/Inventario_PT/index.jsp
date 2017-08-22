@@ -305,7 +305,7 @@
                 <div class="widget-header">
                   <h3><i class="fa fa-list-alt"></i> Reservaciones de Producto Terminado </h3>
                   <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=agregar_reservacion">Agregar Reservacion</a>
+                    <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=agregar_reservacion">Agregar Reservación</a>
                   </div>
                 </div>
                 ${mensaje}

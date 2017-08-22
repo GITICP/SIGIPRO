@@ -39,6 +39,7 @@ public class ReporteDAO extends DAO {
             put("caballos", " SELECT id_caballo AS VAL, numero AS TEXTO FROM caballeriza.caballos");
             put("grupos_de_caballos", " SELECT id_grupo_de_caballo AS VAL, nombre AS TEXTO FROM caballeriza.grupos_de_caballos");
             put("tipos_eventos", " SELECT id_tipo_evento AS VAL, nombre AS TEXTO FROM caballeriza.tipos_eventos");
+            put("sangrias_pruebas", " SELECT sp.id_sangria_prueba AS VAL, to_char(sp.fecha,'DD-MM-YYYY') || '-' || g.nombre || ' (id:' || sp.id_sangria_prueba || ')' AS TEXTO FROM caballeriza.sangrias_pruebas sp INNER JOIN caballeriza.grupos_de_caballos g ON sp.id_grupo = g.id_grupo_de_caballo");
         }
     };
 
@@ -353,7 +354,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2:
-                            w.value(rs.getFloat(cont_col));
+                            w.value(rs.getDouble(cont_col));
                             break;
                         case 4:
                             w.value(rs.getInt(cont_col));
@@ -371,7 +372,7 @@ public class ReporteDAO extends DAO {
                             w.value(rs.getInt(cont_col));
                             break;
                         case 6:
-                            w.value(rs.getFloat(cont_col));
+                            w.value(rs.getDouble(cont_col));
                             break;
                         case 0:
                             w.value("Valor nulo");
@@ -465,7 +466,7 @@ public class ReporteDAO extends DAO {
 
                     switch (tipo_columna) {
                         case 2: 
-                            w.agregarDouble(rs.getFloat(cont_col));
+                            w.agregarDouble(rs.getDouble(cont_col));
                             break;
                         case 4:
                             w.agregarEntero(rs.getInt(cont_col));
@@ -483,7 +484,7 @@ public class ReporteDAO extends DAO {
                             w.agregarEntero(rs.getInt(cont_col));
                             break;
                         case 6:
-                            w.agregarDouble(rs.getFloat(cont_col));
+                            w.agregarDouble(rs.getDouble(cont_col));
                             break;
                         case 0:
                             w.agregarString("Valor nulo");

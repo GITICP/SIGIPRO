@@ -37,7 +37,6 @@ public class Producto_ventaDAO extends DAO {
                 producto.setId_producto(rs.getInt("id_producto"));
                 producto.setNombre(rs.getString("nombre"));
                 producto.setDescripcion(rs.getString("descripcion"));
-                producto.setLote(rs.getString("lote"));
                 producto.setTipo(rs.getString("tipo"));
                 resultado.add(producto);
 
@@ -66,7 +65,6 @@ public class Producto_ventaDAO extends DAO {
                 resultado.setId_producto(rs.getInt("id_producto"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
-                resultado.setLote(rs.getString("lote"));
                 resultado.setTipo(rs.getString("tipo"));
             }
             rs.close();
@@ -84,13 +82,12 @@ public class Producto_ventaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_venta (nombre, descripcion, lote, tipo)"
-                    + " VALUES (?,?,?,?) RETURNING id_producto");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_venta (nombre, descripcion, tipo)"
+                    + " VALUES (?,?,?) RETURNING id_producto");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
-            consulta.setString(3, p.getLote());
-            consulta.setString(4, p.getTipo());
+            consulta.setString(3, p.getTipo());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -113,15 +110,14 @@ public class Producto_ventaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.producto_venta"
-                    + " SET nombre=?, descripcion=?, lote=?, tipo=?"
+                    + " SET nombre=?, descripcion=?, tipo=?"
                     + " WHERE id_producto=?; "
             );
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getDescripcion());
-            consulta.setString(3, p.getLote());
-            consulta.setString(4, p.getTipo());
-            consulta.setInt(5, p.getId_producto());
+            consulta.setString(3, p.getTipo());
+            consulta.setInt(4, p.getId_producto());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

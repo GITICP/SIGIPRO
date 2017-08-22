@@ -69,7 +69,6 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         Producto_venta ds = new Producto_venta();
         
         request.setAttribute("producto", ds);
-        request.setAttribute("inventarios", dao_inv.obtenerInventario_PTs());
         request.setAttribute("accion", "Agregar");
 
         redireccionar(request, response, redireccion);
@@ -112,8 +111,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         int id_producto = Integer.parseInt(request.getParameter("id_producto"));
         Producto_venta ds = dao.obtenerProducto_venta(id_producto);
     
-        request.setAttribute("producto", ds);
-        request.setAttribute("inventarios", dao_inv.obtenerInventario_PTs());        
+        request.setAttribute("producto", ds);        
         request.setAttribute("accion", "Editar");
         
         redireccionar(request, response, redireccion);
@@ -200,6 +198,8 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             request.setAttribute("listaProductos", productos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta eliminado correctamente"));
         } else {
+            List<Producto_venta> productos = dao.obtenerProductos_venta();
+            request.setAttribute("listaProductos", productos);
             request.setAttribute("mensaje", helper.mensajeDeError("Imposible eliminar el producto: El producto a eliminar tiene Solicitudes o Intenciones de Venta relacionadas."));
         }
         redireccionar(request, response, redireccion);
@@ -211,7 +211,6 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         producto.setId_producto(Integer.parseInt(request.getParameter("id_producto")));
         producto.setNombre(request.getParameter("nombre"));
         producto.setDescripcion(request.getParameter("descripcion"));
-        producto.setLote(request.getParameter("lote"));
         producto.setTipo(request.getParameter("tipo"));
         return producto;
     }

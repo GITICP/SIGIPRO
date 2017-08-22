@@ -44,6 +44,11 @@ public class SangriaPruebaCaballo
     {
         return hematocrito;
     }
+    
+    public String getHematocritoConUnidad()
+    {
+        return String.valueOf(hematocrito) + " %";
+    }
 
     public void setHematocrito(float hematrocito)
     {
@@ -53,6 +58,11 @@ public class SangriaPruebaCaballo
     public float getHemoglobina()
     {
         return hemoglobina;
+    }
+    
+    public String getHemoglobinaConUnidad()
+    {
+        return String.valueOf(hemoglobina) + " g/dl";
     }
 
     public void setHemoglobina(float hemoglobina)

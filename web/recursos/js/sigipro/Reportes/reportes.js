@@ -7,7 +7,8 @@ OPCIONES_OBJETOS = [
     {val: "usuarios", texto: "Usuarios"},
     {val: "caballos", texto: "Caballos"},
     {val: "grupos_de_caballos", texto: "Grupos de Caballos"},
-    {val: "tipos_eventos", texto: "Eventos Clinicos Caballos"}
+    {val: "tipos_eventos", texto: "Eventos Clinicos Caballos"},
+    {val: "sangrias_pruebas", texto: "Sangrías de Prueba"}
 ];
 
 $(document).ready(function () {

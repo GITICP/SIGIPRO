@@ -44,7 +44,6 @@
                   <tr>
                     <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Número de Lote</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,7 +58,6 @@
                         </a>
                       </td>
                       <td>${producto.getDescripcion()}</td>
-                      <td>${producto.getLote()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
