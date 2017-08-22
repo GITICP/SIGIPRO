@@ -18,7 +18,7 @@ public class Protocolo {
   private int id_historial;
   private String nombre;
   private String descripcion;
-  private Formula_Maestra formula_maestra;
+  //private Formula_Maestra formula_maestra;
   private Catalogo_PT producto;
   private boolean aprobacion_calidad;
   private boolean aprobacion_direccion;
@@ -69,7 +69,7 @@ public class Protocolo {
                 }
             }
             JSON.put("id_producto",this.producto.getId_catalogo_pt());
-            JSON.put("id_formula_m",this.formula_maestra.getId_formula_maestra());
+            //JSON.put("id_formula_m",this.formula_maestra.getId_formula_maestra());
         }catch (Exception e){
             
         }
@@ -134,13 +134,13 @@ public class Protocolo {
     this.descripcion = descripcion;
   }
 
-  public Formula_Maestra getFormula_maestra() {
+  /*public Formula_Maestra getFormula_maestra() {
     return formula_maestra;
   }
 
   public void setFormula_maestra(Formula_Maestra formula_maestra) {
     this.formula_maestra = formula_maestra;
-  }
+  }*/
 
   public Catalogo_PT getProducto() {
     return producto;
