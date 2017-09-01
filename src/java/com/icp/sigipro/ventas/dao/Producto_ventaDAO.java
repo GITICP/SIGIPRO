@@ -98,7 +98,11 @@ public class Producto_ventaDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del producto debe ser único");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }

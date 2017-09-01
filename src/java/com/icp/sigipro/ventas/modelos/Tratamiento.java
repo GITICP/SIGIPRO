@@ -19,16 +19,8 @@ public class Tratamiento {
     private int id_tratamiento;
     private Cliente cliente;
     private Date fecha;
-    private String estado;
     private String observaciones;
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 
     public String getObservaciones() {
         return observaciones;

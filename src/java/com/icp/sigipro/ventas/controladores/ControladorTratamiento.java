@@ -68,12 +68,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
        
         String redireccion = "Tratamiento/Agregar.jsp";
         Tratamiento ds = new Tratamiento();
-        List<String> estados = new ArrayList<String>();
-        estados.add("A");
-        estados.add("B");
-        estados.add("C");
-        
-        request.setAttribute("estados", estados);
         request.setAttribute("tratamiento", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("accion", "Agregar");
@@ -117,12 +111,7 @@ public class ControladorTratamiento extends SIGIPROServlet {
         String redireccion = "Tratamiento/Editar.jsp";
         int id_tratamiento = Integer.parseInt(request.getParameter("id_tratamiento"));
         Tratamiento ds = dao.obtenerTratamiento(id_tratamiento);
-        List<String> estados = new ArrayList<String>();
-        estados.add("A");
-        estados.add("B");
-        estados.add("C");
-        
-        request.setAttribute("estados", estados);
+
         request.setAttribute("tratamiento", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
         request.setAttribute("accion", "Editar");
@@ -229,7 +218,6 @@ public class ControladorTratamiento extends SIGIPROServlet {
         java.sql.Date fecha_solicitudSQL = new java.sql.Date(result.getTime());
         tratamiento.setFecha(fecha_solicitudSQL);
         tratamiento.setObservaciones(request.getParameter("observaciones"));
-        tratamiento.setEstado(request.getParameter("estado"));
         return tratamiento;
     }
     

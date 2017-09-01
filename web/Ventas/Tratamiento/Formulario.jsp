@@ -80,27 +80,6 @@
                     </div>
                 </div>
             </div>
-                                                     <label for="estado" class="control-label"> *Estado</label>
-            <!-- estado -->
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <select id="estado" class="select2" name="estado" required
-                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
-                          <c:forEach items="${estados}" var="estado">
-                            <c:choose>
-                              <c:when test="${tratamiento.getEstado() == estado}" >
-                                <option value="${estado}" selected> ${estado}</option>
-                              </c:when>
-                              <c:otherwise>
-                                <option value="${estado}"> ${estado}</option>
-                              </c:otherwise>
-                            </c:choose>
-                          </c:forEach>
-                        </select>
-                    </div>
-                </div>
-            </div>
             </div>
       </div>
       <p id="texto"></p>

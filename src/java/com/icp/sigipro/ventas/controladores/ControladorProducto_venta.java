@@ -132,7 +132,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             bitacora.setBitacora(producto_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRODUCTOS_VENTA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado != 0) {
             redireccion = "Producto_ventas/index.jsp";
@@ -140,7 +140,9 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             request.setAttribute("listaProductos", productos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta agregado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            Producto_venta ds = new Producto_venta();
+        request.setAttribute("producto", ds);
+        request.setAttribute("accion", "Agregar");
         }
         redireccionar(request, response, redireccion);
     }
