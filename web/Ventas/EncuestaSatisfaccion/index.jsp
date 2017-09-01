@@ -32,13 +32,13 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-gears"></i> Encuestas de Satisfacción </h3>
-                <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=agregar">Agregar Encuesta de Satisfacción</a>
-                </div>
+              <div class="btn-group widget-header-toolbar">
+                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/EncuestaSatisfaccion?accion=agregar">Agregar Encuesta de Satisfacción</a>
+              </div>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc2">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -60,11 +60,11 @@
                         </a>
                       </td>
                       <td>
-                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${encuesta.getCliente().getId_cliente()}">
-                            <div style="height:100%;width:100%">
-                                  ${encuesta.getCliente().getNombre()}
-                            </div>
-                            </a>
+                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${encuesta.getCliente().getId_cliente()}">
+                          <div style="height:100%;width:100%">
+                            ${encuesta.getCliente().getNombre()}
+                          </div>
+                        </a>
                       </td>
                       <td>${encuesta.getFecha_S()}</td>
                       <td>${encuesta.getObservaciones()}</td>
@@ -81,6 +81,8 @@
       <!-- /main -->
     </div>
 
-    </jsp:attribute>
-
-  </t:plantilla_general>
+  </jsp:attribute>
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+  </jsp:attribute>
+</t:plantilla_general>

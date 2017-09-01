@@ -32,13 +32,13 @@
           <div class="widget widget-table">
             <div class="widget-header">
               <h3><i class="fa fa-gears"></i> Reuniones de Producción </h3>
-                <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ReunionProduccion?accion=agregar">Agregar Reunión de Producción</a>
-                </div>
+              <div class="btn-group widget-header-toolbar">
+                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ReunionProduccion?accion=agregar">Agregar Reunión de Producción</a>
+              </div>
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc1">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -73,6 +73,8 @@
       <!-- /main -->
     </div>
 
-    </jsp:attribute>
-
-  </t:plantilla_general>
+  </jsp:attribute>
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+  </jsp:attribute>
+</t:plantilla_general>

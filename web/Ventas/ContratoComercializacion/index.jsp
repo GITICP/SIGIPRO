@@ -31,17 +31,18 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-file-text-o"></i> Contratos de Comercialización </h3>
-                <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ContratoComercializacion?accion=agregar">Agregar un Contrato de Comercialización</a>
-                </div>  
+              <h3><i class="fa fa-file-text-o"></i> Contratos de Comercialización </h3>
+              <div class="btn-group widget-header-toolbar">
+                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/ContratoComercializacion?accion=agregar">Agregar un Contrato de Comercialización</a>
+              </div>  
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
+                    <th class="columna-escondida">Id</th>
                     <th>Nombre</th>
                     <th>Cliente</th>
                     <th>Fecha Inicial</th>
@@ -54,30 +55,31 @@
                   <c:forEach items="${listaContratos}" var="contrato">
 
                     <tr id ="${contrato.getId_contrato()}">
+                      <td class="columna-escondida">${contrato.getId_contrato()}</td>
                       <td>
                         <a href="/SIGIPRO/Ventas/ContratoComercializacion?accion=ver&id_contrato=${contrato.getId_contrato()}">
-                        <div style="height:100%;width:100%">
+                          <div style="height:100%;width:100%">
                             ${contrato.getNombre()}
-                        </div>
+                          </div>
                         </a>
                       </td>
                       <td>
-                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${contrato.getCliente().getId_cliente()}">
-                            <div style="height:100%;width:100%">
-                                  ${contrato.getCliente().getNombre()}
-                            </div>
-                            </a>
+                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${contrato.getCliente().getId_cliente()}">
+                          <div style="height:100%;width:100%">
+                            ${contrato.getCliente().getNombre()}
+                          </div>
+                        </a>
                       </td>
                       <td>${contrato.getFechaInicial_S()}</td>
                       <td>${contrato.getFechaRenovacion_S()}</td>
                       <td>
-                          <c:choose>
-                            <c:when test= "${(contrato.isFirmado())}">
-                                Si
-                            </c:when>
-                            <c:otherwise>
-                                No
-                            </c:otherwise>
+                        <c:choose>
+                          <c:when test= "${(contrato.isFirmado())}">
+                            Si
+                          </c:when>
+                          <c:otherwise>
+                            No
+                          </c:otherwise>
                         </c:choose>
                       </td>
                       <td>${contrato.getObservaciones()}</td>
@@ -92,7 +94,9 @@
         <!-- /main-content -->
       </div>
       <!-- /main -->
-      </div>
-    </jsp:attribute>
-
-  </t:plantilla_general>
+    </div>
+  </jsp:attribute>
+        <jsp:attribute name="scripts">
+            <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+        </jsp:attribute>
+</t:plantilla_general>
