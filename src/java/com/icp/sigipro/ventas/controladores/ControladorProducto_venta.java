@@ -153,9 +153,9 @@ public class ControladorProducto_venta extends SIGIPROServlet {
         int[] permisos = {701, 703, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        
+        Producto_venta producto_nuevo = construirObjeto(request);
         try {
-            Producto_venta producto_nuevo = construirObjeto(request);
+            
             
             resultado = dao.editarProducto_venta(producto_nuevo);
             //Funcion que genera la bitacora
@@ -163,7 +163,7 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             bitacora.setBitacora(producto_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_PRODUCTOS_VENTA, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado) {
             redireccion = "Producto_ventas/index.jsp";
@@ -171,7 +171,9 @@ public class ControladorProducto_venta extends SIGIPROServlet {
             request.setAttribute("listaProductos", productos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Producto de Venta editado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            Producto_venta ds = dao.obtenerProducto_venta(producto_nuevo.getId_producto());
+            request.setAttribute("producto", ds);        
+            request.setAttribute("accion", "Editar");
         }
         redireccionar(request, response, redireccion);
     }

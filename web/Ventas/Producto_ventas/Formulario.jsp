@@ -42,19 +42,19 @@
                     <div class="input-group">
                         <select id="tipo" class="select2" style='background-color: #fff;' name="tipo" required
                                 oninvalid="setCustomValidity('Este campo es requerido')"
-                                oninput="setCustomValidity('')">
+                                onchange="setCustomValidity('')">
                             <c:choose>
-                                <c:when test="${producto.getTipo()} == Sueros" >
+                                <c:when test="${producto.getTipo()} == 'Sueros'" >
                                   <option value="Servicios"> Servicios</option>
                                   <option value="Sueros" selected> Sueros</option>
                                   <option value="Otros Productos"> Otros Productos</option>
                                 </c:when>
-                                <c:when test="${producto.getTipo()} == Servicios" >
+                                <c:when test="${producto.getTipo()} == 'Servicios'" >
                                   <option value="Servicios" selected> Servicios</option>
                                   <option value="Sueros"> Sueros</option>
                                   <option value="Otros Productos"> Otros Productos</option>
                                 </c:when>
-                                <c:when test="${producto.getTipo()} == Otros Servicios" >
+                                <c:when test="${producto.getTipo()} == 'Otros Servicios'" >
                                   <option value="Servicios"> Servicios</option>
                                   <option value="Sueros"> Sueros</option>
                                   <option value="Otros Productos" selected> Otros Productos</option>

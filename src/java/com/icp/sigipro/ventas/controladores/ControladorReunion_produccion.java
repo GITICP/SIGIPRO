@@ -371,6 +371,13 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
                     }
+                String documentoAdjunto = "";
+                if (tr.getMinuta2().equals("")) {
+                    documentoAdjunto = dao.obtenerReunion_produccion(tr.getId_reunion()).getMinuta2();
+                }
+                if (!documentoAdjunto.equals("")) {
+                        tr.setMinuta2(documentoAdjunto);
+                    }
                 resultado2 = dao.editarReunion_produccion(tr);
                 //System.out.println("listaProductos = "+listaProductos);
             if (listaProductos != null && !(listaProductos.isEmpty()) ) {

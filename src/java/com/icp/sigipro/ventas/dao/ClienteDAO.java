@@ -201,10 +201,10 @@ public class ClienteDAO extends DAO {
             PreparedStatement consulta = getConexion().prepareStatement(" select " +
                 "(select count(*) from ventas.intencion_venta where id_cliente =?)" +
                 "+" +
-                "(select count(*) from ventas.cotizacion where id_cliente =?)" +
-                "+" +
-                "(select count(*) from ventas.orden_compra where id_cliente =?)" +
-                "+" +
+ //               "(select count(*) from ventas.cotizacion where id_cliente =?)" +
+ //               "+" +
+ //               "(select count(*) from ventas.orden_compra where id_cliente =?)" +
+ //               "+" +
                 "(select count(*) from ventas.factura where id_cliente =?)" +
                 "+" +
                 "(select count(*) from ventas.seguimiento_venta where id_cliente =?)" +
@@ -222,8 +222,7 @@ public class ClienteDAO extends DAO {
             consulta.setInt(4, id_cliente);
             consulta.setInt(5, id_cliente);
             consulta.setInt(6, id_cliente);
-            consulta.setInt(7, id_cliente);
-            consulta.setInt(8, id_cliente);
+
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
