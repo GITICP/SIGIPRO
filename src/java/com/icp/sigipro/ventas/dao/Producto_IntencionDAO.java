@@ -217,7 +217,7 @@ public class Producto_IntencionDAO extends DAO {
     public List<Producto_Intencion> parsearProductos(String productos_intencion, int id_intencion) {
         List<Producto_Intencion> resultado = null;
         try {
-            System.out.println(productos_intencion);
+            //System.out.println(productos_intencion);
             resultado = new ArrayList<Producto_Intencion>();
             List<String> productosParcial = new LinkedList<String>(Arrays.asList(productos_intencion.split("#r#")));
             productosParcial.remove("");
