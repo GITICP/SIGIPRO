@@ -273,7 +273,6 @@
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
                           <th>Fecha de Entrega</th>
-                          <th>Lote</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -283,7 +282,6 @@
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
                             <td>${producto.getFecha_S()}</td>
-                            <td>${producto.getLote().getLote()}</td>
                             <td>
                               <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${producto.getContador()})">Modificar</button>
                               <button type="button" class="btn btn-primary btn-sm" style="margin-left:7px;margin-right:5px;" onclick="duplicarProducto(${producto.getProducto().getId_producto()},${producto.getContador()})">Duplicar</button>
