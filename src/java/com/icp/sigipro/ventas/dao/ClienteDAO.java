@@ -62,6 +62,7 @@ public class ClienteDAO extends DAO {
                 cliente.setPersona(rs.getString("persona"));
                 cliente.setDireccion(rs.getString("direccion"));
                 cliente.setCedula(rs.getString("cedula"));
+                cliente.setEstado(rs.getString("estado"));
                 resultado.add(cliente);
 
             }
@@ -93,6 +94,7 @@ public class ClienteDAO extends DAO {
                 resultado.setPersona(rs.getString("persona"));
                 resultado.setDireccion(rs.getString("direccion"));
                 resultado.setCedula(rs.getString("cedula"));
+                resultado.setEstado(rs.getString("estado"));
             }
             rs.close();
             consulta.close();
@@ -109,8 +111,8 @@ public class ClienteDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo, direccion, cedula, persona)"
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_cliente");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo, direccion, cedula, persona, estado)"
+                    + " VALUES (?,?,?,?,?,?,?) RETURNING id_cliente");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getPais());
@@ -118,6 +120,7 @@ public class ClienteDAO extends DAO {
             consulta.setString(4, p.getDireccion());
             consulta.setString(5, p.getCedula());
             consulta.setString(6, p.getPersona());
+            consulta.setString(7, p.getEstado());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -128,7 +131,11 @@ public class ClienteDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del cliente y la cédula deben ser únicos");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }
@@ -140,7 +147,7 @@ public class ClienteDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.cliente"
-                    + " SET nombre=?, pais=?, tipo=?, direccion=?, cedula=?, persona=?"
+                    + " SET nombre=?, pais=?, tipo=?, direccion=?, cedula=?, persona=?, estado=?"
                     + " WHERE id_cliente=?; "
             );
 
@@ -150,7 +157,8 @@ public class ClienteDAO extends DAO {
             consulta.setString(4, p.getDireccion());
             consulta.setString(5, p.getCedula());
             consulta.setString(6, p.getPersona());
-            consulta.setInt(7, p.getId_cliente());
+            consulta.setString(7, p.getEstado());
+            consulta.setInt(8, p.getId_cliente());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -159,7 +167,11 @@ public class ClienteDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la edición");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del cliente y la cédula deben ser únicos");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }

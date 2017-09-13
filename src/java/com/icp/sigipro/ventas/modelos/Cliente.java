@@ -20,6 +20,15 @@ public class Cliente {
     private String direccion;
     private String cedula;
     private String persona;
+    private String estado;
+
+  public String getEstado() {
+    return estado;
+  }
+
+  public void setEstado(String estado) {
+    this.estado = estado;
+  }
 
     public String getDireccion() {
         return direccion;

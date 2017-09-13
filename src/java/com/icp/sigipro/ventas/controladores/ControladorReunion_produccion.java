@@ -147,7 +147,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         String redireccion = "ReunionProduccion/Agregar.jsp";
         Reunion_produccion ds = new Reunion_produccion();
         
-        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
+        request.setAttribute("usuarios",dao_us.obtenerUsuariosAlfa());
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Agregar");
 
@@ -193,7 +193,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         int id_reunion = Integer.parseInt(request.getParameter("id_reunion"));
         Reunion_produccion ds = dao.obtenerReunion_produccion(id_reunion);
         List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
-        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
+        request.setAttribute("usuarios",dao_us.obtenerUsuariosAlfa());
         request.setAttribute("participantes", d);
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Editar");

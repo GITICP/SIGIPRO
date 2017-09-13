@@ -662,6 +662,34 @@ public class UsuarioDAO extends DAO
         return resultado;
     }
     
+    public List<Usuario> obtenerUsuariosAlfa()
+    {
+        SingletonBD s = SingletonBD.getSingletonBD();
+        Connection conexion = s.conectar();
+
+        List<Usuario> resultado = null;
+
+        if (conexion != null) {
+            try {
+                PreparedStatement consulta;
+                consulta = conexion.prepareStatement("SELECT us.id_usuario, us.nombre_usuario, us.correo, us.nombre_completo, us.cedula, "
+                                                     + "us.id_seccion, us.id_puesto, us.fecha_activacion, us.fecha_desactivacion, us.estado "
+                                                     + "FROM seguridad.usuarios us "
+                                                     + "ORDER BY us.nombre_completo ");
+                ResultSet resultadoConsulta = consulta.executeQuery();
+                resultado = llenarUsuarios(resultadoConsulta);
+                resultadoConsulta.close();
+                consulta.close();
+                conexion.close();
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+                resultado = null;
+            }
+        }
+        return resultado;
+    }
+    
 
     
         

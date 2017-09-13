@@ -52,7 +52,7 @@
                         <div class="col-sm-12">
                             <div class="input-group">
                                 <input id="telefono" type="text" class="form-control" name="telefono" maxlength="12" value="${lista.getTelefono()}" 
-                                    oninvalid="setCustomValidity('Debe ingresar un telefono. ')"
+                                    oninvalid="setCustomValidity('Debe ingresar un número de teléfono válido. ')"
                                     oninput="setCustomValidity('')">
                             </div>
                         </div>
@@ -148,7 +148,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea id="observaciones" name="observaciones" class="form-control">${lista.getObservaciones()}</textarea>
+                        <textarea maxlenght="150" id="observaciones" name="observaciones" class="form-control">${lista.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

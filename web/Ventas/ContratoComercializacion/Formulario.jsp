@@ -51,7 +51,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea id="observaciones" name="observaciones" class="form-control">${contrato.getObservaciones()}</textarea>
+                        <textarea maxlength="500" id="observaciones" name="observaciones" class="form-control">${contrato.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

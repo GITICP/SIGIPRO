@@ -38,7 +38,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc3">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
