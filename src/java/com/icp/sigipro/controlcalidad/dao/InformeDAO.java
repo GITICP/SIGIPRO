@@ -25,13 +25,12 @@ public class InformeDAO extends DAO {
 
     public InformeDAO() {
     }
-
     public Informe ingresarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
         boolean resultado_informe = false;
         boolean resultado_resultados = false;
-        boolean resultado_solicitud;
+        boolean resultado_solicitud = false;
 
         PreparedStatement consulta_informe = null;
         ResultSet rs_informe = null;
@@ -168,7 +167,6 @@ public class InformeDAO extends DAO {
 
         return informe;
     }
-
     public Informe editarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
@@ -279,7 +277,7 @@ public class InformeDAO extends DAO {
 
         return informe;
     }
-   public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
+    public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
     SolicitudDAO sdao = new SolicitudDAO();
     SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
     Usuario solicitante = s.getUsuario_solicitante();
