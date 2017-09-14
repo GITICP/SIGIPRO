@@ -256,18 +256,22 @@ public class SolicitudDAO extends DAO {
         return resultado;
     }
 
-    public boolean recibirSolicitud(SolicitudCC solicitud) {
-        boolean resultado = false;
+    public int recibirSolicitud(SolicitudCC solicitud) {
+        // -1 -> Fallo en BD, 0 -> Éxito, 1 -> Solicitud ya fue recibida
+        
+        int resultado = -1;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
                     + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Recibido' "
-                    + "WHERE id_solicitud = ?; ");
+                    + "WHERE id_solicitud = ? and estado = 'Solicitado'; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
             consulta.setTimestamp(2, solicitud.getFecha_recibido());
             consulta.setInt(3, solicitud.getId_solicitud());
             if (consulta.executeUpdate() == 1) {
-                resultado = true;
+                resultado = 0;
+            } else {
+                resultado = 1;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
