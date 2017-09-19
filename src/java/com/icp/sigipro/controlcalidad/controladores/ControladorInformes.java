@@ -185,6 +185,8 @@ public class ControladorInformes extends SIGIPROServlet
         
         String[] ids_resultados = request.getParameterValues("resultados");
         
+        // NO SE ESTÁ ASIGNANDO FECHA DE CIERRE
+        
         Informe informe = new Informe();
         SolicitudCC s = new SolicitudCC();
         s.setId_solicitud(Integer.parseInt(request.getParameter("id_solicitud")));

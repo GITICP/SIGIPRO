@@ -25,13 +25,12 @@ public class InformeDAO extends DAO {
 
     public InformeDAO() {
     }
-
     public Informe ingresarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
         boolean resultado_informe = false;
         boolean resultado_resultados = false;
-        boolean resultado_solicitud;
+        boolean resultado_solicitud = false;
 
         PreparedStatement consulta_informe = null;
         ResultSet rs_informe = null;
@@ -168,7 +167,6 @@ public class InformeDAO extends DAO {
 
         return informe;
     }
-
     public Informe editarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
 
         boolean resultado = false;
@@ -241,12 +239,11 @@ public class InformeDAO extends DAO {
 
             if (cerrar) {
                 update_solicitud = getConexion().prepareStatement(
-                        " UPDATE control_calidad.solicitudes SET estado = ?, fecha_cierre=? WHERE id_solicitud = ? "
+                        " UPDATE control_calidad.solicitudes SET estado = ? WHERE id_solicitud = ? "
                 );
 
                 update_solicitud.setString(1, "Completada");
-                update_solicitud.setTimestamp(2, informe.getSolicitud().getFecha_cierre());
-                update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
+                update_solicitud.setInt(2, informe.getSolicitud().getId_solicitud());
 
                 resultado_solicitud = update_solicitud.executeUpdate() == 1;
             } else {
@@ -279,7 +276,7 @@ public class InformeDAO extends DAO {
 
         return informe;
     }
-   public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
+    public void notificacion_informe_parcial(int id_solicitud) throws SIGIPROException {
     SolicitudDAO sdao = new SolicitudDAO();
     SolicitudCC s = sdao.obtenerSolicitud(id_solicitud);
     Usuario solicitante = s.getUsuario_solicitante();

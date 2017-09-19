@@ -223,7 +223,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         validarPermiso(551, request);
 
-        boolean resultado = false;
+        int resultado = -1;
         String usuario = request.getParameter("usuario_recibo");
         String contrasenna = request.getParameter("passw");
 
@@ -246,13 +246,17 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
                 resultado = dao.recibirSolicitud(solicitud);
 
-                if (resultado) {
+                if (resultado == 0) {
                     //Funcion que genera la bitacora 
                     bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_RECIBIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
                     //----------------------------
                     request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud recibida correctamente"));
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                    if(resultado == -1) {
+                        request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                    } else {
+                        request.setAttribute("mensaje", helper.mensajeDeError("Solicitud ya fue recibida."));
+                    }
                 }
                 this.getIndex(request, response);
             } catch (Exception ex) {
