@@ -80,6 +80,7 @@
                 <tr><td> <strong>Fecha de Atención / Despacho: </strong>  </td> <center> <td> ${lista.getFecha_atencion_S()}   </td> </center> </tr>
                 <tr><td> <strong>Total de Días: </strong>  </td> <center> <td> ${lista.getDias()}   </td> </center> </tr>
                 <tr><td> <strong>Observaciones: </strong>  </td> <center> <td> ${lista.getObservaciones()}   </td> </center> </tr>
+                <tr><td> <strong>Descripcion: </strong>  </td> <center> <td> ${lista.getDescripcion()}   </td> </center> </tr>
               </table>
               <br>
               

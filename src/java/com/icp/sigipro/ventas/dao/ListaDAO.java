@@ -53,6 +53,7 @@ public class ListaDAO extends DAO {
                 lista.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 lista.setFecha_atencion(rs.getDate("fecha_atencion"));
                 lista.setObservaciones(rs.getString("observaciones"));
+                lista.setDescripcion(rs.getString("descripcion"));
                 resultado.add(lista);
 
             }
@@ -84,6 +85,7 @@ public class ListaDAO extends DAO {
                 lista.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 lista.setFecha_atencion(rs.getDate("fecha_atencion"));
                 lista.setObservaciones(rs.getString("observaciones"));
+                lista.setDescripcion(rs.getString("descripcion"));
                 resultado.add(lista);
 
             }
@@ -117,6 +119,7 @@ public class ListaDAO extends DAO {
                 lista.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 lista.setFecha_atencion(rs.getDate("fecha_atencion"));
                 lista.setObservaciones(rs.getString("observaciones"));
+                lista.setDescripcion(rs.getString("descripcion"));
                 resultado.add(lista);
 
             }
@@ -154,6 +157,7 @@ public class ListaDAO extends DAO {
                 resultado.setFecha_solicitud(rs.getDate("fecha_solicitud"));
                 resultado.setFecha_atencion(rs.getDate("fecha_atencion"));
                 resultado.setObservaciones(rs.getString("observaciones"));
+                resultado.setDescripcion(rs.getString("descripcion"));
             }
             rs.close();
             consulta.close();
@@ -170,13 +174,14 @@ public class ListaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud, fecha_atencion, observaciones)"
-                    + " VALUES (?,?,?,?) RETURNING id_enlistado");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud, fecha_atencion, observaciones, descripcion)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_enlistado");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha_solicitud());
             consulta.setDate(3, p.getFecha_atencion());
             consulta.setString(4, p.getObservaciones());
+            consulta.setString(5, p.getDescripcion());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -197,8 +202,8 @@ public class ListaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (nombre_cliente, fecha_solicitud, fecha_atencion, telefono, correo_electronico, observaciones)"
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_enlistado");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (nombre_cliente, fecha_solicitud, fecha_atencion, telefono, correo_electronico, observaciones, descripcion)"
+                    + " VALUES (?,?,?,?,?,?,?) RETURNING id_enlistado");
 
             consulta.setString(1, p.getNombre_cliente());
             consulta.setDate(2, p.getFecha_solicitud());
@@ -206,6 +211,7 @@ public class ListaDAO extends DAO {
             consulta.setString(4, p.getTelefono());
             consulta.setString(5, p.getCorreo());
             consulta.setString(6, p.getObservaciones());
+            consulta.setString(7, p.getDescripcion());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -226,14 +232,15 @@ public class ListaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (nombre_cliente, fecha_solicitud, telefono, correo_electronico, observaciones)"
-                    + " VALUES (?,?,?,?,?) RETURNING id_enlistado");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (nombre_cliente, fecha_solicitud, telefono, correo_electronico, observaciones, descripcion)"
+                    + " VALUES (?,?,?,?,?,?) RETURNING id_enlistado");
 
             consulta.setString(1, p.getNombre_cliente());
             consulta.setDate(2, p.getFecha_solicitud());
             consulta.setString(3, p.getTelefono());
             consulta.setString(4, p.getCorreo());
             consulta.setString(5, p.getObservaciones());
+            consulta.setString(6, p.getDescripcion());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -256,7 +263,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET id_cliente=?, fecha_solicitud=?, fecha_atencion=?, observaciones=?"
+                    + " SET id_cliente=?, fecha_solicitud=?, fecha_atencion=?, observaciones=?, descripcion=?"
                     + " WHERE id_enlistado=?; "
             );
 
@@ -264,7 +271,8 @@ public class ListaDAO extends DAO {
             consulta.setDate(2, p.getFecha_solicitud());
             consulta.setDate(3, p.getFecha_atencion());
             consulta.setString(4, p.getObservaciones());
-            consulta.setInt(5, p.getId_lista());
+            consulta.setString(5, p.getDescripcion());
+            consulta.setInt(6, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -285,7 +293,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET nombre_cliente=?, fecha_solicitud=?, fecha_atencion=?, telefono=?, correo_electronico=?, observaciones=?"
+                    + " SET nombre_cliente=?, fecha_solicitud=?, fecha_atencion=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?"
                     + " WHERE id_enlistado=?; "
             );
 
@@ -295,7 +303,8 @@ public class ListaDAO extends DAO {
             consulta.setString(4, p.getTelefono());
             consulta.setString(5, p.getCorreo());
             consulta.setString(6, p.getObservaciones());
-            consulta.setInt(7, p.getId_lista());
+            consulta.setString(7, p.getDescripcion());
+            consulta.setInt(8, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -316,7 +325,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET nombre_cliente=?, fecha_solicitud=?, telefono=?, correo_electronico=?, observaciones=?"
+                    + " SET nombre_cliente=?, fecha_solicitud=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?"
                     + " WHERE id_enlistado=?; "
             );
 
@@ -325,7 +334,8 @@ public class ListaDAO extends DAO {
             consulta.setString(3, p.getTelefono());
             consulta.setString(4, p.getCorreo());
             consulta.setString(5, p.getObservaciones());
-            consulta.setInt(6, p.getId_lista());
+            consulta.setString(6, p.getDescripcion());
+            consulta.setInt(7, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -403,12 +413,13 @@ public class ListaDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud, observaciones)"
-                    + " VALUES (?,?,?) RETURNING id_enlistado");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.lista (id_cliente, fecha_solicitud, observaciones, descripcion)"
+                    + " VALUES (?,?,?,?) RETURNING id_enlistado");
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha_solicitud());
             consulta.setString(3, p.getObservaciones());
+            consulta.setString(4, p.getDescripcion());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -432,14 +443,15 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET id_cliente=?, fecha_solicitud=?, observaciones=?"
+                    + " SET id_cliente=?, fecha_solicitud=?, observaciones=?, descripcion=?"
                     + " WHERE id_enlistado=?; "
             );
 
             consulta.setInt(1, p.getCliente().getId_cliente());
             consulta.setDate(2, p.getFecha_solicitud());
             consulta.setString(3, p.getObservaciones());
-            consulta.setInt(4, p.getId_lista());
+            consulta.setString(4, p.getDescripcion());
+            consulta.setInt(5, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

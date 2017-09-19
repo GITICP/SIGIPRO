@@ -163,7 +163,7 @@ public class ControladorFactura extends SIGIPROServlet {
         
         request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
-        request.setAttribute("clientes", cdao.obtenerClientes());
+        request.setAttribute("clientes", cdao.obtenerClientesContratosFirmados());
         request.setAttribute("ordenes", ordenes);
         request.setAttribute("tipos", tipos);
         request.setAttribute("accion", "Agregar");
@@ -340,7 +340,7 @@ public class ControladorFactura extends SIGIPROServlet {
         
         request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
-        request.setAttribute("clientes", cdao.obtenerClientes());
+        request.setAttribute("clientes", cdao.obtenerClientesContratosFirmados());
         request.setAttribute("ordenes", ordenes);
         request.setAttribute("tipos", tipos);
         request.setAttribute("accion", "Editar");

@@ -1,3 +1,9 @@
+//Set datepicker to min date today
+
+$(function () {
+    var datepicker = $(".sigiproDatePickerEspecial").datepicker({startDate:"0d"});
+});
+
 $(function(){ /* DOM ready */ //
     $("#id_cliente").change(function () {
         //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
@@ -59,6 +65,8 @@ $( document ).ready(function() {
       catch (exception) {}
       $("#seleccionProducto option[value='"+id+"']").remove();
   }
+  
+  
   //alert("el valor del campo oculto es: " + $('#listaProductos').val());
 });
 

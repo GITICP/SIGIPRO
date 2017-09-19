@@ -75,7 +75,41 @@ public class ClienteDAO extends DAO {
         }
         return resultado;
     }
+    public List<Cliente> obtenerClientesContratosFirmados() throws SIGIPROException {
 
+        List<Cliente> resultado = new ArrayList<Cliente>();
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.cliente WHERE id_cliente NOT IN " +
+                                                      "(SELECT distinct cl.id_cliente " +
+                                                      "FROM ventas.cliente cl INNER JOIN ventas.contrato_comercializacion co ON (cl.id_cliente = co.id_cliente) " +
+                                                      "WHERE co.firmado = FALSE) ");
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                Cliente cliente = new Cliente();
+                
+                cliente.setId_cliente(rs.getInt("id_cliente"));
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setPais(rs.getString("pais"));
+                cliente.setTipo(rs.getString("tipo"));
+                cliente.setPersona(rs.getString("persona"));
+                cliente.setDireccion(rs.getString("direccion"));
+                cliente.setCedula(rs.getString("cedula"));
+                cliente.setEstado(rs.getString("estado"));
+                resultado.add(cliente);
+
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
     public Cliente obtenerCliente(int id_cliente) throws SIGIPROException {
 
         Cliente resultado = new Cliente();
