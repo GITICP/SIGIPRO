@@ -196,7 +196,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(552, request);
+        //validarPermiso(552, request); Eliminada esta validación debido a que los usuarios solicitantes pueden ahora anular sus propias solicitudes
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_anular"));
         String observaciones = request.getParameter("observaciones");
         boolean resultado = false;

@@ -57,9 +57,7 @@
                                         <th>Usuario Solicitante</th>
                                         <th>Fecha de Solicitud</th>
                                         <th>Estado</th>
-                                            <c:if test="${boolrecibir || boolanular}">
-                                            <th>Acción</th>
-                                            </c:if>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,43 +77,58 @@
                                             <td>${solicitud.getUsuario_solicitante().getNombre_completo()}</td>
                                             <td>${solicitud.getFecha_solicitudAsString()}</td>
                                             <td>${solicitud.getEstado()}</td>
-                                            <c:if test="${boolrecibir || boolanular}">
-                                                <c:choose>
-                                                    <c:when test="${solicitud.getEstado().equals('Solicitado')}">
-                                                        <td>
-                                                            <c:if test="${boolrecibir}">
-                                                                <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
-                                                            </c:if>
-                                                            <c:if test="${boolanular}">
+                                            <c:choose>
+                                                <c:when test="${boolrecibir || boolanular}">
+                                                    <c:choose>
+                                                        <c:when test="${solicitud.getEstado().equals('Solicitado')}">
+                                                            <td>
+                                                                <c:if test="${boolrecibir}">
+                                                                    <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
+                                                                </c:if>
+                                                                <c:if test="${boolanular}">
+                                                                    <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
+                                                                </c:if>
+                                                            </td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:choose>
+                                                                <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')}">
+                                                                    <c:choose>
+                                                                        <c:when test="${boolrealizar}">
+                                                                            <td>
+                                                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">Realizar</a>  
+                                                                                <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
+                                                                            </td>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <td>
+                                                                                <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Recibida</button>
+                                                                            </td>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <td>
+                                                                        <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Completada</button>
+                                                                    </td>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:choose>
+                                                        <c:when test="${solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario}">
+                                                            <td>
                                                                 <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
-                                                            </c:if>
-                                                        </td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <c:choose>
-                                                            <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial')}">
-                                                                <c:choose>
-                                                                    <c:when test="${boolrealizar}">
-                                                                        <td>
-                                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Solicitud?accion=ver&id_solicitud=${solicitud.getId_solicitud()}">Realizar</a>  
-                                                                        </td>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <td>
-                                                                            <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Recibida</button>
-                                                                        </td>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <td>
-                                                                    <button class="btn btn-danger btn-sm boton-accion" disabled >Solicitud Completada</button>
-                                                                </td>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:if>
+                                                            </td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td>Sin acción disponible.</td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </tr>
 
                                     </c:forEach>
@@ -159,7 +172,7 @@
                         <td><strong>Información</strong></td><td id="modal_anular_informacion"></td>
                     </tr>
                 </table>
-                
+
                 <br>
 
                 <label for="observaciones" class="control-label">¿Razones por las cuales anula la solicitud?</label>

@@ -45,7 +45,7 @@
                                         <c:if test="${boolrecibir}">
                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
                                         </c:if>
-                                        <c:if test="${boolanular}">
+                                        <c:if test="${boolanular || solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario}">
                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                         </c:if>
                                     </c:when>
@@ -56,6 +56,7 @@
                                         <c:choose>
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe Parcial</a>
+                                                <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                             </c:when>
                                             <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 558)}">
                                                 <c:choose>
@@ -66,6 +67,9 @@
                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
                                                     </c:when>
                                                 </c:choose>
+                                            </c:when>
+                                            <c:when test="${solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario && !solicitud.getEstado().equals('Resultado Parcial') && !solicitud.getEstado().equals('Completada')}">
+                                                <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                             </c:when>
                                         </c:choose>
                                     </c:otherwise>

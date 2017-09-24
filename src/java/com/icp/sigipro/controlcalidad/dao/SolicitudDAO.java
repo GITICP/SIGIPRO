@@ -845,7 +845,9 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                    + "SET estado='Anulada', observaciones=? "
+                    +" SET estado= "
+                    +" case when estado = 'Recibido' then 'Anulada después de recibda' else 'Anulada' end "
+                    +" , observaciones= ? "
                     + "WHERE id_solicitud = ?; ");
             consulta.setString(1, observaciones);
             consulta.setInt(2, id_solicitud);
