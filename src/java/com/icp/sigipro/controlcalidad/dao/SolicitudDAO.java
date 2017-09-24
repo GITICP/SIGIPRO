@@ -648,7 +648,7 @@ public class SolicitudDAO extends DAO {
             if (resultado.getInforme() != null) {
                 String ids = this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud);
                 consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, r.fecha_reportado, "
                         + " CASE WHEN r.id_resultado IN (  "
                         + " 				SELECT r.id_resultado "
                         + " 				FROM control_calidad.resultados_informes ri  "
@@ -665,7 +665,7 @@ public class SolicitudDAO extends DAO {
                 );
 
                 consulta_resultados_sp = getConexion().prepareStatement(
-                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, "
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, r.fecha_reportado, "
                         + " CASE WHEN r.id_resultado_analisis_sp IN (  "
                         + " 				SELECT r.id_resultado_analisis_sp "
                         + " 				FROM control_calidad.resultados_informes ri  "
@@ -686,7 +686,7 @@ public class SolicitudDAO extends DAO {
 
             } else {
                 consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, r.fecha_reportado "
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
@@ -694,7 +694,7 @@ public class SolicitudDAO extends DAO {
                 );
 
                 consulta_resultados_sp = getConexion().prepareStatement(
-                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion "
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, r.fecha_reportado "
                         + "  FROM control_calidad.analisis_grupo_solicitud ags "
                         + "      LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
                         + "  WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
@@ -711,6 +711,7 @@ public class SolicitudDAO extends DAO {
                     r.setId_resultado(rs.getInt("id_resultado"));
                     r.setResultado(rs.getString("resultado"));
                     r.setRepeticion(rs.getInt("repeticion"));
+                    r.setFecha_reportado(rs.getDate("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);
@@ -733,6 +734,7 @@ public class SolicitudDAO extends DAO {
                     r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
                     r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
                     r_sp.setRepeticion(rs_sp.getInt("repeticion"));
+                    r_sp.setFecha_reportado(rs_sp.getDate("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
                     r_sp.setAgs(ags_iter);
@@ -749,7 +751,9 @@ public class SolicitudDAO extends DAO {
             ex.printStackTrace();
         } finally {
             cerrarSilencioso(rs);
+            cerrarSilencioso(rs_sp);
             cerrarSilencioso(consulta);
+            cerrarSilencioso(consulta_resultados_sp);
             cerrarConexion();
         }
         return resultado;

@@ -11,6 +11,7 @@ import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
+import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author Boga
  */
 public class InformeDAO extends DAO {
-
+    
     public InformeDAO() {
     }
     public Informe ingresarInforme(Informe informe, boolean cerrar) throws SIGIPROException {
@@ -94,8 +95,12 @@ public class InformeDAO extends DAO {
 
             while (rs_ags.next()) {
                 String campo = "id_resultado";
+                String campo_id_cambio_fecha = "id_resultado";
+                String tabla = "resultados";
                 if (rs_ags.getInt("id_analisis") == Integer.MAX_VALUE) {
                     campo = "id_resultado_sp";
+                    campo_id_cambio_fecha = "id_resultado_analisis_sp";
+                    tabla = "resultados_analisis_sangrias_prueba";
                 }
                 
                 PreparedStatement consulta_resultado = getConexion().prepareStatement(
@@ -106,6 +111,16 @@ public class InformeDAO extends DAO {
                 consulta_resultado.setInt(1, informe.getId_informe());
                 consulta_resultado.setInt(2, id_resultado);
                 insert_resultados.add(consulta_resultado);
+                
+                PreparedStatement consulta_resultado_fecha = getConexion().prepareStatement(
+                        " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
+                                + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                                + " WHERE " + campo_id_cambio_fecha + " = ?; "
+                );
+                
+                consulta_resultado_fecha.setInt(1, id_resultado);
+                insert_resultados.add(consulta_resultado_fecha);
+                
             }
             
             boolean iteracion_completa = true;
@@ -146,7 +161,7 @@ public class InformeDAO extends DAO {
             resultado = resultado_resultados && resultado_informe && resultado_solicitud;
 
         } catch (SQLException ex) {
-            ex.getNextException().printStackTrace();
+            ex.printStackTrace();
             throw new SIGIPROException("Ha ocurrido un error al registrar el informe. Inténtelo nuevamente.");
         } finally {
             try {
@@ -178,6 +193,7 @@ public class InformeDAO extends DAO {
         int rs_informe;
         PreparedStatement consulta_eliminacion_resultados = null;
         PreparedStatement consulta_resultados = null;
+        PreparedStatement consulta_resultados_fecha = null;
         PreparedStatement update_solicitud = null;
 
         try {
@@ -207,6 +223,8 @@ public class InformeDAO extends DAO {
             consulta_eliminacion_resultados.executeUpdate();
 
             String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
+            String campo_id_resultado_fecha = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_analisis_sp";
+            String tabla = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "resultados" : "resultados_analisis_sangrias_prueba";
 
             consulta_resultados = getConexion().prepareStatement(
                     " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
@@ -217,11 +235,27 @@ public class InformeDAO extends DAO {
                 consulta_resultados.setInt(2, r.getId_resultado());
                 consulta_resultados.addBatch();
             }
+            
+            consulta_resultados_fecha = getConexion().prepareStatement(
+                    " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
+                            + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                            + " WHERE " + campo_id_resultado_fecha + " = ? "
+            );
+            
+            for (Resultado r : informe.getResultados()) {
+                consulta_resultados_fecha.setInt(1, r.getId_resultado());
+                consulta_resultados_fecha.addBatch();
+            }
 
-            int[] contadores = consulta_resultados.executeBatch();
+            int[] contadores_resultados = consulta_resultados.executeBatch();
+            int[] contadores_resultados_fecha = consulta_resultados_fecha.executeBatch();
+            
+            int[] contadores_final = new int[contadores_resultados.length + contadores_resultados_fecha.length];
+            System.arraycopy(contadores_resultados, 0, contadores_final, 0, contadores_resultados.length);
+            System.arraycopy(contadores_resultados_fecha, 0, contadores_final, contadores_resultados.length, contadores_resultados_fecha.length);
 
             boolean iteracion_completa = true;
-            for (int i : contadores) {
+            for (int i : contadores_final) {
                 if (i != 1) {
                     iteracion_completa = false;
                 }

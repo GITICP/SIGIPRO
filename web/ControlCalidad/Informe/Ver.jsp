@@ -67,6 +67,7 @@
                                                 <th>Identificadores de Muestras (Tipo)</th>
                                                 <th>Análisis Solicitado</th>
                                                 <th>Resultado</th>
+                                                <th>Fecha Reportado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -82,6 +83,9 @@
                                                     </td>
                                                     <td>
                                                         ${resultado.getResultado()}
+                                                    </td>
+                                                    <td>
+                                                        ${resultado.getFecha_reportado_formateada()}
                                                     </td>
                                                 </tr>
                                             </c:forEach>

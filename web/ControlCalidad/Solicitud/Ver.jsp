@@ -226,6 +226,7 @@
                                                             <th>Tipo de Muestra</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
+                                                            <th>Fecha Reportado</th>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                 <th>Acción</th>
                                                                 </c:if>
@@ -247,6 +248,9 @@
                                                                 </td>
                                                                 <td>
                                                                     ${resultado.getResultado()}
+                                                                </td>
+                                                                <td>
+                                                                    ${resultado.getFecha_reportado_formateada()}
                                                                 </td>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                     <td>
