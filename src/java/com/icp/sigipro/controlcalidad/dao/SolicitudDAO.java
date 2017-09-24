@@ -584,7 +584,9 @@ public class SolicitudDAO extends DAO {
             }
 
             consulta = getConexion().prepareStatement(
-                    " SELECT ags.id_analisis_grupo_solicitud, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
+                    " SELECT ags.id_analisis_grupo_solicitud, ags.observaciones_no_realizar, ags.realizar, "
+                    + " a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, "
+                    + " tm.id_tipo_muestra "
                     + " FROM control_calidad.analisis_grupo_solicitud as ags "
                     + "   LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
                     + "   LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
@@ -611,6 +613,8 @@ public class SolicitudDAO extends DAO {
                 if (id_ags != ags.getId_analisis_grupo_solicitud()) {
                     ags = new AnalisisGrupoSolicitud();
                     ags.setId_analisis_grupo_solicitud(id_ags);
+                    ags.setObservaciones_no_realizar(rs.getString("observaciones_no_realizar"));
+                    ags.setRealizar(rs.getBoolean("realizar"));
 
                     Analisis a = new Analisis();
                     a.setId_analisis(rs.getInt("id_analisis"));
@@ -998,6 +1002,34 @@ public class SolicitudDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean noRealizarAnalisis(AnalisisGrupoSolicitud ags) throws SIGIPROException {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            
+            consulta = getConexion().prepareStatement(
+                    "UPDATE control_calidad.analisis_grupo_solicitud "
+                    + " SET observaciones_no_realizar = ?, realizar = false "
+                    + " WHERE id_analisis_grupo_solicitud = ?; "); 
+            
+            consulta.setString(1, ags.getObservaciones_no_realizar());
+            consulta.setInt(2, ags.getId_analisis_grupo_solicitud());
+            
+            int result = consulta.executeUpdate();
+
+            if (result == 1) {
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("No se pudo identificar el análisis como no realizable.");
         } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();

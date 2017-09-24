@@ -68,6 +68,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("recibir");
             add("anular");
             add("agregargrupo");
+            add("norealizar");
         }
     };
 
@@ -379,6 +380,39 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         try {
             SolicitudCC s = dao.obtenerSolicitud(grupo.getSolicitud().getId_solicitud());
+            request.setAttribute("solicitud", s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
+        }
+
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postNorealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(541, request);
+        
+        String redireccion = "Solicitud/Ver.jsp";
+        
+        int id_ags = Integer.parseInt(request.getParameter("id_analisis_no_realizar"));
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        String observaciones = request.getParameter("observaciones");
+        
+        AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+        
+        ags.setId_analisis_grupo_solicitud(id_ags);
+        ags.setObservaciones_no_realizar(observaciones);
+        ags.setRealizar(false);
+
+        try {
+            dao.noRealizarAnalisis(ags);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Agrupación creada con éxito."));
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+
+        try {
+            SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
         } catch (Exception ex) {
             ex.printStackTrace();
