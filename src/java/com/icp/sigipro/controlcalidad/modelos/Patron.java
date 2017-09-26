@@ -19,7 +19,7 @@ public class Patron {
     
     private int id_patron;
     private String numero_lote;
-    private String tipo;
+    private TipoPatronControl tipo;
     private Date fecha_ingreso;
     private Date fecha_vencimiento;
     private Date fecha_inicio_uso;
@@ -46,11 +46,11 @@ public class Patron {
         this.numero_lote = numero_lote;
     }
 
-    public String getTipo() {
+    public TipoPatronControl getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoPatronControl tipo) {
         this.tipo = tipo;
     }
 

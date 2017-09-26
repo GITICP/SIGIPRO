@@ -135,7 +135,7 @@
                                                                 <option value=''></option>
                                                                 <c:forEach items="${patrones}" var="patron">
                                                                     <option value=${patron.getId_patron()} ${(resultado.tienePatron(patron)) ? "selected" : ""}>
-                                                                        ${patron.getNumero_lote()} (${patron.getTipo()})
+                                                                        ${patron.getNumero_lote()} (${patron.getTipo().getTipo()})
                                                                     </option>
                                                                 </c:forEach>
                                                             </select>
@@ -155,7 +155,7 @@
                                                                 <option value=''></option>
                                                                 <c:forEach items="${controles}" var="control">
                                                                     <option value=${control.getId_patron()} ${(resultado.tieneControl(control)) ? "selected" : ""}>
-                                                                        ${control.getNumero_lote()}
+                                                                        ${control.getNumero_lote()} (${patron.getTipo().getTipo()})
                                                                     </option>
                                                                 </c:forEach>
                                                             </select>

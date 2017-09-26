@@ -144,7 +144,7 @@
                                                     <c:forEach items="${resultado.getPatrones_resultado()}" var="patron">
                                                         <tr>
                                                             <td>${patron.getNumero_lote()}</td>
-                                                            <td>${patron.getTipo()}</td>
+                                                            <td>${patron.getTipo().getTipo()}</td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -170,7 +170,7 @@
                                                     <c:forEach items="${resultado.getControles_resultado()}" var="patron">
                                                         <tr>
                                                             <td>${patron.getNumero_lote()}</td>
-                                                            <td>${patron.getTipo()}</td>
+                                                            <td>${patron.getTipo().getTipo()}</td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
