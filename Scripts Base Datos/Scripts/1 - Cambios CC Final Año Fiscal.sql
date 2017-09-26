@@ -38,6 +38,7 @@ INSERT INTO control_calidad.tipos_patronescontroles
 VALUES(nextval('control_calidad.tipos_patronescontroles_id_tipo_patroncontrol_seq'::regclass), 'Control Interno', 'Sin descripción.'::character varying, 'Control');
 
 -- Agregada la referencia a tipos de patrones y controles
+ALTER TABLE control_calidad.patrones DROP COLUMN tipo ;
 ALTER TABLE control_calidad.patrones ADD id_tipo_patroncontrol int4 NULL ;
 ALTER TABLE control_calidad.patrones ADD CONSTRAINT patrones_tipos_patronescontroles_fk FOREIGN KEY (id_tipo_patroncontrol) REFERENCES control_calidad.tipos_patronescontroles(id_tipo_patroncontrol) ;
 

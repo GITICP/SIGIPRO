@@ -67,7 +67,7 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
     {
         validarPermisosMultiple(permisos, request);
         String redireccion = "TipoPatronControl/index.jsp";
-        List<TipoPatronControl> tipos_patroncontrol = dao.obtenerTipoPatronControles();
+        List<TipoPatronControl> tipos_patroncontrol = dao.obtenerTiposPatronesControles();
         request.setAttribute("listaTipos", tipos_patroncontrol);
         redireccionar(request, response, redireccion);
     }

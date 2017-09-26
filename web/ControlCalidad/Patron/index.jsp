@@ -61,7 +61,7 @@
                           </div>
                         </a>
                       </td>
-                      <td>${patron.getTipo()}</td>
+                      <td>${patron.getTipo().getNombre()}</td>
                       <td>${patron.getFecha_vencimientoAsString()}</td>
                       <td>${patron.getLugar_almacenamiento()}</td>
                     </tr>

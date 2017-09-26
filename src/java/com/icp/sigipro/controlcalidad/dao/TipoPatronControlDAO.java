@@ -75,7 +75,7 @@ public class TipoPatronControlDAO extends DAO {
         return resultado;
     }
     
-    public List<TipoPatronControl> obtenerTipoPatronControles()
+    public List<TipoPatronControl> obtenerTiposPatronesControles()
     {
         List<TipoPatronControl> resultado = new ArrayList<>();
         PreparedStatement consulta = null;
@@ -83,6 +83,34 @@ public class TipoPatronControlDAO extends DAO {
         try {
             consulta = getConexion().prepareStatement(
                     " SELECT id_tipo_patroncontrol, nombre, tipo FROM control_calidad.tipos_patronescontroles; "
+            );
+            rs = consulta.executeQuery();
+            while (rs.next()) {
+                TipoPatronControl tipo_patroncontrol = new TipoPatronControl();
+                tipo_patroncontrol.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
+                tipo_patroncontrol.setNombre(rs.getString("nombre"));
+                tipo_patroncontrol.setTipo(rs.getString("tipo"));
+                resultado.add(tipo_patroncontrol);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public List<TipoPatronControl> obtenerTiposPatronesControlesOrdenado()
+    {
+        List<TipoPatronControl> resultado = new ArrayList<>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT id_tipo_patroncontrol, nombre, tipo FROM control_calidad.tipos_patronescontroles ORDER BY tipo; "
             );
             rs = consulta.executeQuery();
             while (rs.next()) {
