@@ -194,7 +194,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <div class="input-group">
-                    <input id="nombreContacto" type="text" class="form-control" name="nombreContacto" value="" required
+                    <input id="nombreContacto" maxlength="80" type="text" class="form-control" name="nombreContacto" value="" required
                            oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
                            oninput="setCustomValidity('')">
                   </div>
@@ -227,7 +227,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <div class="input-group">
-                    <input id="correo_electronico" type="email" class="form-control" name="correo_electronico" value="" required
+                    <input id="correo_electronico" type="email" class="form-control" name="correo_electronico" maxlength="70" value="" required
                            oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
                            oninput="setCustomValidity('')">
                   </div>
@@ -238,7 +238,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <div class="input-group">
-                    <input id="correo_electronico2" type="email" class="form-control" name="correo_electronico2" value="" 
+                    <input id="correo_electronico2" type="email" class="form-control" maxlength="70" name="correo_electronico2" value="" 
                            oninvalid="setCustomValidity('Debe ingresar un correo electrónico válido. ')"
                            oninput="setCustomValidity('')">
                   </div>

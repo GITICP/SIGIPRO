@@ -76,7 +76,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea id="observaciones" name="observaciones" class="form-control">${tratamiento.getObservaciones()}</textarea>
+                        <textarea id="observaciones" maxlength="200" name="observaciones" class="form-control">${tratamiento.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>
