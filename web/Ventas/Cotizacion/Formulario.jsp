@@ -21,12 +21,12 @@
                     <div class="input-group">
                         <c:choose>
                               <c:when test="${accion.equals('Agregar')}" >
-                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="ICP-${consecutivo}-${ano}" 
+                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="ICP-${consecutivo}-${ano}"  required
                                         oninvalid="setCustomValidity('Este campo es requerido')"
                                         oninput="setCustomValidity('')">  
                               </c:when>
                               <c:otherwise>
-                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="${cotizacion.getIdentificador()}" 
+                                <input id="identificador" type="text" class="form-control" maxlength="12" name="identificador" value="${cotizacion.getIdentificador()}" required
                                         oninvalid="setCustomValidity('Este campo es requerido')"
                                         oninput="setCustomValidity('')">    
                               </c:otherwise>

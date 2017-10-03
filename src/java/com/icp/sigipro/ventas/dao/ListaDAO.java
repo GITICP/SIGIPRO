@@ -293,7 +293,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET nombre_cliente=?, fecha_solicitud=?, fecha_atencion=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?"
+                    + " SET nombre_cliente=?, fecha_solicitud=?, fecha_atencion=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?, id_cliente=?"
                     + " WHERE id_enlistado=?; "
             );
 
@@ -304,7 +304,8 @@ public class ListaDAO extends DAO {
             consulta.setString(5, p.getCorreo());
             consulta.setString(6, p.getObservaciones());
             consulta.setString(7, p.getDescripcion());
-            consulta.setInt(8, p.getId_lista());
+            consulta.setNull(8, 0);
+            consulta.setInt(9, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -325,7 +326,7 @@ public class ListaDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.lista"
-                    + " SET nombre_cliente=?, fecha_solicitud=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?"
+                    + " SET nombre_cliente=?, fecha_solicitud=?, telefono=?, correo_electronico=?, observaciones=?, descripcion=?, id_cliente=?"
                     + " WHERE id_enlistado=?; "
             );
 
@@ -335,7 +336,8 @@ public class ListaDAO extends DAO {
             consulta.setString(4, p.getCorreo());
             consulta.setString(5, p.getObservaciones());
             consulta.setString(6, p.getDescripcion());
-            consulta.setInt(7, p.getId_lista());
+            consulta.setNull(7, 0);
+            consulta.setInt(8, p.getId_lista());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

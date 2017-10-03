@@ -102,12 +102,15 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
         int documento = Integer.parseInt(request.getParameter("documento"));
         String filename = "";
+        String nombre ="";
         switch(documento){
             case 1:
                 filename = reunion.getMinuta();
+                nombre = "minuta-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
                 break;
             case 2:
                 filename = reunion.getMinuta2();
+                nombre = "adjunto-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
                 break;
         }
         File file = new File(filename);
@@ -119,7 +122,6 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "minuta-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
 
             ServletOutputStream os = response.getOutputStream();
