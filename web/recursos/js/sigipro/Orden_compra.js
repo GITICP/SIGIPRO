@@ -96,7 +96,7 @@ function ajax_productos(id_intencion){
                 nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
                 cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
                 try{fecha = producto.getElementsByTagName('fecha')[0].firstChild.nodeValue;}
-                catch (exception){fecha="";}
+                catch (exception){fecha=" ";}
                // el producto ya no tiene lote
                // if (producto.getElementsByTagName('lote')[0].firstChild === null){
                //     lote = "";
@@ -141,6 +141,7 @@ function agregarProducto(id, producto, cantidad, fecha) {
     fila += '<td>';
     fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto('+contador+')"   style="margin-left:5px;margin-right:7px;">Modificar</button>';
     fila += '<button type="button" class="btn btn-primary btn-sm" onclick="duplicarProducto(' + id + ',' + contador + ')" style="margin-left:7px;margin-right:5px;">Duplicar</button>';
+    fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' + id + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += '</td>';
     fila += '</tr>';
 
@@ -173,7 +174,12 @@ function editarProducto(contador) {
   
   document.getElementById("idProductoEditar").value = contador;
   document.getElementById("editarCantidad").value = fila.cells[1].firstChild.nodeValue;
+  try{
   document.getElementById("editarPosibleFechaDespacho").value = fila.cells[2].firstChild.nodeValue;
+  }
+  catch (exception){
+    $('#editarPosibleFechaDespacho').value = "";
+  }
   $('#modalEditarProducto').modal('show');
 }
 
@@ -194,10 +200,9 @@ function confirmarEdicionProducto() {
         }
     }
     filaCambiada.cells[1].firstChild.nodeValue = $('#editarCantidad').val();
-    try{
-    filaCambiada.cells[2].firstChild.nodeValue = $('#editarPosibleFechaDespacho').val();
-    }
-    catch(exception){}
+    var nuevaFecha = $('#editarPosibleFechaDespacho').val();
+    filaCambiada.cells[2].innerHTML = nuevaFecha;
+
     $('#modalEditarProducto').modal('hide');
     
     /*
@@ -236,5 +241,23 @@ $( document ).ready(function() {
         listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
         
 }
-//alert("el valor del campo oculto es: " + listaProductos.val());
 });
+function eliminarProducto(idRol) {
+  fila = $('#' + idRol);
+  fila.remove();
+  var listaProductos = $('#listaProductos');
+  var tabla = document.getElementById("datatable-column-filter-productos");
+  listaProductos.val("");
+  for(var i = 1; i<tabla.rows.length; i++){
+        var fila = tabla.rows[i];
+        var idfila = fila.getAttribute('id');
+        var productofila = fila.cells[0].firstChild.nodeValue;
+        var cantidadfila = fila.cells[1].firstChild.nodeValue;
+        try {var fechafila = fila.cells[2].firstChild.nodeValue;
+            }
+        catch (exception){fechafila="";}
+        listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
+}
+
+//alert("el valor del campo oculto es: " + listaProductos.val());
+};

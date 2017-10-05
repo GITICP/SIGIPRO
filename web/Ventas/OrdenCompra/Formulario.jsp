@@ -285,6 +285,7 @@
                             <td>
                               <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${producto.getContador()})">Modificar</button>
                               <button type="button" class="btn btn-primary btn-sm" style="margin-left:7px;margin-right:5px;" onclick="duplicarProducto(${producto.getProducto().getId_producto()},${producto.getContador()})">Duplicar</button>
+                              <button type="button" class="btn btn-danger btn-sm" style="margin-left:7px;margin-right:5px;" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
                             </td>
                           </tr>
                         </c:forEach>
