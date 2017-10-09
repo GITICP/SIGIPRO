@@ -8,7 +8,6 @@ package com.icp.sigipro.seguridad.dao;
 import com.icp.sigipro.basededatos.SingletonBD;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import com.icp.sigipro.produccion.modelos.Categoria_AA;
 import com.icp.sigipro.seguridad.modelos.*;
 import com.icp.sigipro.utilidades.UtilidadEmail;
 import java.math.BigInteger;
@@ -18,7 +17,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.SQLException; 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -488,10 +487,13 @@ public class UsuarioDAO extends DAO
                 }
                 
                 if (fActivacion.before(hoySQL)) {
-                    consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
+                    String consulta_str = "UPDATE SEGURIDAD.usuarios "
                                                          + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ? "
                                                          + updateContrasenna
-                                                         + " WHERE id_usuario = ? ");
+                                                         + " WHERE id_usuario = ? ";
+                    
+                    consulta = conexion.prepareStatement(consulta_str);
+                    
                     if (updateContrasennaBool) {
                         consulta.setString(8, md5(contrasenna));
                         consulta.setInt(9, idUsuario);
@@ -502,10 +504,12 @@ public class UsuarioDAO extends DAO
                 }
 
                 else {
-                    consulta = conexion.prepareStatement("UPDATE SEGURIDAD.usuarios "
-                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ?, contrasenna = ?"
+                    
+                    String consulta_str = "UPDATE SEGURIDAD.usuarios "
+                                                         + " SET correo = ?, nombre_completo = ?, cedula = ?, id_seccion = ?, id_puesto = ?, fecha_activacion = ?, fecha_desactivacion= ?, estado = ? "
                                                          + updateContrasenna
-                                                         + " WHERE id_usuario = ? ");
+                                                         + " WHERE id_usuario = ? ";
+                    consulta = conexion.prepareStatement(consulta_str);
                     boolean fechas;
                     if (estado.toLowerCase().equals("false")) {
                         fechas = false;
@@ -562,7 +566,7 @@ public class UsuarioDAO extends DAO
             }
         }
         catch (SQLException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(); 
             try {
                 resultado = false;
                 conexion.rollback();
