@@ -161,7 +161,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <textarea maxlenght="150" id="observaciones" name="observaciones" class="form-control">${lista.getObservaciones()}</textarea>
+            <textarea maxlength="150" id="observaciones" name="observaciones" class="form-control">${lista.getObservaciones()}</textarea>
           </div>
         </div>
       </div>
@@ -171,7 +171,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group">
-            <textarea maxlenght="500" id="descripcion" name="descripcion" class="form-control">${lista.getDescripcion()}</textarea>
+            <textarea maxlength="500" id="descripcion" name="descripcion" class="form-control">${lista.getDescripcion()}</textarea>
           </div>
         </div>
       </div>

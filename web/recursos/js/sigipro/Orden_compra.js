@@ -257,7 +257,10 @@ function eliminarProducto(idRol) {
             }
         catch (exception){fechafila="";}
         listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
+  contador --;
 }
+
+
 
 //alert("el valor del campo oculto es: " + listaProductos.val());
 };

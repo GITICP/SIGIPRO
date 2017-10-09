@@ -459,10 +459,57 @@
                             </div>
                         </div>
                         
-        <span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
+        
+  <div class="col-md-12">
+        
+        <!-- Esta arte es la de los productos de la solicitud -->
+                <div class="widget widget-table">
+                  <div class="widget-header">
+                    <h3><i class="fa fa-th-list"></i> Productos de la Orden de Compra </h3>
+                    <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
+                      <input id="listaProductos" hidden="true" name="listaProductos" value="" required>
+                    </div>
+                  </div>
+                  <div class="widget-content">
+                    <table id="datatable-column-filter-productos" class="table table-striped table-hover datatable">
+                      <thead>
+                        <tr>
+                          <th>Nombre del Producto</th>
+                          <th>Cantidad</th>
+                          <th>Fecha de Entrega</th>
+                          <th>Selector de Lotes</th>
+                          <th>Lotes</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <c:forEach items="${productos_orden}" var="producto">
+                          <tr data-orden="${producto.getContador()}" id="${producto.getProducto().getId_producto()}">
+                            <td>${producto.getProducto().getNombre()}</td>
+                            <td>${producto.getCantidad()}</td>
+                            <td>${producto.getFecha_S()}</td>
+                            <td><select id="selectlote" class="select2" name="selectlote" required
+                            oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+                          <c:forEach items="${lotes}" var="lote">
+                                <option value="${lote}" selected> ${lote}</option>               
+                          </c:forEach>
+                        </select></td>
+                            <td><textarea style="width:100%" name="lotes" id="lotes"></textarea></td>
+                            <td>
+                              <button type="button" class="btn btn-danger btn-sm" style="margin-left:7px;margin-right:5px;" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
+                            </td>
+                          </tr>
+                        </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Esta parte es la de los productos de la solicitud -->
+  </div>
+                        
+<span class="campos-requeridos">Los campos marcados con * son requeridos.</span>
     </div>
-
-
     <div class="form-group">
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
