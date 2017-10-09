@@ -43,19 +43,19 @@ public class SolicitudDAO extends DAO {
             int id = obtenerProximoId();
 
             Date fechaActual = new Date();
-            DateFormat formatoFechaMes = new SimpleDateFormat("MM");
-            DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
-            int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+            //DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+            DateFormat formatoFechaAnno = new SimpleDateFormat("yyyy");
+            //int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
             int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
 
-            String numeroAnno = "";
-
+            String numeroAnno = String.valueOf(anno);
+/*
             if (mes >= 10) {
                 numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
             } else {
                 numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
             }
-
+*/
             String numero_solicitud = id + "-" + numeroAnno;
             solicitud.setNumero_solicitud(numero_solicitud);
 
@@ -104,18 +104,20 @@ public class SolicitudDAO extends DAO {
                 String ultimoAnno = parts[1];
                 
                 Date fechaActual = new Date();
-                DateFormat formatoFechaMes = new SimpleDateFormat("MM");
-                DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
-                int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+                //DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+                DateFormat formatoFechaAnno = new SimpleDateFormat("yyyy");
+                //int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
                 int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
 
-                String numeroAnno = "";
+                String numeroAnno = String.valueOf(anno);
 
+/* Antiguo Cambio de año.
                 if (mes >= 10) {
                     numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
                 } else {
                     numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
                 }
+*/
                 
                 if (numeroAnno.equals(ultimoAnno)){
                     nextval = Integer.parseInt(ultimoConsecutivo)+ 1;
