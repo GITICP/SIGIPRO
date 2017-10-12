@@ -14,13 +14,19 @@ import com.icp.sigipro.ventas.dao.FacturaDAO;
 import com.icp.sigipro.ventas.modelos.Factura;
 
 import com.icp.sigipro.seguridad.dao.UsuarioDAO;
+import com.icp.sigipro.produccion.dao.LoteDAO;
+import com.icp.sigipro.produccion.modelos.Lote;
 import com.icp.sigipro.ventas.dao.ClienteDAO;
 import com.icp.sigipro.ventas.dao.ListaDAO;
 import com.icp.sigipro.ventas.dao.Orden_compraDAO;
 import com.icp.sigipro.ventas.dao.PagoDAO;
+import com.icp.sigipro.ventas.dao.Producto_FacturaDAO;
+import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Lista;
 import com.icp.sigipro.ventas.modelos.Orden_compra;
 import com.icp.sigipro.ventas.modelos.Pago;
+import com.icp.sigipro.ventas.modelos.Producto_Factura;
+import com.icp.sigipro.ventas.modelos.Producto_venta;
 import com.icp.sigipro.webservices.FacturasPagosWs;
 import com.icp.sigipro.webservices.FacturasWs;
 import com.icp.sigipro.webservices.PagosWs;
@@ -69,6 +75,9 @@ public class ControladorFactura extends SIGIPROServlet {
     private final ClienteDAO cdao = new ClienteDAO();
     private final UsuarioDAO dao_us = new UsuarioDAO();
     private final ListaDAO ldao = new ListaDAO();
+    private final Producto_FacturaDAO pfdao = new Producto_FacturaDAO();
+    private final Producto_ventaDAO pvdao = new Producto_ventaDAO();
+    private final LoteDAO lodao = new LoteDAO();
 
     protected final Class clase = ControladorFactura.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -155,14 +164,18 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<Producto_venta> productos = pvdao.obtenerProductos_venta();
         List<String> monedas = new ArrayList<String>();
+        List<Lote> lotes = lodao.obtenerLotes();
         monedas.add("Colones");
         monedas.add("Dólares");
         monedas.add("Euros");
         monedas.add("Otra Moneda");
         
         request.setAttribute("monedas", monedas);
+        request.setAttribute("lotes", lotes);
         request.setAttribute("factura", ds);
+        request.setAttribute("productos", productos);
         request.setAttribute("clientes", cdao.obtenerClientesContratosFirmados());
         request.setAttribute("ordenes", ordenes);
         request.setAttribute("tipos", tipos);
@@ -209,6 +222,8 @@ public class ControladorFactura extends SIGIPROServlet {
         try {
             Factura c = dao.obtenerFactura(id_factura);
             List<Pago> pagos = pdao.obtenerPagos(id_factura);
+            List<Producto_Factura> productos_factura = pfdao.obtenerProductosFactura(id_factura);            
+            request.setAttribute("productos_factura", productos_factura);            
             request.setAttribute("factura", c);
             request.setAttribute("pagos", pagos);
         } catch (Exception ex) {
@@ -332,12 +347,18 @@ public class ControladorFactura extends SIGIPROServlet {
         tipos.add("UCR");
         
         List<Orden_compra> ordenes = odao.obtenerOrdenes_compra();
+        List<Producto_venta> productos = pvdao.obtenerProductos_venta();
         List<String> monedas = new ArrayList<String>();
+        List<Lote> lotes = lodao.obtenerLotes();
+        List<Producto_Factura> productos_factura = pfdao.obtenerProductosFactura(id_factura);
         monedas.add("Colones");
         monedas.add("Dólares");
         monedas.add("Euros");
         monedas.add("Otra Moneda");
         
+        request.setAttribute("productos_factura", productos_factura);        
+        request.setAttribute("productos", productos);
+        request.setAttribute("lotes", lotes);
         request.setAttribute("monedas", monedas);
         request.setAttribute("factura", ds);
         request.setAttribute("clientes", cdao.obtenerClientesContratosFirmados());
@@ -352,7 +373,7 @@ public class ControladorFactura extends SIGIPROServlet {
     protected void postAgregareditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SIGIPROException, ParseException, NoSuchAlgorithmException {
         List<Integer> listaPermisos = getPermisosUsuario(request);
         int[] permisos = {701, 704, 1};
-        validarPermisos(permisos, listaPermisos);
+        validarPermisos(permisos, listaPermisos);          
         int resultado = 0;
         try {
             //Se crea el Path en la carpeta del Proyecto
@@ -367,6 +388,23 @@ public class ControladorFactura extends SIGIPROServlet {
             factory.setRepository(new File(ubicacion));
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
+            String productos_factura = null;
+            for (FileItem item : items) {
+              if (item.isFormField()) {
+                // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
+                String fieldName = item.getFieldName();
+                String fieldValue;
+                try {
+                    fieldValue = item.getString("UTF-8").trim();
+                } catch (UnsupportedEncodingException ex) {
+                    fieldValue = item.getString();
+                }
+                if (fieldName.equalsIgnoreCase("listaProductos")) {
+                  productos_factura = fieldValue;
+                  break;
+                }
+              }
+            }
             Factura tr = construirObjeto(items, request, ubicacion);
 
             if (tr.getId_factura() == 0) {
@@ -404,6 +442,12 @@ public class ControladorFactura extends SIGIPROServlet {
                             }
                         }
                     }
+                    if (productos_factura != null && !(productos_factura.isEmpty())) {
+                      List<Producto_Factura> p_i = pfdao.parsearProductos(productos_factura, resultado);
+                      for (Producto_Factura i : p_i) {
+                          pfdao.insertarProducto_Factura(i);
+                        }
+                      }
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_FACTURA, request.getRemoteAddr());
                     //*----------------------------*
@@ -508,8 +552,14 @@ public class ControladorFactura extends SIGIPROServlet {
                         resultado2 = dao.editarFacturaUCR(tr);
                     }
                 }
-                if (resultado2) {
-                    
+                if (resultado2) {                   
+                    pfdao.eliminarProductos_Factura(tr.getId_factura());
+                    if (productos_factura != null && !(productos_factura.isEmpty())) {
+                      List<Producto_Factura> p_i = pfdao.parsearProductos(productos_factura, resultado);
+                      for (Producto_Factura i : p_i) {
+                          pfdao.insertarProducto_Factura(i);
+                        }
+                      }
                     //Funcion que genera la bitacora
                     bitacora.setBitacora(tr.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_FACTURA, request.getRemoteAddr());
                     //*----------------------------*

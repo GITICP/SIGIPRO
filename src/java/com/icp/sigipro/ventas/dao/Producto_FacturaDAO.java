@@ -7,7 +7,7 @@ package com.icp.sigipro.ventas.dao;
 
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
-import com.icp.sigipro.ventas.modelos.Producto_Orden;
+import com.icp.sigipro.ventas.modelos.Producto_Factura;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -22,21 +22,21 @@ import java.util.List;
  *
  * @author Josue
  */
-public class Producto_OrdenDAO extends DAO {
+public class Producto_FacturaDAO extends DAO {
 
-    public Producto_OrdenDAO() {
+    public Producto_FacturaDAO() {
     }
     
     private Producto_ventaDAO pDAO = new Producto_ventaDAO();
-    private Orden_compraDAO iDAO = new Orden_compraDAO();
+    private FacturaDAO iDAO = new FacturaDAO();
     
-    public boolean esProductoOrden (int id_producto, int id_orden, int cantidad, Date fecha) throws SIGIPROException{
+    public boolean esProductoFactura (int id_producto, int id_factura, int cantidad, Date fecha) throws SIGIPROException{
         boolean resultado = false;
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_orden WHERE id_producto=? and id_orden=? and cantidad=? and fecha_entrega=? ; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_factura WHERE id_producto=? and id_factura=? and cantidad=? and fecha_entrega=? ; ");
             consulta.setInt(1, id_producto);
-            consulta.setInt(2, id_orden);
+            consulta.setInt(2, id_factura);
             consulta.setInt(3, cantidad);
             consulta.setDate(4, fecha);
             ResultSet rs = consulta.executeQuery();
@@ -54,25 +54,26 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
     
-    public List<Producto_Orden> obtenerProductosOrden(int id_orden) throws SIGIPROException {
+    public List<Producto_Factura> obtenerProductosFactura(int id_factura) throws SIGIPROException {
 
-        List<Producto_Orden> resultado = new ArrayList<Producto_Orden>();
+        List<Producto_Factura> resultado = new ArrayList<Producto_Factura>();
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_orden WHERE id_orden=?; ");
-            consulta.setInt(1, id_orden);
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_factura WHERE id_factura=?; ");
+            consulta.setInt(1, id_factura);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
-                Producto_Orden producto_orden = new Producto_Orden();
+                Producto_Factura producto_factura = new Producto_Factura();
                 
-                producto_orden.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
-                producto_orden.setOrden_compra(iDAO.obtenerOrden_compra(rs.getInt("id_orden")));
-                producto_orden.setCantidad(rs.getInt("cantidad"));
-                producto_orden.setFecha_entrega(rs.getDate("fecha_entrega"));
+                producto_factura.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
+                producto_factura.setFactura(iDAO.obtenerFactura(rs.getInt("id_factura")));
+                producto_factura.setCantidad(rs.getInt("cantidad"));
+                producto_factura.setFecha_entrega(rs.getDate("fecha_entrega"));
+                producto_factura.setLote(rs.getString("lotes"));
                 
-                resultado.add(producto_orden);
+                resultado.add(producto_factura);
             }
             rs.close();
             consulta.close();
@@ -84,22 +85,23 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
 
-    public Producto_Orden obtenerProducto_Orden(int id_producto, int id_orden) throws SIGIPROException {
+    public Producto_Factura obtenerProducto_Factura(int id_producto, int id_factura) throws SIGIPROException {
 
-        Producto_Orden resultado = new Producto_Orden();
+        Producto_Factura resultado = new Producto_Factura();
 
         try {
             PreparedStatement consulta;
-            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_orden where id_producto = ? and id_orden = ?; ");
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.producto_factura where id_producto = ? and id_factura = ?; ");
             consulta.setInt(1, id_producto);
-            consulta.setInt(2, id_orden);
+            consulta.setInt(2, id_factura);
             ResultSet rs = consulta.executeQuery();
 
             while (rs.next()) {
                 resultado.setProducto(pDAO.obtenerProducto_venta(rs.getInt("id_producto")));
-                resultado.setOrden_compra(iDAO.obtenerOrden_compra(rs.getInt("id_orden")));
+                resultado.setFactura(iDAO.obtenerFactura(rs.getInt("id_factura")));
                 resultado.setCantidad(rs.getInt("cantidad"));
                 resultado.setFecha_entrega(rs.getDate("fecha_entrega"));
+                resultado.setLote(rs.getString("lotes"));
             }
             rs.close();
             consulta.close();
@@ -111,18 +113,19 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
     
-    public int insertarProducto_Orden(Producto_Orden p) throws SIGIPROException {
-        //System.out.println("insertarProducto_Orden. ID ="+p.getProducto().getId_producto()+", Idorden = "+p.getOrden().getId_orden()+", Cantidad = "+p.getCantidad()+", Fecha = "+p.getFecha_S());
+    public int insertarProducto_Factura(Producto_Factura p) throws SIGIPROException {
+        //System.out.println("insertarProducto_Factura. ID ="+p.getProducto().getId_producto()+", Idfactura = "+p.getFactura().getId_factura()+", Cantidad = "+p.getCantidad()+", Fecha = "+p.getFecha_S());
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_orden (id_producto, id_orden, cantidad, fecha_entrega)"
-                    + " VALUES (?,?,?,?) RETURNING id_producto");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.producto_factura (id_producto, id_factura, cantidad, fecha_entrega, lotes)"
+                    + " VALUES (?,?,?,?,?) RETURNING id_producto");
 
             consulta.setInt(1,p.getProducto().getId_producto());
-            consulta.setInt(2,p.getOrden_compra().getId_orden());
+            consulta.setInt(2,p.getFactura().getId_factura());
             consulta.setInt(3,p.getCantidad());
             consulta.setDate(4,p.getFecha_entrega());
+            consulta.setString(5, p.getLote());
             
             //System.out.println("CONSULTA A EJECUTAR: "+consulta.toString());
 
@@ -141,21 +144,22 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
 
-    public boolean editarProducto_Orden(Producto_Orden p) throws SIGIPROException {
+    public boolean editarProducto_Factura(Producto_Factura p) throws SIGIPROException {
 
         boolean resultado = false;
         
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " UPDATE ventas.producto_orden"
-                    + " SET cantidad=?,fecha_entrega=?"
-                    + " WHERE id_producto=? and id_orden=?; "
+                    " UPDATE ventas.producto_factura"
+                    + " SET cantidad=?,fecha_entrega=?, lotes=?"
+                    + " WHERE id_producto=? and id_factura=?; "
             );
             
             consulta.setInt(1,p.getCantidad());
             consulta.setDate(2,p.getFecha_entrega());
             consulta.setInt(3,p.getProducto().getId_producto());
-            consulta.setInt(4,p.getOrden_compra().getId_orden());
+            consulta.setString(4, p.getLote());
+            consulta.setInt(5,p.getFactura().getId_factura());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -169,18 +173,18 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
 
-    public boolean eliminarProducto_Orden(int id_producto, int id_orden) throws SIGIPROException {
+    public boolean eliminarProducto_Factura(int id_producto, int id_factura) throws SIGIPROException {
 
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM ventas.producto_orden "
-                    + " WHERE id_producto=? and id_orden=?; "
+                    " DELETE FROM ventas.producto_factura "
+                    + " WHERE id_producto=? and id_factura=?; "
             );
 
             consulta.setInt(1, id_producto);
-            consulta.setInt(2, id_orden);
+            consulta.setInt(2, id_factura);
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -194,30 +198,33 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
 
-    public List<Producto_Orden> parsearProductos(String productos_intencion, int id_orden) {
-        List<Producto_Orden> resultado = null;
+    public List<Producto_Factura> parsearProductos(String productos_intencion, int id_factura) {
+        List<Producto_Factura> resultado = null;
         try {
-            resultado = new ArrayList<Producto_Orden>();
+            resultado = new ArrayList<Producto_Factura>();
             List<String> productosParcial = new LinkedList<String>(Arrays.asList(productos_intencion.split("#r#")));
             productosParcial.remove("");
             for (String i : productosParcial) {
                 String[] rol = i.split("#c#");
                 
-               int id_producto = Integer.parseInt(rol[0]);
-               int cantidad = Integer.parseInt(rol[1]);
+                int id_producto = Integer.parseInt(rol[0]);
+                int cantidad = Integer.parseInt(rol[1]);
                 java.sql.Date fecha_entregaSQL;
+                String lotes = "";
                 try {
                   SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
                   java.util.Date fecha_entrega = formatoFecha.parse(rol[2]);
                   fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
+                  lotes = rol[3];
                 }
-                catch (Exception ex) { fecha_entregaSQL = null;}               
-                Producto_Orden p = new Producto_Orden();
+                
+                catch (Exception ex) { fecha_entregaSQL = null;}  
+                Producto_Factura p = new Producto_Factura();
                 p.setFecha_entrega(fecha_entregaSQL);
-                p.setOrden_compra(iDAO.obtenerOrden_compra(id_orden));
+                p.setFactura(iDAO.obtenerFactura(id_factura));
                 p.setProducto(pDAO.obtenerProducto_venta(id_producto));
                 p.setCantidad(cantidad);
-                
+                p.setLote(lotes);
                 resultado.add(p);
             }
         }
@@ -228,33 +235,33 @@ public class Producto_OrdenDAO extends DAO {
         return resultado;
     }
 
-    public void asegurarProductos_Orden(List<Producto_Orden> p_i, int id_orden) throws SIGIPROException {
-        List<Producto_Orden> productosDeLaOrden = this.obtenerProductosOrden(id_orden);
+    public void asegurarProductos_Factura(List<Producto_Factura> p_i, int id_factura) throws SIGIPROException {
+        List<Producto_Factura> productosDeLaFactura = this.obtenerProductosFactura(id_factura);
         boolean esta = false;
-        for (Producto_Orden p : productosDeLaOrden){
-            for (Producto_Orden i : p_i){
-                if ((i.getProducto().getId_producto() == p.getProducto().getId_producto()) && (i.getOrden_compra().getId_orden() == p.getOrden_compra().getId_orden())){
+        for (Producto_Factura p : productosDeLaFactura){
+            for (Producto_Factura i : p_i){
+                if ((i.getProducto().getId_producto() == p.getProducto().getId_producto()) && (i.getFactura().getId_factura() == p.getFactura().getId_factura())){
                     esta = true;
                 }
             }
             if (esta == false){
-                //System.out.println("Producto_Orden a eliminar: id_producto = "+p.getProducto().getId_producto()+", id_orden = "+p.getOrden_compra().getId_orden());
-                this.eliminarProducto_Orden(p.getProducto().getId_producto(), p.getOrden_compra().getId_orden());
+                //System.out.println("Producto_Factura a eliminar: id_producto = "+p.getProducto().getId_producto()+", id_factura = "+p.getFactura().getId_factura());
+                this.eliminarProducto_Factura(p.getProducto().getId_producto(), p.getFactura().getId_factura());
             }
             esta = false;
         }
     }
 
-    public boolean eliminarProductos_Orden(int id_orden) throws SIGIPROException {
+    public boolean eliminarProductos_Factura(int id_factura) throws SIGIPROException {
         boolean resultado = false;
 
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
-                    " DELETE FROM ventas.producto_orden "
-                    + " WHERE id_orden=?; "
+                    " DELETE FROM ventas.producto_factura "
+                    + " WHERE id_factura=?; "
             );
 
-            consulta.setInt(1, id_orden);
+            consulta.setInt(1, id_factura);
 
             if (consulta.executeUpdate() == 1) {
                 resultado = true;

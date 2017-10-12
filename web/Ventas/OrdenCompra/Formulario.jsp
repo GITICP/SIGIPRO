@@ -264,6 +264,7 @@
                   <div class="widget-header">
                     <h3><i class="fa fa-th-list"></i> Productos de la Solicitud / Intención de Venta</h3>
                     <div class="btn-group widget-header-toolbar">
+                      <a class="btn btn-primary btn-sm boton-accion" data-toggle="modal" data-target="#modalAgregarProducto">Agregar</a>
                     </div>
                   </div>
                   <div class="widget-content">
@@ -273,18 +274,17 @@
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
                           <th>Fecha de Entrega</th>
-                          <th></th>
+                          <th>Editar/Eliminar</th>
                         </tr>
                       </thead>
                       <tbody>
                         <c:forEach items="${productos_orden}" var="producto">
-                          <tr data-orden="${producto.getContador()}" id="${producto.getProducto().getId_producto()}">
+                          <tr id="${producto.getProducto().getId_producto()}">
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
                             <td>${producto.getFecha_S()}</td>
                             <td>
-                              <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${producto.getContador()})">Modificar</button>
-                              <button type="button" class="btn btn-primary btn-sm" style="margin-left:7px;margin-right:5px;" onclick="duplicarProducto(${producto.getProducto().getId_producto()},${producto.getContador()})">Duplicar</button>
+                              <button type="button" class="btn btn-warning btn-sm" style="margin-left:5px;margin-right:7px;" onclick="editarProducto(${producto.getProducto().getId_producto()})"> Editar</button>
                               <button type="button" class="btn btn-danger btn-sm" style="margin-left:7px;margin-right:5px;" onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>
                             </td>
                           </tr>
@@ -301,10 +301,10 @@
       <button type="button" class="btn btn-danger btn-volver"><i class="fa fa-times-circle"></i> Cancelar</button>
             <c:choose>
                 <c:when test= "${accion.equals('Editar')}">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
+                   <button type="submit" onclick="validarProductosYSubmit()" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese de agregar productos" class="btn btn-primary"><i class="fa fa-check-circle"></i> Guardar Cambios</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Orden de Compra</button>
+                    <button type="submit" onclick="validarProductosYSubmit()" id="boton_confirmar" data-toggle="confirmar" title="Asegúrese de agregar productos" class="btn btn-primary"><i class="fa fa-check-circle"></i> ${accion} Orden de Compra</button>
                 </c:otherwise>
             </c:choose>    </div>
   </div>

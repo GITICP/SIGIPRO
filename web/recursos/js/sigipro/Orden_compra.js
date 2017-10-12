@@ -1,4 +1,3 @@
-var contador = 0;
 $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el cliente escogido
     $("#eleccion").change(function () {
 
@@ -39,7 +38,7 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         
         campoOcultoRoles = $('#listaProductos');
         campoOcultoRoles.val("");
-        contador = 1;
+
         
         $('#datatable-column-filter-productos tbody tr').remove();
         
@@ -56,7 +55,7 @@ $(function(){ /* DOM ready */ //Filtrar el select de intenciones según el clien
         
         campoOcultoRoles = $('#listaProductos');
         campoOcultoRoles.val("");
-        contador = 1;
+
         
         $('#datatable-column-filter-productos tbody tr').remove();
         
@@ -104,7 +103,7 @@ function ajax_productos(id_intencion){
                // else{
                //     lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
                // }
-                agregarProducto(id, nombre, cantidad, fecha);
+                agregarProductoInicio(id, nombre, cantidad, fecha);
             }
         }
     };
@@ -132,56 +131,91 @@ function enviarPeticionXHTTP(path){
     }
 }
 
-function agregarProducto(id, producto, cantidad, fecha) {
+function agregarProductoInicio(id, producto, cantidad, fecha) {
 
-    fila = '<tr ' + 'data-orden=' + contador+ ' id=' + id + '>';
+    fila = '<tr ' + ' id=' + id + '>';
     fila += '<td>' + producto + '</td>';
     fila += '<td>' + cantidad + '</td>';
     fila += '<td>' + fecha + '</td>';
     fila += '<td>';
-    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto('+contador+')"   style="margin-left:5px;margin-right:7px;">Modificar</button>';
-    fila += '<button type="button" class="btn btn-primary btn-sm" onclick="duplicarProducto(' + id + ',' + contador + ')" style="margin-left:7px;margin-right:5px;">Duplicar</button>';
+    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto('+id+')"   style="margin-left:5px;margin-right:7px;">Modificar</button>';
     fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' + id + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
     fila += '</td>';
     fila += '</tr>';
 
-    //alert("Producto añadido a la lista: "+producto);
-
     campoOcultoRoles = $('#listaProductos');
-    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + id + "#c#" + producto + "#c#" + cantidad + "#c#" + fecha);
-    //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
+    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + id + "#c#" + cantidad + "#c#" + fecha);
 
     $('#datatable-column-filter-productos > tbody:last').append(fila);
-    contador ++;
+
 }
 
-function duplicarProducto(id, contador) {
+$( document ).ready(function() {
   var tabla = document.getElementById("datatable-column-filter-productos");
-  var productoADuplicar = tabla.rows[contador];
-  
-  var nombreProducto = productoADuplicar.cells[0].firstChild.nodeValue;
-  var cantidad = productoADuplicar.cells[1].firstChild.nodeValue;
-  try {var fecha = productoADuplicar.cells[2].firstChild.nodeValue;
+  var campoOcultoRoles = $('#listaProductos');
+  campoOcultoRoles.val("");
+  for (var i = 1; i<tabla.rows.length; i++) {
+      var id = tabla.rows[i].getAttribute('id');
+      campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + id + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue);
+      try {
+      if (tabla.rows[i].cells[2].firstChild.nodeValue !== null)
+        {
+          campoOcultoRoles.val(campoOcultoRoles.val() + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
+        }
+      }
+      catch (exception) {}
+      $("#seleccionProducto option[value='"+id+"']").remove();
   }
-  catch (exception){fecha="";}
-  agregarProducto(id, nombreProducto, cantidad, fecha);
+});
+
+
+function validarProductosYSubmit(){
+    //alert($('#listaProductos').val());
+    if ($('#listaProductos').val() === ""){
+        $('[data-toggle="confirmar"]').tooltip({title: "Asegúrese de agregar productos", placement: "bottom"});   
+        $('[data-toggle="confirmar"]').tooltip('show');   
+    }
+    else{
+        $('#formularioProducto').submit();
+    }
 }
 
-function editarProducto(contador) {
-  //contador = número de fila, está en data-orden
+function eliminarProducto(idRol) {
+  fila = $('#' + idRol);
+  $('#seleccionProducto')
+          .append($("<option></option>")
+                  .attr("value", fila.attr('id'))
+                  .text(fila.children('td').eq(0).text()));
+  fila.remove();
+  var campoOcultoRoles = $('#listaProductos');
   var tabla = document.getElementById("datatable-column-filter-productos");
-  var fila = tabla.rows[contador];
-  
-  document.getElementById("idProductoEditar").value = contador;
-  document.getElementById("editarCantidad").value = fila.cells[1].firstChild.nodeValue;
-  try{
-  document.getElementById("editarPosibleFechaDespacho").value = fila.cells[2].firstChild.nodeValue;
-  }
-  catch (exception){
-    $('#editarPosibleFechaDespacho').value = "";
-  }
+  campoOcultoRoles.val("");
+  for (var i = 1; i<tabla.rows.length; i++) {
+    campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + tabla.rows[i].getAttribute('id') + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue );
+      try {
+      if (tabla.rows[i].cells[2].firstChild.nodeValue !== null)
+        {
+          campoOcultoRoles.val(campoOcultoRoles.val() + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
+        }
+      }
+      catch (exception) {}}
+  //alert("listaProductos = "+campoOcultoRoles.val());
+}
+
+function editarProducto(idRol) {
+  var x = document.getElementById(idRol);
+  document.getElementById("idProductoEditar").value = idRol;
+  var cantidad = document.getElementById("editarCantidad");
+  cantidad.value = x.children[1].innerHTML;
+  document.getElementById("editarPosibleFechaDespacho").value = x.children[2].innerHTML;
   $('#modalEditarProducto').modal('show');
+  
 }
+/*
+ * 
+ * Funciones de Producto
+ * 
+ */
 
 function confirmarEdicionProducto() {
   if (!$('#formEditarProducto')[0].checkValidity()) {
@@ -190,77 +224,139 @@ function confirmarEdicionProducto() {
   }
   else {
     var id = $('#idProductoEditar').val();
-    //get fila que tenga data-orden = id
-    var tabla = document.getElementById("datatable-column-filter-productos");
-    var filaCambiada;
-    for (var i = 1; i<tabla.rows.length; i++){
-        var fila = tabla.rows[i];
-        if (fila.getAttribute('data-orden') === id){
-            filaCambiada = fila;
-        }
-    }
-    filaCambiada.cells[1].firstChild.nodeValue = $('#editarCantidad').val();
-    var nuevaFecha = $('#editarPosibleFechaDespacho').val();
-    filaCambiada.cells[2].innerHTML = nuevaFecha;
-
+    fila = $('#' + id);
+    fila.children('td').eq(1).text($('#editarCantidad').val());
+    fila.children('td').eq(2).text($('#editarPosibleFechaDespacho').val());
     $('#modalEditarProducto').modal('hide');
-    
-    /*
-     * Actualizar ListaProductos = tabla
-     */
-    
-    listaProductos = $('#listaProductos');
-    listaProductos.val(""); //limpia ListaProductos
-    
-    for(var i = 1; i<tabla.rows.length; i++){
-        var fila = tabla.rows[i];
-        var idfila = fila.getAttribute('id');
-        var productofila = fila.cells[0].firstChild.nodeValue;
-        var cantidadfila = fila.cells[1].firstChild.nodeValue;
-        try {var fechafila = fila.cells[2].firstChild.nodeValue;
-            }
-        catch (exception){fechafila="";}
-        listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
+
+    //Aqui se cambia el campo oculto para que los nuevos valores se reflejen luego en la inserción del rol
+    campoOcultoRoles = $('#listaProductos');
+    var a = campoOcultoRoles.val().split("#r#"); //1#c#fecha#c#fecha, 2#c#fecha#c#fecha
+    var nuevoValorCampoOculto = "";
+    a.splice(0, 1);
+    for (var i = 0; i < a.length; i++)
+    {
+      var cadarol = a[i].split("#c#");
+      if (cadarol[0] === id)
+      {
+      }
+      else
+      {
+        nuevoValorCampoOculto = nuevoValorCampoOculto + "#r#" + a[i];
+      }
+
     }
+    campoOcultoRoles.val(nuevoValorCampoOculto + "#r#" + id + "#c#" + $('#editarCantidad').val() + "#c#" + $('#editarPosibleFechaDespacho').val());
   }
 }
 
-$( document ).ready(function() {
-  listaProductos = $('#listaProductos');
-  listaProductos.val("");
-//  alert("el valor del campo oculto es: " + listaProductos.val());
-  var tabla = document.getElementById("datatable-column-filter-productos");
-  for(var i = 1; i<tabla.rows.length; i++){
-        var fila = tabla.rows[i];
-        var idfila = fila.getAttribute('id');
-        var productofila = fila.cells[0].firstChild.nodeValue;
-        var cantidadfila = fila.cells[1].firstChild.nodeValue;
-        try {var fechafila = fila.cells[2].firstChild.nodeValue;
-            }
-        catch (exception){fechafila="";}
-        listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
-        
+// Funcion que agrega el rol seleccionado al input escondido de roles
+function agregarProducto() {
+   if (!$('#formAgregarProducto')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formAgregarProducto')).click().remove();
+    $('#formAgregarProducto').find(':submit').click();
+  }
+  else {
+  $('#modalAgregarProducto').modal('hide');
+  //$('#inputGroupSeleccionProducto').find('#select2-chosen-1').text("");
+  
+  rolSeleccionado = $('#seleccionProducto :selected');
+  inputFechaAct = $('#cantidad');
+  inputFechaDesact = $('#posibleFechaEntrega');
+  var select = document.getElementById("seleccionProducto");
+  var indice = select.selectedIndex;
+  
+    fechaAct = inputFechaAct.val();
+    fechaDesact = inputFechaDesact.val();
+    idRol = rolSeleccionado.val();
+
+    textoRol = rolSeleccionado.text();
+
+    rolSeleccionado.remove();
+    inputFechaAct.val("");
+    inputFechaDesact.val("");
+
+    fila = '<tr ' + 'id=' + idRol + '>';
+    fila += '<td>' + textoRol + '</td>';
+    fila += '<td>' + fechaAct + '</td>';
+    fila += '<td>' + fechaDesact + '</td>';
+    fila += '<td>';
+    fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto(' + idRol + ')"   style="margin-left:5px;margin-right:7px;">Editar</button>';
+    fila += '<button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' + idRol + ')" style="margin-left:7px;margin-right:5px;">Eliminar</button>';
+    fila += '</td>';
+    fila += '</tr>';
+
+    campoOcultoRoles = $('#listaProductos');
+    campoOcultoRoles.val(campoOcultoRoles.val() + "#r#" + idRol + "#c#" + fechaAct + "#c#" + fechaDesact);
+    //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
+
+    $('#datatable-column-filter-productos > tbody:last').append(fila);
+
+    $('#inputGroupSeleccionProducto').find('.select2-chosen').each(function(){$(this).prop('id',''); $(this).text('');});
+  }
 }
+
+$(function(){ /* DOM ready */
+    $("#seleccionProducto").change(function () {
+
+        var select = document.getElementById("seleccionProducto");
+        var indice = select.selectedIndex;
+
+        var cantidad = document.getElementById("cantidad");
+
+
+    });
 });
-function eliminarProducto(idRol) {
-  fila = $('#' + idRol);
-  fila.remove();
-  var listaProductos = $('#listaProductos');
-  var tabla = document.getElementById("datatable-column-filter-productos");
-  listaProductos.val("");
-  for(var i = 1; i<tabla.rows.length; i++){
-        var fila = tabla.rows[i];
-        var idfila = fila.getAttribute('id');
-        var productofila = fila.cells[0].firstChild.nodeValue;
-        var cantidadfila = fila.cells[1].firstChild.nodeValue;
-        try {var fechafila = fila.cells[2].firstChild.nodeValue;
-            }
-        catch (exception){fechafila="";}
-        listaProductos.val(listaProductos.val() + "#r#" + idfila + "#c#" + productofila + "#c#" + cantidadfila + "#c#" + fechafila);
-  contador --;
+
+function confirmacion() {
+  //alert("el valor del campo oculto es: " + $('#listaProductos').val());
+  rolesCodificados = "";
+  $('#datatable-column-filter-productos > tbody > tr').each(function ()
+  
+  {
+    fila = $(this);
+    rolesCodificados += fila.attr('id');
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(1).text();
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(2).text();
+    rolesCodificados += "#r#";
+  });
+  $('#listaProductos').val(rolesCodificados.slice(0, -3));
+
+  if (!$('#formularioProducto')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formularioProducto')).click().remove();
+    $('#formularioProducto').find(':submit').click();
+  }
+  else {
+  $('#formEditarProducto').submit();
+  }
 }
 
+function confirmacionAgregar() {
+  rolesCodificados = "";
+  $('#datatable-column-filter-productos > tbody > tr').each(function ()
 
+  {
+    fila = $(this);
+    rolesCodificados += fila.attr('id');
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(1).text();
+    rolesCodificados += "#c#";
+    rolesCodificados += fila.children('td').eq(2).text();
+    rolesCodificados += "#r#";
+  });
+  $('#listaProductos').val(rolesCodificados.slice(0, -3));
+  //alert("el valor de roles Usuario es: "+$('#listaProductos').val() );
 
-//alert("el valor del campo oculto es: " + listaProductos.val());
-};
+  if (!$('#formularioProducto')[0].checkValidity()) {
+    $('<input type="submit">').hide().appendTo($('#formularioProducto')).click().remove();
+    $('#formularioProducto').find(':submit').click();
+  }
+  else {
+    $('#formAgregarProducto').submit();
+    var cantidad = document.getElementById("cantidad");
+    cantidad.placeholder = "";
+  }
+}
+

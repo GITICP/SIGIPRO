@@ -221,7 +221,7 @@ public class Producto_IntencionDAO extends DAO {
             resultado = new ArrayList<Producto_Intencion>();
             List<String> productosParcial = new LinkedList<String>(Arrays.asList(productos_intencion.split("#r#")));
             productosParcial.remove("");
-            for (String i : productosParcial) {
+          for (String i : productosParcial) {
                 String[] rol = i.split("#c#");
                 Producto_Intencion p = new Producto_Intencion();
                 if (rol.length > 2){
