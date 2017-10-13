@@ -555,7 +555,7 @@ public class ControladorFactura extends SIGIPROServlet {
                 if (resultado2) {                   
                     pfdao.eliminarProductos_Factura(tr.getId_factura());
                     if (productos_factura != null && !(productos_factura.isEmpty())) {
-                      List<Producto_Factura> p_i = pfdao.parsearProductos(productos_factura, resultado);
+                      List<Producto_Factura> p_i = pfdao.parsearProductos(productos_factura, tr.getId_factura());
                       for (Producto_Factura i : p_i) {
                           pfdao.insertarProducto_Factura(i);
                         }

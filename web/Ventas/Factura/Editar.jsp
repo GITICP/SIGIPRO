@@ -90,8 +90,7 @@
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="posibleFechaEntrega" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy"
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
+                       >
               </div>
               <p id='mensajeFechasModalAgregar' style='color:red;'><p>
             </div>
@@ -152,8 +151,7 @@
               <div class="input-group" style="display:table;">
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 <input type="text" pattern="\d{1,2}/\d{1,2}/\d{4}" id="editarPosibleFechaDespacho" class="form-control sigiproDatePickerEspecial" name="editarPosibleFechaDespacho" data-date-format="dd/mm/yyyy"
-                       oninvalid="setCustomValidity('Este campo es requerido ')"
-                       onchange="setCustomValidity('')">
+                       >
               </div>
               <p id='mensajeFechasModalAgregar' style='color:red;'><p>
             </div>

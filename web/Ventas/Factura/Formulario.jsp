@@ -488,7 +488,7 @@
                   <td>${producto.getProducto().getNombre()}</td>
                   <td>${producto.getCantidad()}</td>
                   <td>${producto.getFecha_S()}</td>
-                  <td></td>
+                  <td>${producto.getLote()}</td>
                   <td>
                     <button type="button" class="btn btn-warning btn-sm boton-accion" onclick="editarProducto(${producto.getProducto().getId_producto()})">Editar</button>
                     <button type="button" class="btn btn-danger btn-sm boton-accion"  onclick="eliminarProducto(${producto.getProducto().getId_producto()})" >Eliminar</button>

@@ -396,6 +396,8 @@ function agregarProducto() {
     textoRol = rolSeleccionado.text();
 
     rolSeleccionado.remove();
+    $('#seleccionProducto').val('').change();
+    $('#seleccionLote').val('').change();
     inputFechaAct.val("");
     inputFechaDesact.val("");
     inputLotes.val("");
@@ -416,8 +418,9 @@ function agregarProducto() {
     //alert("el valor del campo oculto es: " + campoOcultoRoles.val());
 
     $('#datatable-column-filter-productos > tbody:last').append(fila);
-    $('#inputGroupSeleccionProducto').find('.select2 option[value='+ idRol + ']').prop('id','').text('');
+    $('#inputGroupSeleccionProducto').find('.select2 option[value='+ idRol + ']').remove();
     $('#modalAgregarProducto').modal('hide');
+    
    // $('body').removeClass('modal-open');
    // $('.modal-backdrop').remove();
    alert($('#listaProductos').val());
