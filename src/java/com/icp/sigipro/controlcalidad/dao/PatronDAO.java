@@ -146,7 +146,7 @@ public class PatronDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.numero_lote, p.fecha_vencimiento, p.lugar_almacenamiento, tpc.id_tipo_patroncontrol, tpc.nombre, tpc.tipo "
+                    " SELECT p.id_patron, p.numero_lote, p.fecha_vencimiento, p.lugar_almacenamiento, tpc.id_tipo_patroncontrol, tpc.nombre "
                     + " FROM control_calidad.patrones p "
                     + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol "
             );
@@ -160,7 +160,6 @@ public class PatronDAO extends DAO {
                 p.setNumero_lote(rs.getString("numero_lote"));
                 
                 TipoPatronControl tpc = new TipoPatronControl();
-                tpc.setTipo(rs.getString("tipo"));
                 tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 tpc.setNombre(rs.getString("nombre"));
                 
@@ -202,8 +201,7 @@ public class PatronDAO extends DAO {
                     + "     p.condicion_almacenamiento,"
                     + "     p.certificado,"
                     + "     tpc.id_tipo_patroncontrol,"
-                    + "     tpc.nombre,"
-                    + "     tpc.tipo "
+                    + "     tpc.nombre "
                     + " FROM control_calidad.patrones p "
                     + "     INNER JOIN  control_calidad.tipos_patronescontroles tpc ON p.id_tipo_patroncontrol = tpc.id_tipo_patroncontrol "
                     + " WHERE p.id_patron = ?;"
@@ -219,7 +217,6 @@ public class PatronDAO extends DAO {
                 TipoPatronControl tpc = new TipoPatronControl();
                 tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 tpc.setNombre(rs.getString("nombre"));
-                tpc.setTipo(rs.getString("tipo"));
                 
                 resultado.setTipo(tpc);
                 resultado.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
@@ -301,7 +298,7 @@ public class PatronDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.numero_lote, tpc.nombre, tpc.id_tipo_patroncontrol, tpc.tipo "
+                    " SELECT p.id_patron, p.numero_lote, tpc.nombre, tpc.id_tipo_patroncontrol "
                     + " FROM control_calidad.patrones p "
                     + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol ;"
             );
@@ -317,7 +314,6 @@ public class PatronDAO extends DAO {
                 TipoPatronControl tpc = new TipoPatronControl();
                 tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 tpc.setNombre(rs.getString("nombre"));
-                tpc.setTipo(rs.getString("tipo"));
                 p.setTipo(tpc);
                 
                 resultado.add(p);

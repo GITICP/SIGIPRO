@@ -134,7 +134,7 @@
                                                                 <option value=''></option>
                                                                 <c:forEach items="${materiales}" var="material">
                                                                     <option value=${material.getId_patron()}>
-                                                                        ${material.getNumero_lote()} (${material.getTipo().getTipo()})
+                                                                        ${material.getNumero_lote()} (${material.getTipo().getNombre()})
                                                                     </option>
                                                                 </c:forEach>
                                                             </select>

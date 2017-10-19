@@ -24,11 +24,10 @@ public class TipoPatronControlDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_patronescontroles (nombre,descripcion,tipo) "
-                                                                        + " VALUES (?,?,?) RETURNING id_tipo_patroncontrol");
+            consulta = getConexion().prepareStatement(" INSERT INTO control_calidad.tipos_patronescontroles (nombre,descripcion) "
+                                                                        + " VALUES (?,?) RETURNING id_tipo_patroncontrol");
             consulta.setString(1, tipo_patroncontrol.getNombre());
             consulta.setString(2, tipo_patroncontrol.getDescripcion());
-            consulta.setString(3, tipo_patroncontrol.getTipo());
             rs = consulta.executeQuery();
             if (rs.next()) {
                 resultado = true;
@@ -54,12 +53,11 @@ public class TipoPatronControlDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.tipos_patronescontroles "
-                    + "SET nombre=?, descripcion=?, tipo=? "
+                    + "SET nombre=?, descripcion=? "
                     + "WHERE id_tipo_patroncontrol = ?; ");
             consulta.setString(1, tipo_patroncontrol.getNombre());
             consulta.setString(2, tipo_patroncontrol.getDescripcion());
-            consulta.setString(3, tipo_patroncontrol.getTipo());
-            consulta.setInt(4, tipo_patroncontrol.getId_tipo_patroncontrol());
+            consulta.setInt(3, tipo_patroncontrol.getId_tipo_patroncontrol());
             if (consulta.executeUpdate()==1) {
                 resultado = true;
             }
@@ -82,14 +80,13 @@ public class TipoPatronControlDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT id_tipo_patroncontrol, nombre, tipo FROM control_calidad.tipos_patronescontroles; "
+                    " SELECT id_tipo_patroncontrol, nombre FROM control_calidad.tipos_patronescontroles; "
             );
             rs = consulta.executeQuery();
             while (rs.next()) {
                 TipoPatronControl tipo_patroncontrol = new TipoPatronControl();
                 tipo_patroncontrol.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 tipo_patroncontrol.setNombre(rs.getString("nombre"));
-                tipo_patroncontrol.setTipo(rs.getString("tipo"));
                 resultado.add(tipo_patroncontrol);
             }
         }
@@ -110,14 +107,13 @@ public class TipoPatronControlDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT id_tipo_patroncontrol, nombre, tipo FROM control_calidad.tipos_patronescontroles ORDER BY tipo; "
+                    " SELECT id_tipo_patroncontrol, nombre FROM control_calidad.tipos_patronescontroles; "
             );
             rs = consulta.executeQuery();
             while (rs.next()) {
                 TipoPatronControl tipo_patroncontrol = new TipoPatronControl();
                 tipo_patroncontrol.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 tipo_patroncontrol.setNombre(rs.getString("nombre"));
-                tipo_patroncontrol.setTipo(rs.getString("tipo"));
                 resultado.add(tipo_patroncontrol);
             }
         }
@@ -146,7 +142,6 @@ public class TipoPatronControlDAO extends DAO {
                 resultado.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
                 resultado.setNombre(rs.getString("nombre"));
                 resultado.setDescripcion(rs.getString("descripcion"));
-                resultado.setTipo(rs.getString("tipo"));
             }
         }
         catch (Exception ex) {

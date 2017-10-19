@@ -47,7 +47,6 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>Nombre del Tipo: </strong></td> <td>${tipopatroncontrol.getNombre()} </td></tr>
-                                <tr><td> <strong>Tipo: </strong> <td>${tipopatroncontrol.getTipo()} </td></tr>
                                 <tr><td> <strong>Descripción: </strong> <td>${tipopatroncontrol.getDescripcion()} </td></tr>
                             </table>
                             <br>

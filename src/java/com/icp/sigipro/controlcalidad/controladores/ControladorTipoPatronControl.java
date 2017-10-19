@@ -177,7 +177,6 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
         TipoPatronControl tpc = new TipoPatronControl();
         tpc.setNombre(request.getParameter("nombre"));
         tpc.setDescripcion(request.getParameter("descripcion"));
-        tpc.setTipo(request.getParameter("tipo"));
 
         return tpc;
     }

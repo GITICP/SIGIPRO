@@ -144,7 +144,7 @@
                                                     <c:forEach items="${resultado.getPatrones_resultado()}" var="patron">
                                                         <tr>
                                                             <td>${patron.getNumero_lote()}</td>
-                                                            <td>${patron.getTipo().getTipo()}</td>
+                                                            <td>${patron.getTipo().getNombre()}</td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>

@@ -25,21 +25,6 @@
                     </div>
                 </div>
             </div>
-            <label for="opciones" class="control-label">Tipo</label>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="patron" ${(tipopatroncontrol.getTipo() == 'Patrón') ? "checked":""}>
-                            <span><i></i>Patrón</span>
-                        </label>
-                        <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="control" ${(tipopatroncontrol.getTipo() == 'Control') ? "checked":""}>
-                            <span><i></i>Control</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="col-md-6">
             <label for="descripcion" class="control-label">Descripción</label>

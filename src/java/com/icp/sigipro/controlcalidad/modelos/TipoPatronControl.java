@@ -17,7 +17,6 @@ public class TipoPatronControl extends IModelo {
     private int id_tipo_patroncontrol;
     private String nombre;
     private String descripcion;
-    private String tipo;
 
     public TipoPatronControl() {
     }
@@ -50,23 +49,6 @@ public class TipoPatronControl extends IModelo {
     public void setId_tipo_patroncontrol(int id_tipo_patroncontrol) {
         this.id_tipo_patroncontrol = id_tipo_patroncontrol;
     }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        String tipoFinal = tipo;
-        switch (tipo) {
-            case "patron":
-                tipoFinal = "Patrón";
-                break;
-            case "control": 
-                tipoFinal = "Control";
-                break;
-        }
-        this.tipo = tipoFinal;
-    }    
     
     public String parseJSON(){
         Class _class = this.getClass();

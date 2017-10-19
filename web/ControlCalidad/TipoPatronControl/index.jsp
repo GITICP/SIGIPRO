@@ -45,7 +45,6 @@
                 <thead> 
                   <tr>
                     <th>Nombre</th>
-                    <th>Tipo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -58,9 +57,6 @@
                             ${tipo.getNombre()}
                           </div>
                         </a>
-                      </td>
-                      <td>
-                          ${tipo.getTipo()}
                       </td>
                     </tr>
                   </c:forEach>

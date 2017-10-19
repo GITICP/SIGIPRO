@@ -248,10 +248,8 @@ public class Resultado extends IModelo
     }
     
     public void agregarPatron(Patron p) {
-        if (!p.getTipo().getTipo().equalsIgnoreCase("Control")) {
-            if(patrones_resultado == null) {
-                patrones_resultado = new ArrayList<>();
-            }
+        if(patrones_resultado == null) {
+            patrones_resultado = new ArrayList<>();
         }
         patrones_resultado.add(p);
     }

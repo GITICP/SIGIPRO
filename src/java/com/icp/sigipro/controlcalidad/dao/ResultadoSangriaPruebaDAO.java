@@ -301,7 +301,7 @@ public class ResultadoSangriaPruebaDAO extends DAO {
             }
 
             consulta_patrones_controles = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.numero_lote, tpc.id_tipo_patroncontrol, tpc.tipo, tpc.nombre "
+                    " SELECT p.id_patron, p.numero_lote, tpc.id_tipo_patroncontrol, tpc.nombre "
                     + " FROM control_calidad.patrones_resultados_sp pr "
                     + "     INNER JOIN control_calidad.patrones p ON pr.id_patron = p.id_patron "
                     + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol "
@@ -322,7 +322,6 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                     TipoPatronControl tpc = new TipoPatronControl();
                     tpc.setNombre(rs_patrones_controles.getString("nombre"));
                     tpc.setId_tipo_patroncontrol(rs_patrones_controles.getInt("id_tipo_patroncontrol"));
-                    tpc.setTipo(rs_patrones_controles.getString("tipo"));
                     
                     p.setTipo(tpc);
 
