@@ -21,7 +21,7 @@
                     <ul class="breadcrumb">
                         <li>Control de Calidad</li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Patrones y Controles</a>
+                            <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Materiales de Referencia</a>
                         </li>
                         <li class="active"> ${tipopatroncontrol.getNombre()} </li>
                     </ul>

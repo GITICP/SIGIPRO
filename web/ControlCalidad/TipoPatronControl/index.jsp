@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Patrones y Controles</a>
+              <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Materiales de Referencia</a>
             </li>
           </ul>
         </div>
@@ -31,7 +31,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Tipos de Patrones y Controles </h3>
+              <h3><i class="fa fa-gears"></i> Tipos de Materiales de Referencia </h3>
               <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 580)}">
                 <div class="btn-group widget-header-toolbar">
                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/TipoPatronControl?accion=agregar">Agregar Tipo</a>

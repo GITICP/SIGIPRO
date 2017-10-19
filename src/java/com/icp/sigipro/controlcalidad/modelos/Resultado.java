@@ -32,7 +32,6 @@ public class Resultado extends IModelo
 
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
-    private List<Patron> controles_resultado;
     private List<Patron> patrones_resultado;
     
     // Evitar error al parsear a JSON con la libraría Gson
@@ -202,31 +201,12 @@ public class Resultado extends IModelo
         return resultado_func;
     }
 
-    public List<Patron> getControles_resultado() {
-        return controles_resultado;
-    }
-
-    public void setControles_resultado(List<Patron> controles_resultado) {
-        this.controles_resultado = controles_resultado;
-    }
-
     public List<Patron> getPatrones_resultado() {
         return patrones_resultado;
     }
 
     public void setPatrones_resultado(List<Patron> patrones_resultado) {
         this.patrones_resultado = patrones_resultado;
-    }
-    
-    public void setControles(String[] ids) {
-
-        this.controles_resultado = new ArrayList<>();
-
-        for (String id : ids) {
-            Patron patron = new Patron();
-            patron.setId_patron(Integer.parseInt(id));
-            this.controles_resultado.add(patron);
-        }
     }
     
     public void setPatrones(String[] ids) {
@@ -245,9 +225,6 @@ public class Resultado extends IModelo
         if (this.patrones_resultado != null) {
             resultado_func = !this.patrones_resultado.isEmpty();
         }
-        if (this.controles_resultado != null) {
-            resultado_func = !this.controles_resultado.isEmpty() || resultado_func;
-        }
         return resultado_func;
     }
     
@@ -255,14 +232,6 @@ public class Resultado extends IModelo
         boolean resultado_func = false;
         if (this.patrones_resultado != null) {
             resultado_func = tienePatronEnLista(patrones_resultado, p.getId_patron());
-        }
-        return resultado_func;
-    }
-    
-    public boolean tieneControl(Patron p) {
-        boolean resultado_func = false;
-        if (this.controles_resultado != null) {
-            resultado_func = tienePatronEnLista(controles_resultado, p.getId_patron());
         }
         return resultado_func;
     }
@@ -283,13 +252,8 @@ public class Resultado extends IModelo
             if(patrones_resultado == null) {
                 patrones_resultado = new ArrayList<>();
             }
-            patrones_resultado.add(p);
-        } else {
-            if (controles_resultado == null) {
-                controles_resultado = new ArrayList<>();
-            }
-            controles_resultado.add(p);
         }
+        patrones_resultado.add(p);
     }
 
     public Date getFecha_reportado() {

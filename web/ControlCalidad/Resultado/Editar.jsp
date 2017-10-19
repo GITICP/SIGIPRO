@@ -124,7 +124,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label for="patrones" class="control-label"> Patrones Utilizados</label>
+                                                <label for="patrones" class="control-label"> Materiales de Referencia Utilizados</label>
                                                 <div class="form-group">
                                                     <div class="col-sm-12">
                                                         <div class="input-group">
@@ -133,29 +133,9 @@
                                                                     oninvalid="setCustomValidity('Este campo es requerido')"
                                                                     onchange="setCustomValidity('')">
                                                                 <option value=''></option>
-                                                                <c:forEach items="${patrones}" var="patron">
-                                                                    <option value=${patron.getId_patron()} ${(resultado.tienePatron(patron)) ? "selected" : ""}>
-                                                                        ${patron.getNumero_lote()} (${patron.getTipo().getTipo()})
-                                                                    </option>
-                                                                </c:forEach>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="patrones" class="control-label"> Controles Utilizados</label>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">
-                                                        <div class="input-group">
-                                                            <select id="seleccion-controles" class="select2" name="controles" multiple="multiple"
-                                                                    style='background-color: #fff;'
-                                                                    oninvalid="setCustomValidity('Este campo es requerido')"
-                                                                    onchange="setCustomValidity('')">
-                                                                <option value=''></option>
-                                                                <c:forEach items="${controles}" var="control">
-                                                                    <option value=${control.getId_patron()} ${(resultado.tieneControl(control)) ? "selected" : ""}>
-                                                                        ${control.getNumero_lote()} (${patron.getTipo().getTipo()})
+                                                                <c:forEach items="${materiales}" var="material">
+                                                                    <option value=${material.getId_patron()} ${(resultado.tienePatron(material)) ? "selected" : ""}>
+                                                                        ${material.getNumero_lote()} (${material.getTipo().getTipo()})
                                                                     </option>
                                                                 </c:forEach>
                                                             </select>

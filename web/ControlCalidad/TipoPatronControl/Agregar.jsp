@@ -23,9 +23,9 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Patrones y Controles</a>
+              <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Materiales de Referencia</a>
             </li>
-            <li class="active"> Agregar Tipo de Patrón/Control </li>
+            <li class="active"> Agregar Tipo de Material de Referencia</li>
 
           </ul>
         </div>
@@ -37,7 +37,7 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Agregar Nuevo Tipo de Patrón/Control</h3>
+              <h3><i class="fa fa-gears"></i> Agregar Nuevo Tipo de Material de Referencia</h3>
             </div>
             ${mensaje}
             <div class="widget-content">

@@ -292,15 +292,9 @@ public class PatronDAO extends DAO {
         return resultado;
     }
     
-    public List<List<Patron>> obtenerPatronesRealizarAnalisis() throws SIGIPROException {
+    public List<Patron> obtenerPatronesRealizarAnalisis() throws SIGIPROException {
         
-        List<Patron> lista_patrones = new ArrayList<>();
-        List<Patron> lista_controles = new ArrayList<>();
-        
-        List<List<Patron>> resultado = new ArrayList<>();
-        
-        resultado.add(lista_patrones);
-        resultado.add(lista_controles);
+        List<Patron> resultado = new ArrayList<>();
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
@@ -325,12 +319,8 @@ public class PatronDAO extends DAO {
                 tpc.setNombre(rs.getString("nombre"));
                 tpc.setTipo(rs.getString("tipo"));
                 p.setTipo(tpc);
-
-                if (p.getTipo().getTipo().equalsIgnoreCase("Control")) {
-                    lista_controles.add(p);
-                } else {
-                    lista_patrones.add(p);
-                }
+                
+                resultado.add(p);
             }
 
         } catch (SQLException sql_ex) {

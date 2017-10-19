@@ -133,12 +133,6 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                     insert_patrones_controles.addBatch();
                 }
 
-                for (Patron p : resultado_sp.getControles_resultado()) {
-                    insert_patrones_controles.setInt(1, resultado_sp.getId_resultado());
-                    insert_patrones_controles.setInt(2, p.getId_patron());
-                    insert_patrones_controles.addBatch();
-                }
-
                 insert_patrones_controles.executeBatch();
 
             }
@@ -447,12 +441,6 @@ public class ResultadoSangriaPruebaDAO extends DAO {
                 );
 
                 for (Patron p : resultado_sp.getPatrones_resultado()) {
-                    insert_patrones_controles.setInt(1, resultado_sp.getId_resultado());
-                    insert_patrones_controles.setInt(2, p.getId_patron());
-                    insert_patrones_controles.addBatch();
-                }
-
-                for (Patron p : resultado_sp.getControles_resultado()) {
                     insert_patrones_controles.setInt(1, resultado_sp.getId_resultado());
                     insert_patrones_controles.setInt(2, p.getId_patron());
                     insert_patrones_controles.addBatch();

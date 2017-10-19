@@ -21,9 +21,9 @@
                     <ul class="breadcrumb">
                         <li>Control de Calidad</li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Patron?">Patrones y Controles</a>
+                            <a href="/SIGIPRO/ControlCalidad/Patron?">Materiales de Referencia</a>
                         </li>
-                        <li class="active"> Patrón ${patron.getNumero_lote()} </li>
+                        <li class="active"> Material de Referencia ${patron.getNumero_lote()} </li>
                     </ul>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <!-- COLUMN FILTER DATA TABLE -->
                     <div class="widget widget-table">
                         <div class="widget-header">
-                            <h3><i class="fa fa-gears"></i> Patrón ${patron.getNumero_lote()} </h3>
+                            <h3><i class="fa fa-gears"></i> Material de Referencia ${patron.getNumero_lote()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 573)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar este patrón" data-href="/SIGIPRO/ControlCalidad/Patron?accion=eliminar&id_patron=${patron.getId_patron()}">Eliminar</a>
