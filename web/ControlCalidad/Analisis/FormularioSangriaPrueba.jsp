@@ -133,7 +133,7 @@
                                                                 <option value=''></option>
                                                                 <c:forEach items="${patrones}" var="patron">
                                                                     <option value=${patron.getId_patron()} ${(resultado.tienePatron(patron)) ? "Selected" : ""}>
-                                                                        ${patron.getNumero_lote()} (${patron.getTipo()})
+                                                                        ${patron.getNumero_lote()} (${patron.getTipo().getTipo()})
                                                                     </option>
                                                                 </c:forEach>
                                                             </select>

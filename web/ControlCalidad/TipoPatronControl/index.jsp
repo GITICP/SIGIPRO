@@ -20,7 +20,7 @@
           <ul class="breadcrumb">
             <li>Control de Calidad</li>
             <li> 
-              <a href="/SIGIPRO/ControlCalidad/Patron?">Patrones y Controles</a>
+              <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?">Tipos de Patrones y Controles</a>
             </li>
           </ul>
         </div>
@@ -31,10 +31,10 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-              <h3><i class="fa fa-gears"></i> Patrones y Controles </h3>
-              <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 571)}">
+              <h3><i class="fa fa-gears"></i> Tipos de Patrones y Controles </h3>
+              <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 580)}">
                 <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Patron?accion=agregar">Agregar Patrón</a>
+                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/TipoPatronControl?accion=agregar">Agregar Tipo</a>
                 </div>
               </c:if>
             </div>
@@ -44,26 +44,24 @@
                 <!-- Columnas -->
                 <thead> 
                   <tr>
-                    <th>Núm. Lote/Identificador</th>
+                    <th>Nombre</th>
                     <th>Tipo</th>
-                    <th>Fecha de Vencimiento</th>
-                    <th>Lugar de Almacenamiento</th>                    
                   </tr>
                 </thead>
                 <tbody>
-                  <c:forEach items="${lista_patrones}" var="patron">
+                  <c:forEach items="${listaTipos}" var="tipo">
 
-                    <tr id ="${patron.getId_patron()}">
+                    <tr id ="${tipo.getId_tipo_patroncontrol()}">
                       <td>
-                        <a href="/SIGIPRO/ControlCalidad/Patron?accion=ver&id_patron=${patron.getId_patron()}">
+                        <a href="/SIGIPRO/ControlCalidad/TipoPatronControl?accion=ver&id_tipo_patroncontrol=${tipo.getId_tipo_patroncontrol()}">
                           <div style="height:100%;width:100%">
-                            ${patron.getNumero_lote()}
+                            ${tipo.getNombre()}
                           </div>
                         </a>
                       </td>
-                      <td>${patron.getTipo().getNombre()}</td>
-                      <td>${patron.getFecha_vencimientoAsString()}</td>
-                      <td>${patron.getLugar_almacenamiento()}</td>
+                      <td>
+                          ${tipo.getTipo()}
+                      </td>
                     </tr>
                   </c:forEach>
                 </tbody>

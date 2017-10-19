@@ -111,7 +111,6 @@ function recargarTipoMuestra() {
     });
 }
 
-
 function agregarMuestra() {
     fila = "<div id=" + contador + " class=\"col-sm-12\">";
     fila += "<div class=\"col-sm-3\">";
@@ -239,6 +238,20 @@ function eliminarMuestra(id) {
 
     //recargarTipoMuestra();
 
+}
+
+function abrirModalNoRealizar(id, nombre_analisis) {
+    var encodedStr = "&iquest;Razones por las cuales no se realizar&aacute; el an&aacute;lisis de " + nombre_analisis + "?";
+    
+    var parser = new DOMParser;
+    var dom = parser.parseFromString(
+        '<!doctype html><body>' + encodedStr,
+        'text/html');
+    var decodedString = dom.body.textContent;
+    
+    $("#label-observaciones").text(decodedString);
+    $("#id_analisis_no_realizar").val(id);
+    $("#modalNoRealizar").modal();
 }
 
 

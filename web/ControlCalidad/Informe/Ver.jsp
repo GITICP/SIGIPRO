@@ -14,6 +14,12 @@
 
         <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
 
+        <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+            <c:if test="${!ags.isRealizar()}">
+                <c:set var="hayAGSSinRealizar" value="${true}" scope="page" />
+            </c:if>
+        </c:forEach>
+
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
             <div class="row">
@@ -67,6 +73,7 @@
                                                 <th>Identificadores de Muestras (Tipo)</th>
                                                 <th>Análisis Solicitado</th>
                                                 <th>Resultado</th>
+                                                <th>Fecha Reportado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -83,6 +90,9 @@
                                                     <td>
                                                         ${resultado.getResultado()}
                                                     </td>
+                                                    <td>
+                                                        ${resultado.getFecha_reportado_formateada()}
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
@@ -91,6 +101,55 @@
                             </div>
                         </div>
                         <!-- END WIDGET TICKET TABLE -->
+
+                        <c:if test="${hayAGSSinRealizar}">
+                            <div class="col-md-12">
+                                <div class="widget widget-table">
+                                    <div class="widget-header">
+                                        <h3><i class="fa fa-check-square-o"></i> Análisis No realizados</h3>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                            <!-- Columnas -->
+                                            <thead> 
+                                                <tr>
+                                                    <th>Identificador(es) de Muestra(s)</th>
+                                                    <th>Tipo de Muestra</th>
+                                                    <th>Análisis Solicitado</th>
+                                                    <th>Observaciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+                                                    <c:if test="${!ags.isRealizar()}">
+
+                                                    <td>
+                                                        <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                            ${muestra.getIdentificador()}<br>
+                                                        </c:forEach>
+
+                                                    </td>
+
+                                                    <td>
+                                                        ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
+                                                    </td>
+                                                    <td>
+                                                        ${ags.getAnalisis().getNombre()}
+                                                    </td>
+
+                                                    <td>
+                                                        ${ags.getObservaciones_no_realizar()}
+                                                    </td>
+
+                                                </c:if>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:if>
                     </div>
                     <!-- /main-content -->
                 </div>

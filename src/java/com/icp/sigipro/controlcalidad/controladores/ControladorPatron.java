@@ -7,7 +7,9 @@ package com.icp.sigipro.controlcalidad.controladores;
 
 import com.icp.sigipro.bitacora.modelo.Bitacora;
 import com.icp.sigipro.controlcalidad.dao.PatronDAO;
+import com.icp.sigipro.controlcalidad.dao.TipoPatronControlDAO;
 import com.icp.sigipro.controlcalidad.modelos.Patron;
+import com.icp.sigipro.controlcalidad.modelos.TipoPatronControl;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.core.SIGIPROServlet;
 import java.io.File;
@@ -41,6 +43,7 @@ public class ControladorPatron extends SIGIPROServlet {
     private final int[] permisos = {571, 572, 573, 574};
     //-----------------
     private final PatronDAO dao = new PatronDAO();
+    private final TipoPatronControlDAO tpc_dao = new TipoPatronControlDAO();
 
     protected final Class clase = ControladorPatron.class;
     protected final List<String> accionesGet = new ArrayList<String>() {
@@ -111,6 +114,9 @@ public class ControladorPatron extends SIGIPROServlet {
 
         String redireccion = "Patron/Agregar.jsp";
         Patron p = new Patron();
+        p.setTipo(new TipoPatronControl());
+        List<TipoPatronControl> tipos_patronescontroles = tpc_dao.obtenerTiposPatronesControlesOrdenado();
+        request.setAttribute("tipos_patronescontroles", tipos_patronescontroles);
         request.setAttribute("patron", p);
         request.setAttribute("accion", "Agregar");
         redireccionar(request, response, redireccion);
@@ -150,6 +156,8 @@ public class ControladorPatron extends SIGIPROServlet {
         int id_patron = Integer.parseInt(request.getParameter("id_patron"));
         try {
             Patron patron = dao.obtenerPatron(id_patron);
+            List<TipoPatronControl> tipos_patronescontroles = tpc_dao.obtenerTiposPatronesControlesOrdenado();
+            request.setAttribute("tipos_patronescontroles", tipos_patronescontroles);
             request.setAttribute("patron", patron);
         } catch (SIGIPROException sig_ex) {
             request.setAttribute("mensaje", helper.mensajeDeError(sig_ex.getMessage()));
@@ -227,12 +235,14 @@ public class ControladorPatron extends SIGIPROServlet {
         Patron p = new Patron();
 
         p.setNumero_lote(this.obtenerParametro("num_lote"));
-        p.setTipo(this.obtenerParametro("tipo"));
+        TipoPatronControl tpc = new TipoPatronControl();
+        p.setTipo(tpc);
 
         try {
             p.setFecha_ingreso(helper_fechas.formatearFecha(this.obtenerParametro("fecha_ingreso")));
             p.setFecha_vencimiento(helper_fechas.formatearFecha(this.obtenerParametro("fecha_vencimiento")));
             p.setFecha_inicio_uso(helper_fechas.formatearFecha(this.obtenerParametro("fecha_inicio_uso")));
+            tpc.setId_tipo_patroncontrol(Integer.parseInt(this.obtenerParametro("id_tipo_patroncontrol")));
         } catch (ParseException p_ex) {
             p_ex.printStackTrace();
         }

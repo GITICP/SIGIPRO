@@ -13,6 +13,7 @@
     <jsp:attribute name="contenido">
 
         <jsp:include page="../../plantillas/barraFuncionalidad.jsp" />
+        <c:set var="hayAGSSinRealizar" value="${false}" scope="page" />
 
         <!-- content-wrapper -->
         <div class="col-md-12 content-wrapper">
@@ -45,7 +46,7 @@
                                         <c:if test="${boolrecibir}">
                                             <a class="btn btn-primary btn-sm boton-accion recibir-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalRecibirSolicitud">Recibir</a>
                                         </c:if>
-                                        <c:if test="${boolanular}">
+                                        <c:if test="${boolanular || solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario}">
                                             <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                         </c:if>
                                     </c:when>
@@ -56,6 +57,7 @@
                                         <c:choose>
                                             <c:when test="${solicitud.getInforme() == null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 557)}">
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=generar&id_solicitud=${solicitud.getId_solicitud()}">Generar Informe Parcial</a>
+                                                <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                             </c:when>
                                             <c:when test="${solicitud.getInforme() != null && helper_permisos.validarPermiso(sessionScope.listaPermisos, 558)}">
                                                 <c:choose>
@@ -66,6 +68,9 @@
                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
                                                     </c:when>
                                                 </c:choose>
+                                            </c:when>
+                                            <c:when test="${solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario && !solicitud.getEstado().equals('Resultado Parcial') && !solicitud.getEstado().equals('Completada')}">
+                                                <a class="btn btn-danger btn-sm boton-accion anular-Modal" data-id='${solicitud.getId_solicitud()}' data-toggle="modal" data-target="#modalAnularSolicitud">Anular</a>
                                             </c:when>
                                         </c:choose>
                                     </c:otherwise>
@@ -167,10 +172,18 @@
                                                             <c:choose>
                                                                 <c:when test="${solicitud.getEstado().equals('Recibido') || solicitud.getEstado().equals('Resultado Parcial') || solicitud.getEstado().equals('Completada')}">
                                                                     <c:choose>
+                                                                        <c:when test="${!ags.isRealizar()}">
+                                                                            <c:set var="hayAGSSinRealizar" value="${true}" scope="page" />
+                                                                            Análisis no se realizará.
+                                                                        </c:when>
                                                                         <c:when test="${ags.getResultados() == null}">
                                                                             <a class="btn btn-primary btn-sm boton-accion" 
                                                                                href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
                                                                                 Realizar
+                                                                            </a>
+                                                                            <a class="btn btn-warning btn-sm boton-accion" 
+                                                                               onclick="abrirModalNoRealizar(${ags.getId_analisis_grupo_solicitud()}, '${ags.getAnalisis().getNombre()}')">
+                                                                                No Realizar
                                                                             </a>
                                                                         </c:when>
                                                                         <c:otherwise>
@@ -226,6 +239,7 @@
                                                             <th>Tipo de Muestra</th>
                                                             <th>Análisis Solicitado</th>
                                                             <th>Resultado</th>
+                                                            <th>Fecha Reportado</th>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                 <th>Acción</th>
                                                                 </c:if>
@@ -248,6 +262,9 @@
                                                                 <td>
                                                                     ${resultado.getResultado()}
                                                                 </td>
+                                                                <td>
+                                                                    ${resultado.getFecha_reportado_formateada()}
+                                                                </td>
                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 547)}">
                                                                     <td>
                                                                         <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/ControlCalidad/Resultado?accion=editar&id_resultado=${resultado.getId_resultado()}&id_analisis=${resultado.getAgs().getAnalisis().getId_analisis()}${(resultado.getAgs().getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += resultado.getAgs().getGrupo().getGrupos_muestras_Sring() : "" }">Editar</a>
@@ -260,6 +277,55 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <c:if test="${hayAGSSinRealizar}">
+                                        <div class="col-md-12">
+                                            <div class="widget widget-table">
+                                                <div class="widget-header">
+                                                    <h3><i class="fa fa-check-square-o"></i> Análisis No realizados</h3>
+                                                </div>
+
+                                                <div class="widget-content">
+                                                    <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                                                        <!-- Columnas -->
+                                                        <thead> 
+                                                            <tr>
+                                                                <th>Identificador(es) de Muestra(s)</th>
+                                                                <th>Tipo de Muestra</th>
+                                                                <th>Análisis Solicitado</th>
+                                                                <th>Observaciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
+                                                                <c:if test="${!ags.isRealizar()}">
+
+                                                                <td>
+                                                                    <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                        ${muestra.getIdentificador()}<br>
+                                                                    </c:forEach>
+
+                                                                </td>
+
+                                                                <td>
+                                                                    ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
+                                                                </td>
+                                                                <td>
+                                                                    ${ags.getAnalisis().getNombre()}
+                                                                </td>
+
+                                                                <td>
+                                                                    ${ags.getObservaciones_no_realizar()}
+                                                                </td>
+
+                                                            </c:if>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
                                     <!-- END WIDGET TICKET TABLE -->
                                 </div>
                             </c:if>
@@ -394,6 +460,36 @@
             </div>
         </form>
 
+
+    </jsp:attribute>
+
+</t:modal>
+
+<t:modal idModal="modalNoRealizar" titulo="No realizar análisis">
+    <jsp:attribute name="form">
+        <div class="widget-content">
+            <form class="form-horizontal" id="no-realizar-analisis" autocomplete="off" method="post" action="Solicitud">
+                <input hidden="true" name="accion" value="norealizar">
+                <input hidden="true" id='id_solicitud' name='id_solicitud' value="${solicitud.getId_solicitud()}">
+                <input hidden="true" id='id_analisis_no_realizar' name='id_analisis_no_realizar' value="">
+                <label id="label-observaciones" for="observaciones" class="control-label"></label>
+                <br>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <textarea rows="5" cols="50" maxlength="500" placeholder="Observaciones" class="form-control" name="observaciones" ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> No realizar análisis</button>            
+                    </div>
+                </div>
+            </form>
+        </div>
 
     </jsp:attribute>
 

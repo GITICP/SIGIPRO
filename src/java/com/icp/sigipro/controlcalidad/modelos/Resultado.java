@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import com.google.gson.Gson;
+import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Date;
 import java.sql.SQLXML;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class Resultado
+public class Resultado extends IModelo
 {
 
     private int id_resultado;
@@ -24,6 +25,7 @@ public class Resultado
     private transient SQLXML datos;
     private String datos_string;
     private Date fecha;
+    private Date fecha_reportado;
     private Usuario usuario;
     private int repeticion;
     private String resultado;
@@ -277,7 +279,7 @@ public class Resultado
     }
     
     public void agregarPatron(Patron p) {
-        if (!p.getTipo().equalsIgnoreCase("Control Interno")) {
+        if (!p.getTipo().getTipo().equalsIgnoreCase("Control")) {
             if(patrones_resultado == null) {
                 patrones_resultado = new ArrayList<>();
             }
@@ -289,4 +291,18 @@ public class Resultado
             controles_resultado.add(p);
         }
     }
+
+    public Date getFecha_reportado() {
+        return fecha_reportado;
+    }
+    
+    public String getFecha_reportado_formateada() {
+        return helper_fechas.formatearFecha(fecha_reportado);
+    }
+    
+    public void setFecha_reportado(Date fecha_reportado) {
+        this.fecha_reportado = fecha_reportado;
+    }
+    
+    
 }
