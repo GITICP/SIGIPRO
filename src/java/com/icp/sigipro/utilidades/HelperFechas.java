@@ -6,6 +6,7 @@
 package com.icp.sigipro.utilidades;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,5 +58,9 @@ public class HelperFechas {
 
     public String getFecha_hoyAsString() {
         return formatearFecha(getFecha_hoy());
+    }
+
+    public Timestamp getFecha_hoy_timestamp() {
+        return new Timestamp(this.getFecha_hoy().getTime());
     }
 }
