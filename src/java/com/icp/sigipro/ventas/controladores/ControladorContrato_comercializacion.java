@@ -136,15 +136,20 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             bitacora.setBitacora(contrato_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CONTRATO_COMERCIALIZACION, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado != 0){
             redireccion = "ContratoComercializacion/index.jsp";
             List<Contrato_comercializacion> contratos = dao.obtenerContratos_comercializacion();
             request.setAttribute("listaContratos", contratos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Contrato agregado correctamente"));
-        } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+        }
+        else{
+         Contrato_comercializacion ds = new Contrato_comercializacion();
+        
+        request.setAttribute("contrato", ds);
+        request.setAttribute("clientes",cDAO.obtenerClientes());
+        request.setAttribute("accion", "Agregar");
         }
         redireccionar(request, response, redireccion);
     }
@@ -155,9 +160,9 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
         int[] permisos = {701, 705, 1};
         List<Integer> listaPermisos = getPermisosUsuario(request);
         validarPermisos(permisos, listaPermisos);
-        
+        Contrato_comercializacion contrato_nuevo = construirObjeto(request);
         try {
-            Contrato_comercializacion contrato_nuevo = construirObjeto(request);
+            
             
             resultado = dao.editarContrato_comercializacion(contrato_nuevo);
             //Funcion que genera la bitacora
@@ -165,7 +170,7 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             bitacora.setBitacora(contrato_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CONTRATO_COMERCIALIZACION, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado) {
             redireccion = "ContratoComercializacion/index.jsp";
@@ -173,7 +178,11 @@ public class ControladorContrato_comercializacion extends SIGIPROServlet {
             request.setAttribute("listaContratos", contratos);
             request.setAttribute("mensaje", helper.mensajeDeExito("Contrato editado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            int id_contrato = Integer.parseInt(request.getParameter("id_contrato"));
+            Contrato_comercializacion ds = dao.obtenerContrato_comercializacion(contrato_nuevo.getId_contrato());
+            request.setAttribute("clientes",cDAO.obtenerClientes());
+            request.setAttribute("contrato", ds);
+            request.setAttribute("accion", "Editar");
         }
         redireccionar(request, response, redireccion);
     }

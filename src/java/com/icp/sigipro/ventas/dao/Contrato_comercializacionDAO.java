@@ -109,7 +109,11 @@ public class Contrato_comercializacionDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del contrato debe ser único");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }
@@ -139,7 +143,11 @@ public class Contrato_comercializacionDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la edición");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del contrato debe ser único");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar la edición");}
         }
         return resultado;
     }

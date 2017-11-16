@@ -25,6 +25,15 @@ public class Lista { //Lista de espera
     private String correo;
     private int dias;
     private String observaciones;
+    private String descripcion;
+
+  public String getDescripcion() {
+    return descripcion;
+  }
+
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+  }
 
     public String getObservaciones() {
         return observaciones;

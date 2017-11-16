@@ -15,23 +15,23 @@ $(function(){ /* DOM ready */ //
             telefono.required = true;
             correo.required = true;
             nombre.required = true;
-            telefono.style.display = 'block';
-            correo.style.display = 'block';
-            telefono_label.style.display = 'block';
-            correo_label.style.display = 'block';
-            nombre.style.display = 'block';
-            nombre_label.style.display = 'block';
+            telefono.disabled = false;
+            correo.disabled= false;
+            telefono_label.disabled = false;
+            correo_label.disabled = false;
+            nombre.disabled = false;
+            nombre_label.disabled = false;
         }
         else{ //hide teléfono y correo
             telefono.required = false;
             correo.required = false;
             nombre.required = false;
-            telefono.style.display = 'none';
-            correo.style.display = 'none';
-            telefono_label.style.display = 'none';
-            correo_label.style.display = 'none';
-            nombre.style.display = 'none';
-            nombre_label.style.display = 'none';
+            telefono.disabled = true;
+            correo.disabled= true;
+            telefono_label.disabled = true;
+            correo_label.disabled = true;
+            nombre.disabled = true;
+            nombre_label.disabled = true;
         }
     }).change();
     
@@ -48,7 +48,12 @@ function comprobarFechas(){
     }
     
     else{
-        document.getElementById("formLista").submit();
+       
+       if (!$('#id_cliente').valid || !$('#fecha_solicitud').valid) {
+            $('<input type="submit">').hide().appendTo($('#formLista')).click();
+}
+       else{
+            $("#formLista").submit();}
     }
 }
 

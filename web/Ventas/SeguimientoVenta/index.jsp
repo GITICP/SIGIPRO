@@ -38,7 +38,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -86,5 +86,7 @@
     </div>
 
     </jsp:attribute>
-
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+  </jsp:attribute>
   </t:plantilla_general>

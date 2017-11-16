@@ -102,12 +102,15 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
         int documento = Integer.parseInt(request.getParameter("documento"));
         String filename = "";
+        String nombre ="";
         switch(documento){
             case 1:
                 filename = reunion.getMinuta();
+                nombre = "minuta-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
                 break;
             case 2:
                 filename = reunion.getMinuta2();
+                nombre = "adjunto-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
                 break;
         }
         File file = new File(filename);
@@ -119,7 +122,6 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
 
             response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
             response.setContentLength((int) file.length());
-            String nombre = "minuta-" + reunion.getId_reunion() + "." + this.getFileExtension(filename);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + nombre + "\"");
 
             ServletOutputStream os = response.getOutputStream();
@@ -147,7 +149,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         String redireccion = "ReunionProduccion/Agregar.jsp";
         Reunion_produccion ds = new Reunion_produccion();
         
-        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
+        request.setAttribute("usuarios",dao_us.obtenerUsuariosAlfa());
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Agregar");
 
@@ -193,7 +195,7 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
         int id_reunion = Integer.parseInt(request.getParameter("id_reunion"));
         Reunion_produccion ds = dao.obtenerReunion_produccion(id_reunion);
         List<Participantes_reunion> d = pDAO.obtenerParticipantes(id_reunion);
-        request.setAttribute("usuarios",dao_us.obtenerUsuarios());
+        request.setAttribute("usuarios",dao_us.obtenerUsuariosAlfa());
         request.setAttribute("participantes", d);
         request.setAttribute("reunion", ds);
         request.setAttribute("accion", "Editar");
@@ -370,6 +372,13 @@ public class ControladorReunion_produccion extends SIGIPROServlet {
                         tr.setMinuta(archivoViejo);
                         //File archivo = new File(archivoViejo);
                         //archivo.delete();
+                    }
+                String documentoAdjunto = "";
+                if (tr.getMinuta2().equals("")) {
+                    documentoAdjunto = dao.obtenerReunion_produccion(tr.getId_reunion()).getMinuta2();
+                }
+                if (!documentoAdjunto.equals("")) {
+                        tr.setMinuta2(documentoAdjunto);
                     }
                 resultado2 = dao.editarReunion_produccion(tr);
                 //System.out.println("listaProductos = "+listaProductos);

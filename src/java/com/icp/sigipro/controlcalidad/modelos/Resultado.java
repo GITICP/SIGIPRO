@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.modelos;
 
 import com.google.gson.Gson;
+import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Date;
 import java.sql.SQLXML;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author ld.conejo
  */
-public class Resultado
+public class Resultado extends IModelo
 {
 
     private int id_resultado;
@@ -24,13 +25,13 @@ public class Resultado
     private transient SQLXML datos;
     private String datos_string;
     private Date fecha;
+    private Date fecha_reportado;
     private Usuario usuario;
     private int repeticion;
     private String resultado;
 
     private List<Reactivo> reactivos_resultado;
     private List<Equipo> equipos_resultado;
-    private List<Patron> controles_resultado;
     private List<Patron> patrones_resultado;
     
     // Evitar error al parsear a JSON con la libraría Gson
@@ -200,31 +201,12 @@ public class Resultado
         return resultado_func;
     }
 
-    public List<Patron> getControles_resultado() {
-        return controles_resultado;
-    }
-
-    public void setControles_resultado(List<Patron> controles_resultado) {
-        this.controles_resultado = controles_resultado;
-    }
-
     public List<Patron> getPatrones_resultado() {
         return patrones_resultado;
     }
 
     public void setPatrones_resultado(List<Patron> patrones_resultado) {
         this.patrones_resultado = patrones_resultado;
-    }
-    
-    public void setControles(String[] ids) {
-
-        this.controles_resultado = new ArrayList<>();
-
-        for (String id : ids) {
-            Patron patron = new Patron();
-            patron.setId_patron(Integer.parseInt(id));
-            this.controles_resultado.add(patron);
-        }
     }
     
     public void setPatrones(String[] ids) {
@@ -243,9 +225,6 @@ public class Resultado
         if (this.patrones_resultado != null) {
             resultado_func = !this.patrones_resultado.isEmpty();
         }
-        if (this.controles_resultado != null) {
-            resultado_func = !this.controles_resultado.isEmpty() || resultado_func;
-        }
         return resultado_func;
     }
     
@@ -253,14 +232,6 @@ public class Resultado
         boolean resultado_func = false;
         if (this.patrones_resultado != null) {
             resultado_func = tienePatronEnLista(patrones_resultado, p.getId_patron());
-        }
-        return resultado_func;
-    }
-    
-    public boolean tieneControl(Patron p) {
-        boolean resultado_func = false;
-        if (this.controles_resultado != null) {
-            resultado_func = tienePatronEnLista(controles_resultado, p.getId_patron());
         }
         return resultado_func;
     }
@@ -277,16 +248,23 @@ public class Resultado
     }
     
     public void agregarPatron(Patron p) {
-        if (!p.getTipo().equalsIgnoreCase("Control Interno")) {
-            if(patrones_resultado == null) {
-                patrones_resultado = new ArrayList<>();
-            }
-            patrones_resultado.add(p);
-        } else {
-            if (controles_resultado == null) {
-                controles_resultado = new ArrayList<>();
-            }
-            controles_resultado.add(p);
+        if(patrones_resultado == null) {
+            patrones_resultado = new ArrayList<>();
         }
+        patrones_resultado.add(p);
     }
+
+    public Date getFecha_reportado() {
+        return fecha_reportado;
+    }
+    
+    public String getFecha_reportado_formateada() {
+        return helper_fechas.formatearFecha(fecha_reportado);
+    }
+    
+    public void setFecha_reportado(Date fecha_reportado) {
+        this.fecha_reportado = fecha_reportado;
+    }
+    
+    
 }

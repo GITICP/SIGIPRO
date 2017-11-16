@@ -47,6 +47,7 @@
                                         <th>Nombre</th>
                                         <th>Tipo</th>
                                         <th>País</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,6 +63,7 @@
                                             </td>
                                             <td>${cliente.getTipo()}</td>
                                             <td>${cliente.getPais()}</td>
+                                            <td>${cliente.getEstado()}</td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>

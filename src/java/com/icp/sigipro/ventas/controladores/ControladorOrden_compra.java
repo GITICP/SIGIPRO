@@ -22,6 +22,7 @@ import com.icp.sigipro.ventas.dao.Producto_OrdenDAO;
 import com.icp.sigipro.ventas.dao.Producto_ventaDAO;
 import com.icp.sigipro.ventas.modelos.Intencion_venta;
 import com.icp.sigipro.ventas.modelos.Producto_Orden;
+import com.icp.sigipro.ventas.modelos.Producto_venta;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -103,6 +104,8 @@ public class ControladorOrden_compra extends SIGIPROServlet {
         else{
             consecutivo = ordenes.get(ordenes.size()-1).getId_orden()+1;
         }
+        List<Producto_venta> productos = pdao.obtenerProductos_venta();
+        request.setAttribute("productos", productos);
         request.setAttribute("consecutivo", consecutivo);
         request.setAttribute("orden", ds);
         request.setAttribute("clientes", cdao.obtenerClientes());
@@ -210,7 +213,8 @@ public class ControladorOrden_compra extends SIGIPROServlet {
             d.get(contador-1).setContador(contador);
             contador ++;
         }
-        
+        List<Producto_venta> productos = pdao.obtenerProductos_venta();
+        request.setAttribute("productos", productos);
         request.setAttribute("listadoProductos", listadoProductos);
         request.setAttribute("productos_orden", d);
         request.setAttribute("orden", ds);

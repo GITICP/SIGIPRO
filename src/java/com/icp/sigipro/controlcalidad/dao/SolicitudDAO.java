@@ -43,19 +43,19 @@ public class SolicitudDAO extends DAO {
             int id = obtenerProximoId();
 
             Date fechaActual = new Date();
-            DateFormat formatoFechaMes = new SimpleDateFormat("MM");
-            DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
-            int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+            //DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+            DateFormat formatoFechaAnno = new SimpleDateFormat("yyyy");
+            //int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
             int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
 
-            String numeroAnno = "";
-
+            String numeroAnno = String.valueOf(anno);
+/*
             if (mes >= 10) {
                 numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
             } else {
                 numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
             }
-
+*/
             String numero_solicitud = id + "-" + numeroAnno;
             solicitud.setNumero_solicitud(numero_solicitud);
 
@@ -104,18 +104,20 @@ public class SolicitudDAO extends DAO {
                 String ultimoAnno = parts[1];
                 
                 Date fechaActual = new Date();
-                DateFormat formatoFechaMes = new SimpleDateFormat("MM");
-                DateFormat formatoFechaAnno = new SimpleDateFormat("yy");
-                int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
+                //DateFormat formatoFechaMes = new SimpleDateFormat("MM");
+                DateFormat formatoFechaAnno = new SimpleDateFormat("yyyy");
+                //int mes = Integer.parseInt(formatoFechaMes.format(fechaActual));
                 int anno = Integer.parseInt(formatoFechaAnno.format(fechaActual));
 
-                String numeroAnno = "";
+                String numeroAnno = String.valueOf(anno);
 
+/* Antiguo Cambio de año.
                 if (mes >= 10) {
                     numeroAnno = String.valueOf(anno) + String.valueOf(anno + 1);
                 } else {
                     numeroAnno = String.valueOf(anno - 1) + String.valueOf(anno);
                 }
+*/
                 
                 if (numeroAnno.equals(ultimoAnno)){
                     nextval = Integer.parseInt(ultimoConsecutivo)+ 1;
@@ -256,18 +258,22 @@ public class SolicitudDAO extends DAO {
         return resultado;
     }
 
-    public boolean recibirSolicitud(SolicitudCC solicitud) {
-        boolean resultado = false;
+    public int recibirSolicitud(SolicitudCC solicitud) {
+        // -1 -> Fallo en BD, 0 -> Éxito, 1 -> Solicitud ya fue recibida
+        
+        int resultado = -1;
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
                     + "SET id_usuario_recibido=?, fecha_recibido=?, estado='Recibido' "
-                    + "WHERE id_solicitud = ?; ");
+                    + "WHERE id_solicitud = ? and estado = 'Solicitado'; ");
             consulta.setInt(1, solicitud.getUsuario_recibido().getId_usuario());
             consulta.setTimestamp(2, solicitud.getFecha_recibido());
             consulta.setInt(3, solicitud.getId_solicitud());
             if (consulta.executeUpdate() == 1) {
-                resultado = true;
+                resultado = 0;
+            } else {
+                resultado = 1;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -580,7 +586,9 @@ public class SolicitudDAO extends DAO {
             }
 
             consulta = getConexion().prepareStatement(
-                    " SELECT ags.id_analisis_grupo_solicitud, a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, tm.id_tipo_muestra "
+                    " SELECT ags.id_analisis_grupo_solicitud, ags.observaciones_no_realizar, ags.realizar, "
+                    + " a.id_analisis, a.nombre as nombreanalisis, g.id_grupo, m.id_muestra, m.identificador, tm.nombre as nombretipo, "
+                    + " tm.id_tipo_muestra "
                     + " FROM control_calidad.analisis_grupo_solicitud as ags "
                     + "   LEFT OUTER JOIN control_calidad.grupos as g ON g.id_grupo = ags.id_grupo "
                     + "   LEFT OUTER JOIN control_calidad.grupos_muestras as gm ON gm.id_grupo = g.id_grupo "
@@ -607,6 +615,8 @@ public class SolicitudDAO extends DAO {
                 if (id_ags != ags.getId_analisis_grupo_solicitud()) {
                     ags = new AnalisisGrupoSolicitud();
                     ags.setId_analisis_grupo_solicitud(id_ags);
+                    ags.setObservaciones_no_realizar(rs.getString("observaciones_no_realizar"));
+                    ags.setRealizar(rs.getBoolean("realizar"));
 
                     Analisis a = new Analisis();
                     a.setId_analisis(rs.getInt("id_analisis"));
@@ -644,7 +654,7 @@ public class SolicitudDAO extends DAO {
             if (resultado.getInforme() != null) {
                 String ids = this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud);
                 consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, r.fecha_reportado, "
                         + " CASE WHEN r.id_resultado IN (  "
                         + " 				SELECT r.id_resultado "
                         + " 				FROM control_calidad.resultados_informes ri  "
@@ -661,7 +671,7 @@ public class SolicitudDAO extends DAO {
                 );
 
                 consulta_resultados_sp = getConexion().prepareStatement(
-                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, "
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, r.fecha_reportado, "
                         + " CASE WHEN r.id_resultado_analisis_sp IN (  "
                         + " 				SELECT r.id_resultado_analisis_sp "
                         + " 				FROM control_calidad.resultados_informes ri  "
@@ -682,7 +692,7 @@ public class SolicitudDAO extends DAO {
 
             } else {
                 consulta = getConexion().prepareStatement(
-                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion "
+                        " SELECT ags.id_analisis_grupo_solicitud, r.id_resultado, r.resultado, r.repeticion, r.fecha_reportado "
                         + " FROM control_calidad.analisis_grupo_solicitud ags "
                         + "     LEFT JOIN control_calidad.resultados r ON r.id_analisis_grupo_solicitud = ags.id_analisis_grupo_solicitud"
                         + " WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
@@ -690,7 +700,7 @@ public class SolicitudDAO extends DAO {
                 );
 
                 consulta_resultados_sp = getConexion().prepareStatement(
-                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion "
+                        "SELECT ags.id_analisis_grupo_solicitud, r.id_resultado_analisis_sp, r.hematocrito, r.hemoglobina, r.repeticion, r.fecha_reportado "
                         + "  FROM control_calidad.analisis_grupo_solicitud ags "
                         + "      LEFT JOIN control_calidad.resultados_analisis_sangrias_prueba r ON r.id_ags = ags.id_analisis_grupo_solicitud "
                         + "  WHERE ags.id_analisis_grupo_solicitud IN " + this.pasarIdsAGSAParentesis(lista_grupos_analisis_solicitud)
@@ -707,6 +717,7 @@ public class SolicitudDAO extends DAO {
                     r.setId_resultado(rs.getInt("id_resultado"));
                     r.setResultado(rs.getString("resultado"));
                     r.setRepeticion(rs.getInt("repeticion"));
+                    r.setFecha_reportado(rs.getDate("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);
@@ -729,6 +740,7 @@ public class SolicitudDAO extends DAO {
                     r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
                     r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
                     r_sp.setRepeticion(rs_sp.getInt("repeticion"));
+                    r_sp.setFecha_reportado(rs_sp.getDate("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
                     r_sp.setAgs(ags_iter);
@@ -745,7 +757,9 @@ public class SolicitudDAO extends DAO {
             ex.printStackTrace();
         } finally {
             cerrarSilencioso(rs);
+            cerrarSilencioso(rs_sp);
             cerrarSilencioso(consulta);
+            cerrarSilencioso(consulta_resultados_sp);
             cerrarConexion();
         }
         return resultado;
@@ -837,7 +851,9 @@ public class SolicitudDAO extends DAO {
         PreparedStatement consulta = null;
         try {
             consulta = getConexion().prepareStatement(" UPDATE control_calidad.solicitudes "
-                    + "SET estado='Anulada', observaciones=? "
+                    +" SET estado= "
+                    +" case when estado = 'Recibido' then 'Anulada después de recibda' else 'Anulada' end "
+                    +" , observaciones= ? "
                     + "WHERE id_solicitud = ?; ");
             consulta.setString(1, observaciones);
             consulta.setInt(2, id_solicitud);
@@ -988,6 +1004,34 @@ public class SolicitudDAO extends DAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+
+    public boolean noRealizarAnalisis(AnalisisGrupoSolicitud ags) throws SIGIPROException {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            
+            consulta = getConexion().prepareStatement(
+                    "UPDATE control_calidad.analisis_grupo_solicitud "
+                    + " SET observaciones_no_realizar = ?, realizar = false "
+                    + " WHERE id_analisis_grupo_solicitud = ?; "); 
+            
+            consulta.setString(1, ags.getObservaciones_no_realizar());
+            consulta.setInt(2, ags.getId_analisis_grupo_solicitud());
+            
+            int result = consulta.executeUpdate();
+
+            if (result == 1) {
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("No se pudo identificar el análisis como no realizable.");
         } finally {
             cerrarSilencioso(consulta);
             cerrarConexion();

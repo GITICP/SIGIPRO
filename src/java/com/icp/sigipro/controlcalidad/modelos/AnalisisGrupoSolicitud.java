@@ -20,7 +20,9 @@ public class AnalisisGrupoSolicitud {
     private Analisis analisis;
     private Grupo grupo;
     private List<Resultado> resultados;
-
+    private String observaciones_no_realizar;
+    private boolean realizar;
+            
     private String[] lista_analisis;
 
     public AnalisisGrupoSolicitud() {
@@ -113,6 +115,28 @@ public class AnalisisGrupoSolicitud {
     
     public Resultado getPrimerResultado() {
         return resultados.get(0);
+    }
+
+    public String getObservaciones_no_realizar() {
+        return observaciones_no_realizar;
+    }
+
+    public void setObservaciones_no_realizar(String observaciones_no_realizar) {
+        String observaciones_final = "Sin observaciones.";
+        if (observaciones_no_realizar != null) {
+            if(!observaciones_no_realizar.isEmpty()) {
+                observaciones_final = observaciones_no_realizar;
+            }
+        }
+        this.observaciones_no_realizar = observaciones_final;
+    }
+
+    public boolean isRealizar() {
+        return realizar;
+    }
+
+    public void setRealizar(boolean realizar) {
+        this.realizar = realizar;
     }
     
     public void setResultados(List<Resultado> resultados) {

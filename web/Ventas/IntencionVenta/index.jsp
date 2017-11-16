@@ -38,7 +38,7 @@
             </div>
             ${mensaje}
             <div class="widget-content">
-                <table id="tabla_intenciones" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+                <table id="tabla_intenciones" class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -88,6 +88,8 @@
       <!-- /main -->
       </div>
     </jsp:attribute>
-
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+  </jsp:attribute>
   </t:plantilla_general>
     <script src="${direccion_contexto}/SIGIPRO/recursos/js/sigipro/Intencion_venta.js"></script>

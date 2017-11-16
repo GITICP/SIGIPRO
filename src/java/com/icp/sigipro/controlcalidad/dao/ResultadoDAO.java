@@ -17,6 +17,7 @@ import com.icp.sigipro.controlcalidad.modelos.ResultadoSangriaPrueba;
 import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.controlcalidad.modelos.TipoEquipo;
 import com.icp.sigipro.controlcalidad.modelos.TipoMuestra;
+import com.icp.sigipro.controlcalidad.modelos.TipoPatronControl;
 import com.icp.sigipro.controlcalidad.modelos.TipoReactivo;
 import com.icp.sigipro.controlcalidad.modelos.asociaciones.ObjetoAsociacionMultiple;
 import com.icp.sigipro.core.DAO;
@@ -112,13 +113,7 @@ public class ResultadoDAO extends DAO {
                     insert_patrones_controles.setInt(2, p.getId_patron());
                     insert_patrones_controles.addBatch();
                 }
-
-                for (Patron p : resultado.getControles_resultado()) {
-                    insert_patrones_controles.setInt(1, resultado.getId_resultado());
-                    insert_patrones_controles.setInt(2, p.getId_patron());
-                    insert_patrones_controles.addBatch();
-                }
-
+                
                 insert_patrones_controles.executeBatch();
             }
 
@@ -308,9 +303,10 @@ public class ResultadoDAO extends DAO {
             }
 
             consulta_patrones_controles = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.tipo, p.numero_lote "
+                    " SELECT p.id_patron, p.numero_lote, tpc.id_tipo_patroncontrol, tpc.nombre "
                     + " FROM control_calidad.patrones_resultados pr "
                     + "     INNER JOIN control_calidad.patrones p ON pr.id_patron = p.id_patron "
+                    + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol "
                     + " WHERE pr.id_resultado = ?;"
             );
             
@@ -324,7 +320,11 @@ public class ResultadoDAO extends DAO {
                     
                     p.setId_patron(rs_patrones_controles.getInt("id_patron"));
                     p.setNumero_lote(rs_patrones_controles.getString("numero_lote"));
-                    p.setTipo(rs_patrones_controles.getString("tipo"));
+                    
+                    TipoPatronControl tpc = new TipoPatronControl();
+                    tpc.setId_tipo_patroncontrol(rs_patrones_controles.getInt("id_tipo_patroncontrol"));
+                    tpc.setNombre(rs_patrones_controles.getString("nombre"));
+                    p.setTipo(tpc);
                     
                     resultado.agregarPatron(p);
                 } while(rs_patrones_controles.next());
@@ -542,12 +542,6 @@ public class ResultadoDAO extends DAO {
                 );
 
                 for (Patron p : resultado.getPatrones_resultado()) {
-                    insert_patrones_controles.setInt(1, resultado.getId_resultado());
-                    insert_patrones_controles.setInt(2, p.getId_patron());
-                    insert_patrones_controles.addBatch();
-                }
-
-                for (Patron p : resultado.getControles_resultado()) {
                     insert_patrones_controles.setInt(1, resultado.getId_resultado());
                     insert_patrones_controles.setInt(2, p.getId_patron());
                     insert_patrones_controles.addBatch();

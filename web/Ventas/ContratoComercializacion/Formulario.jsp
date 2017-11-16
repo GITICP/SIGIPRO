@@ -39,7 +39,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <input id="nombre" type="text" class="form-control" name="nombre" value="${contrato.getNombre()}" required
+                        <input id="nombre" type="text" maxlength="100" class="form-control" name="nombre" value="${contrato.getNombre()}" required
                             oninvalid="setCustomValidity('Debe ingresar un nombre. ')"
                             oninput="setCustomValidity('')">
                     </div>
@@ -51,7 +51,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <textarea id="observaciones" name="observaciones" class="form-control">${contrato.getObservaciones()}</textarea>
+                        <textarea maxlength="500" id="observaciones" name="observaciones" class="form-control">${contrato.getObservaciones()}</textarea>
                     </div>
                 </div>
             </div>

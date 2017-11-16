@@ -6,6 +6,7 @@
 package com.icp.sigipro.controlcalidad.dao;
 
 import com.icp.sigipro.controlcalidad.modelos.Patron;
+import com.icp.sigipro.controlcalidad.modelos.TipoPatronControl;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import java.sql.PreparedStatement;
@@ -30,12 +31,13 @@ public class PatronDAO extends DAO {
         try {
             insert_patron = getConexion().prepareStatement(
                     " INSERT INTO control_calidad.patrones "
-                    + " (numero_lote, tipo, fecha_ingreso, fecha_vencimiento, fecha_inicio_uso, certificado, lugar_almacenamiento, condicion_almacenamiento, observaciones) "
+                    + " (numero_lote, id_tipo_patroncontrol, fecha_ingreso, fecha_vencimiento, fecha_inicio_uso, certificado, "
+                            + "lugar_almacenamiento, condicion_almacenamiento, observaciones) "
                     + " VALUES (?,?,?,?,?,?,?,?,?) RETURNING id_patron;"
             );
 
             insert_patron.setString(1, patron.getNumero_lote());
-            insert_patron.setString(2, patron.getTipo());
+            insert_patron.setInt(2, patron.getTipo().getId_tipo_patroncontrol());
             insert_patron.setDate(3, patron.getFecha_ingreso());
             insert_patron.setDate(4, patron.getFecha_vencimiento());
             insert_patron.setDate(5, patron.getFecha_inicio_uso());
@@ -76,7 +78,7 @@ public class PatronDAO extends DAO {
 
             String consulta
                     = " UPDATE control_calidad.patrones SET "
-                    + "     numero_lote = ?, tipo = ?, fecha_ingreso = ?, fecha_vencimiento = ?, fecha_inicio_uso = ?, "
+                    + "     numero_lote = ?, id_tipo_patroncontrol = ?, fecha_ingreso = ?, fecha_vencimiento = ?, fecha_inicio_uso = ?, "
                     + "     lugar_almacenamiento = ?, condicion_almacenamiento = ?, observaciones = ? ";
 
             if (tiene_certificado) {
@@ -88,7 +90,7 @@ public class PatronDAO extends DAO {
             update_patron = getConexion().prepareStatement(consulta);
 
             update_patron.setString(1, patron.getNumero_lote());
-            update_patron.setString(2, patron.getTipo());
+            update_patron.setInt(2, patron.getTipo().getId_tipo_patroncontrol());
             update_patron.setDate(3, patron.getFecha_ingreso());
             update_patron.setDate(4, patron.getFecha_vencimiento());
             update_patron.setDate(5, patron.getFecha_inicio_uso());
@@ -144,8 +146,9 @@ public class PatronDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.numero_lote, p.tipo, p.fecha_vencimiento, p.lugar_almacenamiento "
+                    " SELECT p.id_patron, p.numero_lote, p.fecha_vencimiento, p.lugar_almacenamiento, tpc.id_tipo_patroncontrol, tpc.nombre "
                     + " FROM control_calidad.patrones p "
+                    + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol "
             );
 
             rs = consulta.executeQuery();
@@ -155,7 +158,12 @@ public class PatronDAO extends DAO {
 
                 p.setId_patron(rs.getInt("id_patron"));
                 p.setNumero_lote(rs.getString("numero_lote"));
-                p.setTipo(rs.getString("tipo"));
+                
+                TipoPatronControl tpc = new TipoPatronControl();
+                tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
+                tpc.setNombre(rs.getString("nombre"));
+                
+                p.setTipo(tpc);
                 p.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
                 p.setLugar_almacenamiento(rs.getString("lugar_almacenamiento"));
 
@@ -185,15 +193,17 @@ public class PatronDAO extends DAO {
             consulta = getConexion().prepareStatement(
                     " SELECT p.id_patron, "
                     + "     p.numero_lote, "
-                    + "     p.tipo, "
                     + "     p.fecha_vencimiento, "
                     + "     p.fecha_ingreso, "
                     + "     p.lugar_almacenamiento,"
                     + "     p.fecha_inicio_uso,"
                     + "     p.observaciones,"
                     + "     p.condicion_almacenamiento,"
-                    + "     p.certificado"
+                    + "     p.certificado,"
+                    + "     tpc.id_tipo_patroncontrol,"
+                    + "     tpc.nombre "
                     + " FROM control_calidad.patrones p "
+                    + "     INNER JOIN  control_calidad.tipos_patronescontroles tpc ON p.id_tipo_patroncontrol = tpc.id_tipo_patroncontrol "
                     + " WHERE p.id_patron = ?;"
             );
 
@@ -203,7 +213,12 @@ public class PatronDAO extends DAO {
             if (rs.next()) {
                 resultado.setId_patron(rs.getInt("id_patron"));
                 resultado.setNumero_lote(rs.getString("numero_lote"));
-                resultado.setTipo(rs.getString("tipo"));
+                
+                TipoPatronControl tpc = new TipoPatronControl();
+                tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
+                tpc.setNombre(rs.getString("nombre"));
+                
+                resultado.setTipo(tpc);
                 resultado.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
                 resultado.setFecha_ingreso(rs.getDate("fecha_ingreso"));
                 resultado.setLugar_almacenamiento(rs.getString("lugar_almacenamiento"));
@@ -274,23 +289,18 @@ public class PatronDAO extends DAO {
         return resultado;
     }
     
-    public List<List<Patron>> obtenerPatronesRealizarAnalisis() throws SIGIPROException {
+    public List<Patron> obtenerPatronesRealizarAnalisis() throws SIGIPROException {
         
-        List<Patron> lista_patrones = new ArrayList<>();
-        List<Patron> lista_controles = new ArrayList<>();
-        
-        List<List<Patron>> resultado = new ArrayList<>();
-        
-        resultado.add(lista_patrones);
-        resultado.add(lista_controles);
+        List<Patron> resultado = new ArrayList<>();
 
         PreparedStatement consulta = null;
         ResultSet rs = null;
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT p.id_patron, p.numero_lote, p.tipo "
+                    " SELECT p.id_patron, p.numero_lote, tpc.nombre, tpc.id_tipo_patroncontrol "
                     + " FROM control_calidad.patrones p "
+                    + "     INNER JOIN control_calidad.tipos_patronescontroles tpc ON tpc.id_tipo_patroncontrol = p.id_tipo_patroncontrol ;"
             );
 
             rs = consulta.executeQuery();
@@ -300,13 +310,13 @@ public class PatronDAO extends DAO {
 
                 p.setId_patron(rs.getInt("id_patron"));
                 p.setNumero_lote(rs.getString("numero_lote"));
-                p.setTipo(rs.getString("tipo"));
-
-                if (p.getTipo().equalsIgnoreCase("Control Interno")) {
-                    lista_controles.add(p);
-                } else {
-                    lista_patrones.add(p);
-                }
+                
+                TipoPatronControl tpc = new TipoPatronControl();
+                tpc.setId_tipo_patroncontrol(rs.getInt("id_tipo_patroncontrol"));
+                tpc.setNombre(rs.getString("nombre"));
+                p.setTipo(tpc);
+                
+                resultado.add(p);
             }
 
         } catch (SQLException sql_ex) {

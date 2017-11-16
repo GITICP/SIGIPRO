@@ -1,3 +1,9 @@
+//Set datepicker to min date today
+
+$(function () {
+    var datepicker = $(".sigiproDatePickerEspecial").datepicker({startDate:"0d"});
+});
+
 $(function(){ /* DOM ready */ //
     $("#id_cliente").change(function () {
         //Agregar solo las opciones que contienen el data-cliente que corresponde a id_cliente[selectedindex].value
@@ -49,9 +55,19 @@ $( document ).ready(function() {
   campoOcultoRoles.val("");
   for (var i = 1; i<tabla.rows.length; i++) {
       var id = tabla.rows[i].getAttribute('id');
-      campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + id + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
+      campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + id + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue);
+      try {
+      if (tabla.rows[i].cells[2].firstChild.nodeValue !== null)
+        {
+          campoOcultoRoles.val(campoOcultoRoles.val() + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
+        }
+      }
+      catch (exception) {}
       $("#seleccionProducto option[value='"+id+"']").remove();
   }
+  
+  
+  //alert("el valor del campo oculto es: " + $('#listaProductos').val());
 });
 
 function validarProductosYSubmit(){
@@ -76,8 +92,14 @@ function eliminarProducto(idRol) {
   var tabla = document.getElementById("datatable-column-filter-productos");
   campoOcultoRoles.val("");
   for (var i = 1; i<tabla.rows.length; i++) {
-    campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + tabla.rows[i].getAttribute('id') + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
-  }
+    campoOcultoRoles.val(campoOcultoRoles.val()+"#r#" + tabla.rows[i].getAttribute('id') + "#c#" + tabla.rows[i].cells[1].firstChild.nodeValue );
+      try {
+      if (tabla.rows[i].cells[2].firstChild.nodeValue !== null)
+        {
+          campoOcultoRoles.val(campoOcultoRoles.val() + "#c#" + tabla.rows[i].cells[2].firstChild.nodeValue);
+        }
+      }
+      catch (exception) {}}
   //alert("listaProductos = "+campoOcultoRoles.val());
 }
 
@@ -188,9 +210,10 @@ $(function(){ /* DOM ready */
 });
 
 function confirmacion() {
+  //alert("el valor del campo oculto es: " + $('#listaProductos').val());
   rolesCodificados = "";
   $('#datatable-column-filter-productos > tbody > tr').each(function ()
-
+  
   {
     fila = $(this);
     rolesCodificados += fila.attr('id');

@@ -55,7 +55,7 @@
               <div class="col-sm-12">
                 <!-- Stock -->
                 <div class="input-group">
-                    <textarea id="observaciones" name="observaciones" class="form-control">${reunion.getObservaciones()}</textarea>
+                    <textarea id="observaciones" maxlength="100" name="observaciones" class="form-control">${reunion.getObservaciones()}</textarea>
                 </div>
               </div>
             </div>

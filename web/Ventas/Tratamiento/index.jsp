@@ -31,14 +31,14 @@
           <!-- COLUMN FILTER DATA TABLE -->
           <div class="widget widget-table">
             <div class="widget-header">
-                <h3><i class="fa fa-file-text-o"></i> Tratamientos </h3>
-                <div class="btn-group widget-header-toolbar">
-                    <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Tratamiento?accion=agregar">Agregar un Tratamiento</a>
-                </div>  
+              <h3><i class="fa fa-file-text-o"></i> Tratamientos </h3>
+              <div class="btn-group widget-header-toolbar">
+                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Ventas/Tratamiento?accion=agregar">Agregar un Tratamiento</a>
+              </div>  
             </div>
             ${mensaje}
             <div class="widget-content">
-              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter">
+              <table class="table table-sorting table-striped table-hover datatable tablaSigipro sigipro-tabla-filter sortable-desc2">
                 <!-- Columnas -->
                 <thead> 
                   <tr>
@@ -46,7 +46,6 @@
                     <th>Cliente</th>
                     <th>Fecha</th>
                     <th>Observaciones</th>
-                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -55,32 +54,20 @@
                     <tr id ="${tratamiento.getId_tratamiento()}">
                       <td>
                         <a href="/SIGIPRO/Ventas/Tratamiento?accion=ver&id_tratamiento=${tratamiento.getId_tratamiento()}">
-                        <div style="height:100%;width:100%">
+                          <div style="height:100%;width:100%">
                             ${tratamiento.getId_tratamiento()}
-                        </div>
+                          </div>
                         </a>
                       </td>
                       <td>
-                          <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${tratamiento.getCliente().getId_cliente()}">
-                            <div style="height:100%;width:100%">
-                                  ${tratamiento.getCliente().getNombre()}
-                            </div>
-                            </a>
+                        <a href="/SIGIPRO/Ventas/Clientes?accion=ver&id_cliente=${tratamiento.getCliente().getId_cliente()}">
+                          <div style="height:100%;width:100%">
+                            ${tratamiento.getCliente().getNombre()}
+                          </div>
+                        </a>
                       </td>
                       <td>${tratamiento.getFecha_S()}</td>
-                      <td>${tratamiento.getObservaciones()}</td>
-                      <c:choose>
-                        <c:when test="${tratamiento.getEstado().equals('Idóneo')}">
-                           <td><font color="green">A</font></td>
-                        </c:when>
-                        <c:when test="${tratamiento.getEstado().equals('Normal')}">
-                            <td><font color="blue">B</font></td>
-                        </c:when>
-                        <c:otherwise>
-                            <td><font color="red">C</font></td>
-                        </c:otherwise>
-                    </c:choose>
-                      
+                      <td>${tratamiento.getObservaciones()}</td>                     
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -92,7 +79,9 @@
         <!-- /main-content -->
       </div>
       <!-- /main -->
-      </div>
-    </jsp:attribute>
-
-  </t:plantilla_general>
+    </div>
+  </jsp:attribute>
+  <jsp:attribute name="scripts">
+    <script src="/SIGIPRO/recursos/js/sigipro/sortTables.js"></script>
+  </jsp:attribute>
+</t:plantilla_general>

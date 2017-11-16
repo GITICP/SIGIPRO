@@ -121,7 +121,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             bitacora.setBitacora(contacto_nuevo.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CONTACTOS_CLIENTE, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado) {
             redireccion = "Clientes/index.jsp";
@@ -129,7 +129,11 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             request.setAttribute("listaClientes", clientes);
             request.setAttribute("mensaje", helper.mensajeDeExito("Contacto agregado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            Contactos_cliente ds = new Contactos_cliente();
+            int id_cliente = Integer.parseInt(request.getParameter("id_cliente"));
+            request.setAttribute("contacto", ds);
+            request.setAttribute("id_cliente", id_cliente);
+            request.setAttribute("accion", "Agregar");
         }
         redireccionar(request, response, redireccion);
     }
@@ -151,7 +155,7 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             bitacora.setBitacora(contacto_nuevo.parseJSON(), Bitacora.ACCION_EDITAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_CONTACTOS_CLIENTE, request.getRemoteAddr());
             //*----------------------------*
         } catch (SIGIPROException ex) {
-            request.setAttribute("mensaje", ex.getMessage());
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
         }
         if (resultado) {
             redireccion = "Clientes/index.jsp";
@@ -159,7 +163,9 @@ public class ControladorContactos_cliente extends SIGIPROServlet {
             request.setAttribute("listaClientes", clientes);
             request.setAttribute("mensaje", helper.mensajeDeExito("Contacto editado correctamente"));
         } else {
-            request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            Contactos_cliente ds = ccdao.obtenerContactos_cliente(contacto_a_editar.getId_contacto());
+            request.setAttribute("contacto", ds);
+            request.setAttribute("accion", "Editar");
         }
         redireccionar(request, response, redireccion);
     }

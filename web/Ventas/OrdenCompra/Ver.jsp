@@ -113,7 +113,6 @@
                           <th>Nombre del Producto</th>
                           <th>Cantidad</th>
                           <th>Fecha de Entrega</th>
-                          <th>Lote</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -122,7 +121,6 @@
                             <td>${producto.getProducto().getNombre()}</td>
                             <td>${producto.getCantidad()}</td>
                             <td>${producto.getFecha_S()}</td>
-                            <td>${producto.getLote().getLote()}</td>
                           </tr>
                         </c:forEach>
                       </tbody>

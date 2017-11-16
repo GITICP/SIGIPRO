@@ -44,6 +44,7 @@
                   <tr>
                     <th>Nombre</th>
                     <th>Descripción</th>
+                    <th>Tipo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -58,6 +59,7 @@
                         </a>
                       </td>
                       <td>${producto.getDescripcion()}</td>
+                      <td>${producto.getTipo()}</td>
                     </tr>
                   </c:forEach>
                 </tbody>

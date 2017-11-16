@@ -68,6 +68,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
             add("recibir");
             add("anular");
             add("agregargrupo");
+            add("norealizar");
         }
     };
 
@@ -196,7 +197,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Métodos Post">
     protected void postAnular(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validarPermiso(552, request);
+        //validarPermiso(552, request); Eliminada esta validación debido a que los usuarios solicitantes pueden ahora anular sus propias solicitudes
         int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud_anular"));
         String observaciones = request.getParameter("observaciones");
         boolean resultado = false;
@@ -223,7 +224,7 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         validarPermiso(551, request);
 
-        boolean resultado = false;
+        int resultado = -1;
         String usuario = request.getParameter("usuario_recibo");
         String contrasenna = request.getParameter("passw");
 
@@ -246,13 +247,17 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
                 resultado = dao.recibirSolicitud(solicitud);
 
-                if (resultado) {
+                if (resultado == 0) {
                     //Funcion que genera la bitacora 
                     bitacora.setBitacora(solicitud.parseJSON(), Bitacora.ACCION_RECIBIR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_SOLICITUDCC, request.getRemoteAddr());
                     //----------------------------
                     request.setAttribute("mensaje", helper.mensajeDeExito("Solicitud recibida correctamente"));
                 } else {
-                    request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                    if(resultado == -1) {
+                        request.setAttribute("mensaje", helper.mensajeDeError("Solicitud no pudo ser recibida por un error del sistema."));
+                    } else {
+                        request.setAttribute("mensaje", helper.mensajeDeError("Solicitud ya fue recibida."));
+                    }
                 }
                 this.getIndex(request, response);
             } catch (Exception ex) {
@@ -375,6 +380,39 @@ public class ControladorSolicitud extends SIGIPROServlet {
 
         try {
             SolicitudCC s = dao.obtenerSolicitud(grupo.getSolicitud().getId_solicitud());
+            request.setAttribute("solicitud", s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("No se pudo obtener la solicitud. Notifique al administrador del sistema."));
+        }
+
+        redireccionar(request, response, redireccion);
+    }
+    
+    protected void postNorealizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(541, request);
+        
+        String redireccion = "Solicitud/Ver.jsp";
+        
+        int id_ags = Integer.parseInt(request.getParameter("id_analisis_no_realizar"));
+        int id_solicitud = Integer.parseInt(request.getParameter("id_solicitud"));
+        String observaciones = request.getParameter("observaciones");
+        
+        AnalisisGrupoSolicitud ags = new AnalisisGrupoSolicitud();
+        
+        ags.setId_analisis_grupo_solicitud(id_ags);
+        ags.setObservaciones_no_realizar(observaciones);
+        ags.setRealizar(false);
+
+        try {
+            dao.noRealizarAnalisis(ags);
+            request.setAttribute("mensaje", helper.mensajeDeExito("Agrupación creada con éxito."));
+        } catch (SIGIPROException ex) {
+            request.setAttribute("mensaje", helper.mensajeDeError(ex.getMessage()));
+        }
+
+        try {
+            SolicitudCC s = dao.obtenerSolicitud(id_solicitud);
             request.setAttribute("solicitud", s);
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -203,13 +203,15 @@ public class Producto_OrdenDAO extends DAO {
             for (String i : productosParcial) {
                 String[] rol = i.split("#c#");
                 
-                int id_producto = Integer.parseInt(rol[0]);
-                int cantidad = Integer.parseInt(rol[2]);
-                
-                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date fecha_entrega = formatoFecha.parse(rol[3]);
-                java.sql.Date fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
-                
+               int id_producto = Integer.parseInt(rol[0]);
+               int cantidad = Integer.parseInt(rol[1]);
+                java.sql.Date fecha_entregaSQL;
+                try {
+                  SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                  java.util.Date fecha_entrega = formatoFecha.parse(rol[2]);
+                  fecha_entregaSQL = new java.sql.Date(fecha_entrega.getTime());
+                }
+                catch (Exception ex) { fecha_entregaSQL = null;}               
                 Producto_Orden p = new Producto_Orden();
                 p.setFecha_entrega(fecha_entregaSQL);
                 p.setOrden_compra(iDAO.obtenerOrden_compra(id_orden));

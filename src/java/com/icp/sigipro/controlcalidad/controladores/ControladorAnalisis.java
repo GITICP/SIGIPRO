@@ -336,10 +336,9 @@ public class ControladorAnalisis extends SIGIPROServlet {
  
             List<Equipo> equipos = (analisis.tiene_equipos()) ? equipodao.obtenerEquiposTipo(analisis.pasar_ids_tipos("equipos")) : new ArrayList<Equipo>();
             List<Reactivo> reactivos = (analisis.tiene_reactivos()) ? reactivodao.obtenerReactivosTipo(analisis.pasar_ids_tipos("reactivos")) : new ArrayList<Reactivo>();
-            List<List<Patron>> patrones_controles = patrondao.obtenerPatronesRealizarAnalisis();
+            List<Patron> materiales = patrondao.obtenerPatronesRealizarAnalisis();
 
-            request.setAttribute("patrones", patrones_controles.get(0));
-            request.setAttribute("controles", patrones_controles.get(1));
+            request.setAttribute("materiales", materiales);
             request.setAttribute("equipos", equipos);
             request.setAttribute("reactivos", reactivos);
             request.setAttribute("analisis", analisis);
@@ -478,7 +477,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
 
         String[] equipos_utilizados = this.obtenerParametros("equipos");
         String[] reactivos_utilizados = this.obtenerParametros("reactivos");
-        String[] controles_utilizados = this.obtenerParametros("controles");
         String[] patrones_utilizados = this.obtenerParametros("patrones");
 
         HelperExcel excel = this.guardarArchivoResultado(resultado, analisis, ubicacion);
@@ -537,7 +535,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado.setEquipos(equipos_utilizados);
             resultado.setReactivos(reactivos_utilizados);
             resultado.setPatrones(patrones_utilizados);
-            resultado.setControles(controles_utilizados);
 
             resultadodao.insertarResultado(resultado);
             bitacora.setBitacora(resultado.parseJSON(), Bitacora.ACCION_AGREGAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_RESULTADO, request.getRemoteAddr());
@@ -803,7 +800,6 @@ public class ControladorAnalisis extends SIGIPROServlet {
             resultado.setEquipos(equipos_utilizados);
             resultado.setReactivos(reactivos_utilizados);
             resultado.setPatrones(patrones_utilizados);
-            resultado.setControles(controles_utilizados);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

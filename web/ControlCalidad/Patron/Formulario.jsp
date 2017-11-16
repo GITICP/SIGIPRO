@@ -28,18 +28,22 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="input-group">
-                        <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="Primario" ${(accion == 'Editar' && patron.getTipo() == 'Primario') ? "checked" : ""}>
-                            <span><i></i>Primario</span>
-                        </label>
-                        <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="Secundario" ${(accion == 'Editar' && patron.getTipo() == 'Secundario') ? "checked" : ""}>
-                            <span><i></i>Secundario</span>
-                        </label>
-                        <label class="fancy-radio">
-                            <input type="radio" name="tipo" value="Control Interno" ${(accion == 'Editar' && patron.getTipo() == 'Control Interno') ? "checked" : ""}>
-                            <span><i></i>Control Interno</span>
-                        </label>
+                        <select id="seleccionTipo" class="select2" name="id_tipo_patroncontrol"
+                                style='background-color: #fff;' required
+                                oninvalid="setCustomValidity('Este campo es requerido')"
+                                onchange="setCustomValidity('')">
+                            <option value=''></option>
+                            <c:forEach items="${tipos_patronescontroles}" var="tipo_patroncontrol">
+                                <c:choose>
+                                    <c:when test="${tipo_patroncontrol.getId_tipo_patroncontrol() == patron.getTipo().getId_tipo_patroncontrol()}" >
+                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}"  selected> ${tipo_patroncontrol.getNombre()}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}" > ${tipo_patroncontrol.getNombre()}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
             </div>

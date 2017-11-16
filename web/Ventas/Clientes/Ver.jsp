@@ -61,6 +61,7 @@
                 <tr><td> <strong>País: </strong>  </td> <center> <td> ${cliente.getPais()}   </td> </center> </tr>
                 <tr><td> <strong>Tipo de Persona: </strong>  </td> <center> <td> ${cliente.getPersona()}   </td> </center> </tr>
                 <tr><td> <strong>Dirección: </strong>  </td> <center> <td> ${cliente.getDireccion()}   </td> </center> </tr>
+                <tr><td> <strong>Estado: </strong>  </td> <center> <td> ${cliente.getEstado()}   </td> </center> </tr>
               </table>
               <br>
               

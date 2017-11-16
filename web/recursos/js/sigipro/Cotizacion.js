@@ -63,7 +63,7 @@ function ajax_productos(id_intencion){
             var producto1 = xmlDoc.getElementsByTagName("producto");
             var id;
             var nombre;
-            var lote;
+            //var lote;
             var cantidad;
             var producto;
             //alert(producto1.length);
@@ -72,13 +72,13 @@ function ajax_productos(id_intencion){
                 id = producto.getElementsByTagName('id')[0].firstChild.nodeValue;
                 nombre = producto.getElementsByTagName('nombre')[0].firstChild.nodeValue;
                 cantidad = producto.getElementsByTagName('cantidad')[0].firstChild.nodeValue;
-                if (producto.getElementsByTagName('lote')[0].firstChild === null){
-                    lote = "";
-                }
-                else{
-                    lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
-                }
-                agregarProducto(id, nombre, cantidad, lote);
+//                if (producto.getElementsByTagName('lote')[0].firstChild === null){
+//                    lote = "";
+//                }
+//                else{
+//                    lote = producto.getElementsByTagName('lote')[0].firstChild.nodeValue;
+//                }
+                agregarProducto(id, nombre, cantidad);
             }
         }
     };
@@ -106,12 +106,11 @@ function enviarPeticionXHTTP(path){
     }
 }
 
-function agregarProducto(id, producto, cantidad, lote) {
+function agregarProducto(id, producto, cantidad) {
 
     fila = '<tr ' + 'id=' + id + '>';
     fila += '<td>' + producto + '</td>';
     fila += '<td>' + cantidad + '</td>';
-    fila += '<td>' + lote + '</td>';
     fila += '<td>0</td>';
     fila += '<td>';
     fila += '<button type="button" class="btn btn-warning btn-sm" onclick="editarProducto(' + id + ')"   style="margin-left:5px;margin-right:7px;">Modificar Precio</button>';

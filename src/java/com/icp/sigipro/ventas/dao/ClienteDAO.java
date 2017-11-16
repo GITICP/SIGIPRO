@@ -62,6 +62,7 @@ public class ClienteDAO extends DAO {
                 cliente.setPersona(rs.getString("persona"));
                 cliente.setDireccion(rs.getString("direccion"));
                 cliente.setCedula(rs.getString("cedula"));
+                cliente.setEstado(rs.getString("estado"));
                 resultado.add(cliente);
 
             }
@@ -74,7 +75,41 @@ public class ClienteDAO extends DAO {
         }
         return resultado;
     }
+    public List<Cliente> obtenerClientesContratosFirmados() throws SIGIPROException {
 
+        List<Cliente> resultado = new ArrayList<Cliente>();
+
+        try {
+            PreparedStatement consulta;
+            consulta = getConexion().prepareStatement(" SELECT * FROM ventas.cliente WHERE id_cliente NOT IN " +
+                                                      "(SELECT distinct cl.id_cliente " +
+                                                      "FROM ventas.cliente cl INNER JOIN ventas.contrato_comercializacion co ON (cl.id_cliente = co.id_cliente) " +
+                                                      "WHERE co.firmado = FALSE) ");
+            ResultSet rs = consulta.executeQuery();
+
+            while (rs.next()) {
+                Cliente cliente = new Cliente();
+                
+                cliente.setId_cliente(rs.getInt("id_cliente"));
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setPais(rs.getString("pais"));
+                cliente.setTipo(rs.getString("tipo"));
+                cliente.setPersona(rs.getString("persona"));
+                cliente.setDireccion(rs.getString("direccion"));
+                cliente.setCedula(rs.getString("cedula"));
+                cliente.setEstado(rs.getString("estado"));
+                resultado.add(cliente);
+
+            }
+            rs.close();
+            consulta.close();
+            cerrarConexion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new SIGIPROException("Se produjo un error al procesar la solicitud");
+        }
+        return resultado;
+    }
     public Cliente obtenerCliente(int id_cliente) throws SIGIPROException {
 
         Cliente resultado = new Cliente();
@@ -93,6 +128,7 @@ public class ClienteDAO extends DAO {
                 resultado.setPersona(rs.getString("persona"));
                 resultado.setDireccion(rs.getString("direccion"));
                 resultado.setCedula(rs.getString("cedula"));
+                resultado.setEstado(rs.getString("estado"));
             }
             rs.close();
             consulta.close();
@@ -109,8 +145,8 @@ public class ClienteDAO extends DAO {
         int resultado = 0;
 
         try {
-            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo, direccion, cedula, persona)"
-                    + " VALUES (?,?,?,?,?,?) RETURNING id_cliente");
+            PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO ventas.cliente (nombre, pais, tipo, direccion, cedula, persona, estado)"
+                    + " VALUES (?,?,?,?,?,?,?) RETURNING id_cliente");
 
             consulta.setString(1, p.getNombre());
             consulta.setString(2, p.getPais());
@@ -118,6 +154,7 @@ public class ClienteDAO extends DAO {
             consulta.setString(4, p.getDireccion());
             consulta.setString(5, p.getCedula());
             consulta.setString(6, p.getPersona());
+            consulta.setString(7, p.getEstado());
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
@@ -128,7 +165,11 @@ public class ClienteDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar el ingreso");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del cliente y la cédula deben ser únicos");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }
@@ -140,7 +181,7 @@ public class ClienteDAO extends DAO {
         try {
             PreparedStatement consulta = getConexion().prepareStatement(
                     " UPDATE ventas.cliente"
-                    + " SET nombre=?, pais=?, tipo=?, direccion=?, cedula=?, persona=?"
+                    + " SET nombre=?, pais=?, tipo=?, direccion=?, cedula=?, persona=?, estado=?"
                     + " WHERE id_cliente=?; "
             );
 
@@ -150,7 +191,8 @@ public class ClienteDAO extends DAO {
             consulta.setString(4, p.getDireccion());
             consulta.setString(5, p.getCedula());
             consulta.setString(6, p.getPersona());
-            consulta.setInt(7, p.getId_cliente());
+            consulta.setString(7, p.getEstado());
+            consulta.setInt(8, p.getId_cliente());
             
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
@@ -159,7 +201,11 @@ public class ClienteDAO extends DAO {
             cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new SIGIPROException("Se produjo un error al procesar la edición");
+            if (ex.getMessage().contains("llave"))
+              { 
+                throw new SIGIPROException("El nombre del cliente y la cédula deben ser únicos");}
+            else {
+            throw new SIGIPROException("Se produjo un error al procesar el ingreso");}
         }
         return resultado;
     }
@@ -201,10 +247,10 @@ public class ClienteDAO extends DAO {
             PreparedStatement consulta = getConexion().prepareStatement(" select " +
                 "(select count(*) from ventas.intencion_venta where id_cliente =?)" +
                 "+" +
-                "(select count(*) from ventas.cotizacion where id_cliente =?)" +
-                "+" +
-                "(select count(*) from ventas.orden_compra where id_cliente =?)" +
-                "+" +
+ //               "(select count(*) from ventas.cotizacion where id_cliente =?)" +
+ //               "+" +
+ //               "(select count(*) from ventas.orden_compra where id_cliente =?)" +
+ //               "+" +
                 "(select count(*) from ventas.factura where id_cliente =?)" +
                 "+" +
                 "(select count(*) from ventas.seguimiento_venta where id_cliente =?)" +
@@ -222,8 +268,7 @@ public class ClienteDAO extends DAO {
             consulta.setInt(4, id_cliente);
             consulta.setInt(5, id_cliente);
             consulta.setInt(6, id_cliente);
-            consulta.setInt(7, id_cliente);
-            consulta.setInt(8, id_cliente);
+
 
             ResultSet resultadoConsulta = consulta.executeQuery();
             if (resultadoConsulta.next()) {
