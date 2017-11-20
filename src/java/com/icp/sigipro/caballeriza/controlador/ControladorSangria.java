@@ -183,9 +183,9 @@ public class ControladorSangria extends SIGIPROServlet {
         try {
             List<Sangria> sangrias;
             if (tipo != null) {
-                sangrias = dao.obtenerSangriasLALPendiente();
+                sangrias = dao.obtenerTodasSangriasProduccion();
             } else {
-                sangrias = dao.obtenerSangriasProduccion();
+                sangrias = dao.obtenerTodasSangriasProduccion();
             }
 
             List<SangriaAJAX> sangrias_ajax = new ArrayList<SangriaAJAX>();
