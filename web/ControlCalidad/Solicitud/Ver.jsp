@@ -64,9 +64,6 @@
                                                     <c:when test="${solicitud.getEstado().equals('Resultado Parcial')}">
                                                         <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Parcial</a>
                                                     </c:when>
-                                                    <c:when test="${solicitud.getEstado().equals('Completada')}">
-                                                        <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/ControlCalidad/Informe?accion=editar&id_solicitud=${solicitud.getId_solicitud()}">Editar Informe Final</a>
-                                                    </c:when>
                                                 </c:choose>
                                             </c:when>
                                             <c:when test="${solicitud.getUsuario_solicitante().getId_usuario()== sessionScope.idusuario && !solicitud.getEstado().equals('Resultado Parcial') && !solicitud.getEstado().equals('Completada')}">
