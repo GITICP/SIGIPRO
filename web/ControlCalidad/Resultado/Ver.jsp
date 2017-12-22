@@ -44,7 +44,7 @@
                         </div>
                         ${mensaje}
                         <div class="widget-content">
-                            
+
                             <c:choose>
                                 <c:when test="${analisis.getId_analisis() != Integer.MAX_VALUE}">
                                     ${cuerpo_datos}
@@ -71,7 +71,7 @@
                                     </div>
                                 </c:otherwise>
                             </c:choose>
-                            
+
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -152,7 +152,34 @@
                                         </div>
                                     </div>
                                 </div>
+                                <c:if test="${analisis.tieneMachote()}">
+                                    <div class="col-md-6">
+                                        <div class="widget widget-table">
+                                            <div class="widget-header">
+                                                <h3><i class="fa fa-table"></i>Archivo de Excel</h3>
+                                            </div>
+                                            <div class="widget-content">
 
+                                                <input type="hidden" name="path" value="${resultado.getPath()}" />
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="nombre" class="control-label"> Resultado</label>
+                                                        <div class="form-group">
+                                                            <div class="col-md-12">
+                                                                <div class="input-group">
+                                                                    <a href="/SIGIPRO/ControlCalidad/Resultado?accion=archivo&id_resultado=${resultado.getId_resultado()}">Descargar Resultado</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </div>
                         </div>
 
