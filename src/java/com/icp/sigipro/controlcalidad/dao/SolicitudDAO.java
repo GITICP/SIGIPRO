@@ -591,7 +591,7 @@ public class SolicitudDAO extends DAO {
                     + "        solicitud.tabla_referencia, "
                     + "        solicitud.id_referenciado, "
                     + "        solicitud.informacion_referencia_adicional, "
-                    + "solicitud.fecha_cierre, "
+                    + "        solicitud.fecha_cierre, "
                     + "        i.id_informe, "
                     + "        i.realizado_por,"
                     + "        i.fecha as fecha_informe, "
@@ -768,7 +768,7 @@ public class SolicitudDAO extends DAO {
                     r.setId_resultado(rs.getInt("id_resultado"));
                     r.setResultado(rs.getString("resultado"));
                     r.setRepeticion(rs.getInt("repeticion"));
-                    r.setFecha_reportado(rs.getDate("fecha_reportado"));
+                    r.setFecha_reportado(rs.getTimestamp("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);
@@ -791,7 +791,7 @@ public class SolicitudDAO extends DAO {
                     r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
                     r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
                     r_sp.setRepeticion(rs_sp.getInt("repeticion"));
-                    r_sp.setFecha_reportado(rs_sp.getDate("fecha_reportado"));
+                    r_sp.setFecha_reportado(rs_sp.getTimestamp("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
                     r_sp.setAgs(ags_iter);

@@ -10,6 +10,7 @@ import com.icp.sigipro.core.IModelo;
 import com.icp.sigipro.seguridad.modelos.Usuario;
 import java.sql.Date;
 import java.sql.SQLXML;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Resultado extends IModelo
     private transient SQLXML datos;
     private String datos_string;
     private Date fecha;
-    private Date fecha_reportado;
+    private Timestamp fecha_reportado;
     private Usuario usuario;
     private int repeticion;
     private String resultado;
@@ -254,15 +255,15 @@ public class Resultado extends IModelo
         patrones_resultado.add(p);
     }
 
-    public Date getFecha_reportado() {
+    public Timestamp getFecha_reportado() {
         return fecha_reportado;
     }
     
     public String getFecha_reportado_formateada() {
-        return helper_fechas.formatearFecha(fecha_reportado);
+        return helper_fechas.formatearTimestamp(fecha_reportado);
     }
     
-    public void setFecha_reportado(Date fecha_reportado) {
+    public void setFecha_reportado(Timestamp fecha_reportado) {
         this.fecha_reportado = fecha_reportado;
     }
     
