@@ -55,7 +55,7 @@
                             <h3><i class="fa fa-flask"></i> ${lote.getNombre()} </h3>
                             <div class="btn-group widget-header-toolbar">
                                 <c:choose>
-                                    <c:when test="${lote.isEstado()}">
+                                    <c:when test="${lote.isEstado() && lote.isAprobacion()}">
                                         <c:choose>
                                             <c:when test="${lote.getFecha_vencimiento()==null}">
                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 668)}">
@@ -71,6 +71,11 @@
 
                                     </c:when>
                                 </c:choose>
+                                <c:if test="${lote.isAprobacion()}">
+                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 660)}">
+                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalRechazarLote">Rechazar</a>
+                                    </c:if>
+                                </c:if>
                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 660)}">
                                     <a class="btn btn-danger btn-sm boton-accion confirmable" data-texto-confirmacion="eliminar el lote de producción" data-href="/SIGIPRO/Produccion/Lote?accion=eliminar&id_lote=${lote.getId_lote()}">Eliminar</a>
                                 </c:if>
@@ -83,9 +88,12 @@
                                 <tr><td> <strong>Protocolo:</strong></td> <td>${lote.getProtocolo().getNombre()} </td></tr>
                                 <tr><td> <strong>Estado:</strong></td> <td>
                                         <c:choose>
-                                            <c:when test="${lote.isEstado()}">
+                                            <c:when test="${lote.isEstado() && lote.isAprobacion()}">
                                                 Completo
                                             </c:when>
+                                            <c:when test="${!lote.isAprobacion()}">
+                                                Rechazado
+                                            </c:when> 
                                             <c:otherwise>
                                                 Pendiente
                                             </c:otherwise>
@@ -201,58 +209,60 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>
-                                                            <c:choose>
-                                                                <c:when test="${respuesta.getEstado()==1 || respuesta.getEstado()==2}">
-                                                                    <a class="btn btn-danger btn-sm boton-accion" disabled>Deshabilitado</a>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==3 || respuesta.getEstado()==4}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">  
-                                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_respuesta=${respuesta.getId_respuesta()}">Realizar</a>
-                                                                    </c:if>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==5}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">
-                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
-                                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
-                                                                    </c:if>
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
-                                                                        <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=cerrar&id_respuesta=${respuesta.getId_respuesta()}">Cerrar</a>
-                                                                    </c:if>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==8}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
-                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=devolver&id_respuesta=${respuesta.getId_respuesta()}">Devolver</a>
-                                                                    </c:if>
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 664)}">
-                                                                        <a class="btn btn-danger btn-sm boton-accion revisar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalRevisarPaso">Revisar</a>
-                                                                    </c:if>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==6}">
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
-                                                                        <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=devolver&id_respuesta=${respuesta.getId_respuesta()}">Devolver</a>
-                                                                    </c:if>
-                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 665)}">
-                                                                        <a class="btn btn-danger btn-sm boton-accion verificar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalVerificarPaso">Verificar</a>
-                                                                    </c:if>
-                                                                </c:when>
-                                                                <c:when test="${respuesta.getEstado()==7}">
-                                                                    <a class="btn btn-warning btn-sm boton-accion" disabled>Completado</a>
-                                                                    <c:choose>
-                                                                        <c:when test="${lote.isEstado()}">
-                                                                            <c:if test="${lote.getFecha_vencimiento()==null}">
+                                                            <c:if test="${lote.isAprobacion()}">  
+                                                                <c:choose>
+                                                                    <c:when test="${respuesta.getEstado()==1 || respuesta.getEstado()==2}">
+                                                                        <a class="btn btn-danger btn-sm boton-accion" disabled>Deshabilitado</a>
+                                                                    </c:when>
+                                                                    <c:when test="${respuesta.getEstado()==3 || respuesta.getEstado()==4}">
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">  
+                                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=realizar&id_respuesta=${respuesta.getId_respuesta()}">Realizar</a>
+                                                                        </c:if>
+                                                                    </c:when>
+                                                                    <c:when test="${respuesta.getEstado()==5}">
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">
+                                                                            <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=completar&id_respuesta=${respuesta.getId_respuesta()}">Completar</a>
+                                                                            <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
+                                                                        </c:if>
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
+                                                                            <a class="btn btn-danger btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=cerrar&id_respuesta=${respuesta.getId_respuesta()}">Cerrar</a>
+                                                                        </c:if>
+                                                                    </c:when>
+                                                                    <c:when test="${respuesta.getEstado()==8}">
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
+                                                                            <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=devolver&id_respuesta=${respuesta.getId_respuesta()}">Devolver</a>
+                                                                        </c:if>
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 664)}">
+                                                                            <a class="btn btn-danger btn-sm boton-accion revisar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalRevisarPaso">Revisar</a>
+                                                                        </c:if>
+                                                                    </c:when>
+                                                                    <c:when test="${respuesta.getEstado()==6}">
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 669)}">
+                                                                            <a class="btn btn-warning btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=devolver&id_respuesta=${respuesta.getId_respuesta()}">Devolver</a>
+                                                                        </c:if>
+                                                                        <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 665)}">
+                                                                            <a class="btn btn-danger btn-sm boton-accion verificar-Modal" data-id='${respuesta.getLote().getId_lote()}' data-respuesta='${respuesta.getId_respuesta()}' data-version="${respuesta.getVersion()}" data-toggle="modal" data-target="#modalVerificarPaso">Verificar</a>
+                                                                        </c:if>
+                                                                    </c:when>
+                                                                    <c:when test="${respuesta.getEstado()==7}">
+                                                                        <a class="btn btn-warning btn-sm boton-accion" disabled>Completado</a>
+                                                                        <c:choose>
+                                                                            <c:when test="${lote.isEstado() && lote.isAprobacion()}">
+                                                                                <c:if test="${lote.getFecha_vencimiento()==null}">
+                                                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">
+                                                                                        <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
+                                                                                    </c:if>
+                                                                                </c:if>
+                                                                            </c:when>
+                                                                            <c:otherwise>
                                                                                 <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">
                                                                                     <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
                                                                                 </c:if>
-                                                                            </c:if>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 661)}">
-                                                                                <a class="btn btn-primary btn-sm boton-accion " href="/SIGIPRO/Produccion/Lote?accion=repetir&id_respuesta=${respuesta.getId_respuesta()}">Repetir</a>
-                                                                            </c:if>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </c:when>
-                                                            </c:choose>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </c:when>
+                                                                </c:choose>
+                                                            </c:if>
                                                         </td>
 
                                                     </tr>
@@ -278,6 +288,25 @@
     </jsp:attribute>
 
 </t:plantilla_general>
+
+<t:modal idModal="modalRechazarLote" titulo="Rechazar Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-rechazar-lote">
+            <form class="form-horizontal" id="rechazarLote" autocomplete="off" method="get" action="Lote">
+                <input hidden="true" name="accion" value="Rechazar">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="label" class="control-label">¿Está seguro que desea rechazar el Lote de Producción?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Rechazar Lote</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>
+
 
 <t:modal idModal="modalRevisarPaso" titulo="Revisar Paso de Protocolo de Producción">
     <jsp:attribute name="form">
