@@ -24,9 +24,12 @@ public class Lote {
     String nombre;
     //Para el JSON creado en el RealizarLote
     String nombreProtocolo;
+    //Indica si el Lote esta en estado de produccion o si ya finalizo
     boolean estado;
+    boolean rechazado;
     int posicion_actual;
     Paso paso_actual;
+    //Indica si el Lote esta aprobado o rechazado
     boolean aprobacion;
     private Date fecha_vencimiento;
     private Usuario usuario_distribucion;

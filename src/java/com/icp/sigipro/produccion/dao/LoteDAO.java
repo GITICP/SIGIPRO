@@ -32,7 +32,7 @@ public class LoteDAO extends DAO {
         ResultSet rs = null;
         try {
             consulta = getConexion().prepareStatement(" INSERT INTO produccion.lote (nombre,id_protocolo,estado,posicion_actual, aprobacion) "
-                    + " VALUES (?,?,false,1,false) RETURNING id_lote");
+                    + " VALUES (?,?,false,1,true) RETURNING id_lote");
             consulta.setString(1, lote.getNombre());
             consulta.setInt(2, lote.getProtocolo().getId_protocolo());
             rs = consulta.executeQuery();
@@ -697,11 +697,11 @@ public class LoteDAO extends DAO {
         PreparedStatement consulta = null;
         ResultSet rs = null;
         try {
-            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, h.nombre as nombreprotocolo , l.estado "
+            consulta = getConexion().prepareStatement(" SELECT l.id_lote, l.nombre as nombrelote, l.id_protocolo, h.nombre as nombreprotocolo , l.estado, l.aprobacion "
                     + "FROM produccion.lote as l "
                     + "LEFT JOIN produccion.protocolo as pro ON l.id_protocolo = pro.id_protocolo "
                     + "LEFT JOIN produccion.historial_protocolo as h ON (h.id_protocolo = pro.id_protocolo and h.version = pro.version) "
-                    + "WHERE (l.estado = false or l.aprobacion = true) ; ");
+                    + "WHERE (l.estado = false) ; ");
             System.out.println(consulta);
             rs = consulta.executeQuery();
             while (rs.next()) {
@@ -709,6 +709,7 @@ public class LoteDAO extends DAO {
                 lote.setId_lote(rs.getInt("id_lote"));
                 lote.setNombre(rs.getString("nombrelote"));
                 lote.setEstado(rs.getBoolean("estado"));
+                lote.setAprobacion(rs.getBoolean("aprobacion"));
                 Protocolo protocolo = new Protocolo();
                 protocolo.setId_protocolo(rs.getInt("id_protocolo"));
                 protocolo.setNombre(rs.getString("nombreprotocolo"));
@@ -741,7 +742,7 @@ public class LoteDAO extends DAO {
                     + "LEFT JOIN produccion.respuesta_pxp as r ON (r.id_pxp = pp.id_pxp and r.id_lote = l.id_lote) "
                     + "LEFT JOIN seguridad.usuarios as ul ON (l.id_usuario_distribucion = ul.id_usuario) "
                     + "LEFT JOIN produccion.catalogo_pt as pt ON (h.id_catalogo_pt = pt.id_catalogo_pt) "
-                    + "WHERE (l.estado = true and l.aprobacion = false) ; ");
+                    + "WHERE (l.estado = true or l.aprobacion = false) ; ");
             rs = consulta.executeQuery();
             while (rs.next()) {
                 Lote lote = new Lote();
@@ -1105,6 +1106,28 @@ public class LoteDAO extends DAO {
             if (consulta.executeUpdate() == 1) {
                 resultado = true;
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
+    public boolean rechazarLote(int id_lote) {
+        boolean resultado = false;
+        PreparedStatement consulta = null;
+        try {
+            consulta = getConexion().prepareStatement(" UPDATE produccion.lote "
+                    + "SET aprobacion=false, estado=true "
+                    + "WHERE id_lote= ?; ");
+            consulta.setInt(1, id_lote);
+            if (consulta.executeUpdate() == 1) {
+                resultado = true;
+            }
+            consulta.close();
+            cerrarConexion();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

@@ -247,6 +247,11 @@ $(document).on("click", ".distribucion-Modal", function () {
     $('#class-distribucion-lote #id_lote').val(id_lote);
 });
 
+$(document).on("click", ".rechazar-Modal", function () {
+    var id_lote = $(this).data('id');
+    $('#class-rechazar-lote #id_lote').val(id_lote);
+});
+
 function generar_select_sangria(datos, element) {
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
