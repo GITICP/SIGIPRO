@@ -36,10 +36,10 @@
                             <c:forEach items="${tipos_patronescontroles}" var="tipo_patroncontrol">
                                 <c:choose>
                                     <c:when test="${tipo_patroncontrol.getId_tipo_patroncontrol() == patron.getTipo().getId_tipo_patroncontrol()}" >
-                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}"  selected> ${tipo_patroncontrol.getNombre()} (${tipo_patroncontrol.getTipo()})</option>
+                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}"  selected> ${tipo_patroncontrol.getNombre()}</option>
                                     </c:when>
                                     <c:otherwise>
-                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}" > ${tipo_patroncontrol.getNombre()} (${tipo_patroncontrol.getTipo()})</option>
+                                        <option value="${tipo_patroncontrol.getId_tipo_patroncontrol()}" > ${tipo_patroncontrol.getNombre()}</option>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>

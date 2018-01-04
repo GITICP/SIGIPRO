@@ -25,6 +25,7 @@ public class ProductoInterno extends IModelo
   private boolean cuarentena;
   private boolean perecedero;
   private Reactivo reactivo;
+  private String numero_lote;
  
   public ProductoInterno(){}
 
@@ -46,6 +47,14 @@ public class ProductoInterno extends IModelo
             
         }
         return JSON.toString();
+    }
+
+    public String getNumero_lote() {
+        return numero_lote;
+    }
+
+    public void setNumero_lote(String numero_lote) {
+        this.numero_lote = numero_lote;
     }
 
   

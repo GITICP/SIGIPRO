@@ -114,7 +114,7 @@ public class InformeDAO extends DAO {
                 
                 PreparedStatement consulta_resultado_fecha = getConexion().prepareStatement(
                         " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
-                                + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                                + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
                                 + " WHERE " + campo_id_cambio_fecha + " = ?; "
                 );
                 
@@ -149,11 +149,12 @@ public class InformeDAO extends DAO {
 
             if (cerrar) {
                 update_solicitud.setString(1, "Completada");
+                update_solicitud.setTimestamp(2, helper_fechas.getFecha_hoy_timestamp());
             } else {
                 update_solicitud.setString(1, "Resultado Parcial");
+                update_solicitud.setNull(2, java.sql.Types.DATE);
             }
 
-            update_solicitud.setTimestamp(2, informe.getSolicitud().getFecha_cierre());
             update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
 
             resultado_solicitud = update_solicitud.executeUpdate() == 1;
@@ -238,7 +239,7 @@ public class InformeDAO extends DAO {
             
             consulta_resultados_fecha = getConexion().prepareStatement(
                     " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
-                            + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                            + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
                             + " WHERE " + campo_id_resultado_fecha + " = ? "
             );
             
@@ -273,11 +274,12 @@ public class InformeDAO extends DAO {
 
             if (cerrar) {
                 update_solicitud = getConexion().prepareStatement(
-                        " UPDATE control_calidad.solicitudes SET estado = ? WHERE id_solicitud = ? "
-                );
+                        " UPDATE control_calidad.solicitudes SET estado = ?, fecha_cierre = ? WHERE id_solicitud = ? "
+                ); 
 
                 update_solicitud.setString(1, "Completada");
-                update_solicitud.setInt(2, informe.getSolicitud().getId_solicitud());
+                update_solicitud.setTimestamp(2, helper_fechas.getFecha_hoy_timestamp());
+                update_solicitud.setInt(3, informe.getSolicitud().getId_solicitud());
 
                 resultado_solicitud = update_solicitud.executeUpdate() == 1;
             } else {

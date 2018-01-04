@@ -336,6 +336,57 @@ public class SolicitudDAO extends DAO {
         return resultado;
     }
 
+    public List<SolicitudCC> obtenerTodasSolicitudesAjax() {
+        List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
+        PreparedStatement consulta = null;
+        ResultSet rs = null;
+        try {
+            consulta = getConexion().prepareStatement(
+                    " SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
+                    + " FROM control_calidad.solicitudes s "
+                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
+                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
+                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
+                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
+                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
+                    + " ORDER BY s.id_solicitud DESC ; ");
+            rs = consulta.executeQuery();
+
+            SolicitudCC solicitud = new SolicitudCC();
+
+            while (rs.next()) {
+
+                int id_solicitud = rs.getInt("id_solicitud");
+
+                if (id_solicitud != solicitud.getId_solicitud()) {
+                    solicitud = new SolicitudCC();
+                    solicitud.setId_solicitud(id_solicitud);
+                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
+                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
+                    Usuario usuario = new Usuario();
+                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
+                    usuario.setNombre_completo(rs.getString("nombre_completo"));
+                    solicitud.setUsuario_solicitante(usuario);
+                    solicitud.setEstado(rs.getString("estado"));
+                    solicitud.setDescripcion(rs.getString("descripcion"));
+                    resultado.add(solicitud);
+                }
+                TipoMuestra tm = new TipoMuestra();
+                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
+                tm.setNombre(rs.getString("nombre_muestra"));
+                solicitud.agregarMuestra(tm);
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cerrarSilencioso(rs);
+            cerrarSilencioso(consulta);
+            cerrarConexion();
+        }
+        return resultado;
+    }
+    
     public List<SolicitudCC> obtenerSeccionSolicitudes(int id_usuario) {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;
@@ -540,7 +591,7 @@ public class SolicitudDAO extends DAO {
                     + "        solicitud.tabla_referencia, "
                     + "        solicitud.id_referenciado, "
                     + "        solicitud.informacion_referencia_adicional, "
-                    + "solicitud.fecha_cierre, "
+                    + "        solicitud.fecha_cierre, "
                     + "        i.id_informe, "
                     + "        i.realizado_por,"
                     + "        i.fecha as fecha_informe, "
@@ -717,7 +768,7 @@ public class SolicitudDAO extends DAO {
                     r.setId_resultado(rs.getInt("id_resultado"));
                     r.setResultado(rs.getString("resultado"));
                     r.setRepeticion(rs.getInt("repeticion"));
-                    r.setFecha_reportado(rs.getDate("fecha_reportado"));
+                    r.setFecha_reportado(rs.getTimestamp("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs.getInt("id_analisis_grupo_solicitud"));
                     r.setAgs(ags_iter);
@@ -740,7 +791,7 @@ public class SolicitudDAO extends DAO {
                     r_sp.setHematocrito(rs_sp.getFloat("hematocrito"));
                     r_sp.setHemoglobina(rs_sp.getFloat("hemoglobina"));
                     r_sp.setRepeticion(rs_sp.getInt("repeticion"));
-                    r_sp.setFecha_reportado(rs_sp.getDate("fecha_reportado"));
+                    r_sp.setFecha_reportado(rs_sp.getTimestamp("fecha_reportado"));
                     AnalisisGrupoSolicitud ags_iter = new AnalisisGrupoSolicitud();
                     ags_iter.setId_analisis_grupo_solicitud(rs_sp.getInt("id_analisis_grupo_solicitud"));
                     r_sp.setAgs(ags_iter);

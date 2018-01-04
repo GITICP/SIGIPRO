@@ -47,7 +47,7 @@
                         <div class="widget-content">
                             <table class="tabla-ver">
                                 <tr><td> <strong>Número de Lote/Identificador: </strong></td> <td>${patron.getNumero_lote()} </td></tr>
-                                <tr><td> <strong>Tipo: </strong></td> <td>${patron.getTipo().getNombre()} (${patron.getTipo().getTipo()}) </td></tr>
+                                <tr><td> <strong>Tipo: </strong></td> <td>${patron.getTipo().getNombre()}</td></tr>
                                 <tr><td> <strong>Fecha de Vencimiento: </strong></td> <td>${patron.getFecha_vencimientoAsString()} </td></tr>
                                 <tr><td> <strong>Fecha de Ingreso: </strong></td> <td>${patron.getFecha_ingresoAsString()} </td></tr>
                                 <tr><td> <strong>Fecha de Inicio de Uso: </strong></td> <td>${patron.getFecha_inicio_usoAsString()} </td></tr>

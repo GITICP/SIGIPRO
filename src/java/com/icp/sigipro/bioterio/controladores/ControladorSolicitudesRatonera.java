@@ -432,6 +432,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
             }
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            this.getAgregar(request, response);
         }
         redireccionar(request, response, redireccion);
     }
@@ -482,6 +483,7 @@ public class ControladorSolicitudesRatonera extends SIGIPROServlet {
             }
         } else {
             request.setAttribute("mensaje", helper.mensajeDeError("Ocurrió un error al procesar su petición"));
+            this.getEditar(request, response);
         }
         redireccionar(request, response, redireccion);
     }

@@ -363,7 +363,12 @@ function generar_select_subbodegas(datos, element) {
         var elemento = datos[i];
         var opcion_string = "<option value=\"" + elemento.id_producto + "\">";
         var opcion = $(opcion_string);
-        opcion.text(elemento.nombre);
+        if (elemento.numero_lote !== undefined){
+            opcion.text(elemento.nombre+" (Lote: "+elemento.numero_lote+")");
+        }else{
+            opcion.text(elemento.nombre);
+        }
+        
 
         $(element).append(opcion);
     }
