@@ -1,4 +1,4 @@
-#Proyecto SIGIPRO
+# Proyecto SIGIPRO
 
 Sistema para el manejo de:
 
@@ -11,7 +11,7 @@ Sistema para el manejo de:
 * Ventas
 * Control de Calidad
 
-##Realizado por:
+## Realizado por:
 
 * Esteban Aguilar Valverde <a href="https://github.com/Estebav8">estebav8</a>
 * Jose Daniel Chacón Bogarín <a href="https://github.com/jchaconbogarin">jchaconbogarin</a>
@@ -21,13 +21,13 @@ Sistema para el manejo de:
 * Isaac López Delgado <a href="https://github.com/isaaclpez">isaaclpez</a>
 
 
-#Instalación (para Desarrollo)
+# Instalación (para Desarrollo)
 
-##PREREQUISITOS
+## PREREQUISITOS
 
 -JDK instalado
 
-###NetBeans 8 
+### NetBeans 8 
 
 https://netbeans.org/downloads/
 
@@ -36,7 +36,7 @@ Descargar el Java EE o el ALL.
 A la hora de la instalación, asegurarse de descargar el server APACHE TOMCAT (el Glassfish es el default, así que hay que meterse a Customize en las pantallas de 
 instalación para seleccionar Apache).
 
-###Apache Tomcat
+### Apache Tomcat
 
 Incluido en la descarga de NetBeans. 
 
@@ -44,7 +44,7 @@ En caso de error a la hora de intentar iniciar el servidor, ver el siguiente vid
 
 https://www.youtube.com/watch?v=guslgqUMe2A
 
-###PostgreSQL
+### PostgreSQL
 
 http://www.postgresql.org/download/
 
@@ -53,17 +53,17 @@ Descargar el servidor de la BD. Poner de usuario "postgre" y contraseña "Solari
 Para abrir la UI del servicio, abrir pgAdmin III. Crear una nueva "Database" llamada "sigipro". Luego, en dicho esquema, correr el código que se encuentra en
 Scripts Base Datos/ScriptBD - Creacion de Esquemas y Tablas. 
 
-##Despliegue
+## Despliegue
 
 Ir a NetBeans, abrir el proyecto SIGIPRO, y darle Run. Revisar la Consola para ver cual puerto está asignado (8084). Abrirlo con el localhost.
 
-#Versiones de Producción
+# Versiones de Producción
 
-##Bodegas
+## Bodegas
 
 Bodegas fue puesta a producción de manera completa el 7 de abril de 2015.
 
-###Arreglos
+### Arreglos
     8 de abril:
         Commit: Fix de agregar producto interno
         Justificación: Para arreglar un problema de que no se podía aprobar o rechazar una solicitud, el arreglo provocó errores a la hora de agregar un nuevo producto por un asunto de NullPointerException. La solución había sido hacer un .replace de comillas por comillas simples de forma que ya no hiciera conflicto. La situación provocó que tirara un NullPointerException cuando el atributo no estaba inicializado. La solución fue validar si el atributo era nulo antes de ejecutar la función.

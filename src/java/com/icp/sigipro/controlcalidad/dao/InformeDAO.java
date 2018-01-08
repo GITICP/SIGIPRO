@@ -114,7 +114,7 @@ public class InformeDAO extends DAO {
                 
                 PreparedStatement consulta_resultado_fecha = getConexion().prepareStatement(
                         " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
-                                + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                                + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
                                 + " WHERE " + campo_id_cambio_fecha + " = ?; "
                 );
                 
@@ -239,7 +239,7 @@ public class InformeDAO extends DAO {
             
             consulta_resultados_fecha = getConexion().prepareStatement(
                     " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
-                            + " CASE WHEN res.fecha_reportado is null THEN current_date ELSE res.fecha_reportado END "
+                            + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
                             + " WHERE " + campo_id_resultado_fecha + " = ? "
             );
             

@@ -90,6 +90,7 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
             add("index");
             add("ver");
             add("eliminar");
+            add("rechazar");
             add("realizar");
             add("usuariosajax");
             add("ultimoslotesajax");
@@ -187,7 +188,6 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     protected void getActivar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -301,6 +301,29 @@ public class ControladorLoteProduccion extends SIGIPROServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser eliminado ya que tiene pasos asociadas."));
+            this.getIndex(request, response);
+        }
+
+    }
+
+    protected void getRechazar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validarPermiso(660, request);
+        int id_lote = Integer.parseInt(request.getParameter("id_lote"));
+        boolean resultado = false;
+        try {
+            resultado = dao.rechazarLote(id_lote);
+            if (resultado) {
+                //Funcion que genera la bitacora 
+                bitacora.setBitacora(id_lote, Bitacora.ACCION_RECHAZAR, request.getSession().getAttribute("usuario"), Bitacora.TABLA_LOTEPRODUCCION, request.getRemoteAddr());
+                //----------------------------
+                request.setAttribute("mensaje", helper.mensajeDeExito("Lote de Producción rechazado correctamente"));
+            } else {
+                request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser rechazado."));
+            }
+            this.getIndex(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("mensaje", helper.mensajeDeError("Lote de Producción no pudo ser rechazado."));
             this.getIndex(request, response);
         }
 

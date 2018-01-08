@@ -247,6 +247,11 @@ $(document).on("click", ".distribucion-Modal", function () {
     $('#class-distribucion-lote #id_lote').val(id_lote);
 });
 
+$(document).on("click", ".rechazar-Modal", function () {
+    var id_lote = $(this).data('id');
+    $('#class-rechazar-lote #id_lote').val(id_lote);
+});
+
 function generar_select_sangria(datos, element) {
     $(element).append("<option value=\"\"></option>");
     for (var i = 0; i < datos.length; i++) {
@@ -358,7 +363,12 @@ function generar_select_subbodegas(datos, element) {
         var elemento = datos[i];
         var opcion_string = "<option value=\"" + elemento.id_producto + "\">";
         var opcion = $(opcion_string);
-        opcion.text(elemento.nombre);
+        if (elemento.numero_lote !== undefined){
+            opcion.text(elemento.nombre+" (Lote: "+elemento.numero_lote+")");
+        }else{
+            opcion.text(elemento.nombre);
+        }
+        
 
         $(element).append(opcion);
     }

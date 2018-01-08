@@ -54,7 +54,7 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
   
     protected void getAgregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        validarPermiso(500, request);
+        validarPermiso(580, request);
 
         String redireccion = "TipoPatronControl/Agregar.jsp";
         TipoPatronControl tpc = new TipoPatronControl();
@@ -90,7 +90,7 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
     
     protected void getEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        validarPermiso(501, request);
+        validarPermiso(581, request);
         String redireccion = "TipoPatronControl/Editar.jsp";
         int id_tipo_patroncontrol = Integer.parseInt(request.getParameter("id_tipo_patroncontrol"));
         TipoPatronControl tipo_patron = dao.obtenerTipoPatronControl(id_tipo_patroncontrol);
@@ -102,7 +102,7 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
 
     protected void getEliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        validarPermiso(502, request);
+        validarPermiso(582, request);
         int id_tipo_patroncontrol = Integer.parseInt(request.getParameter("id_tipo_patroncontrol"));
         boolean resultado = false;
         try{
@@ -150,7 +150,7 @@ public class ControladorTipoPatronControl extends SIGIPROServlet {
     
     protected void postEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        validarPermiso(501, request);
+        validarPermiso(581, request);
         boolean resultado = false;
         TipoPatronControl tpc = construirObjeto(request);
         int id_tipo_patroncontrol = Integer.parseInt(request.getParameter("id_tipo_patroncontrol"));

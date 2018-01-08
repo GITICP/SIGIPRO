@@ -33,6 +33,11 @@ public class HelperFechas {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(fecha);
     }
+    
+    public String formatearTimestamp(Timestamp fecha) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        return df.format(fecha);
+    }
 
     public Date formatearFecha(String fecha) throws ParseException {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");

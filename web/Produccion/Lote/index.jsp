@@ -65,6 +65,11 @@
                                             </td>
                                             <td>
                                                 <a class="btn btn-primary btn-sm boton-accion" href="/SIGIPRO/Produccion/Lote?accion=ver&id_lote=${lote.getId_lote()}">Pendiente</a>
+                                                <c:if test="${lote.isAprobacion()}">
+                                                    <c:if test="${helper_permisos.validarPermiso(sessionScope.listaPermisos, 660)}">
+                                                        <a class="btn btn-danger btn-sm boton-accion rechazar-Modal" data-id='${lote.getId_lote()}' data-toggle="modal" data-target="#modalRechazarLote">Rechazar</a>
+                                                    </c:if>
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -84,3 +89,21 @@
         <script src="/SIGIPRO/recursos/js/sigipro/LoteProduccion.js"></script>
     </jsp:attribute>
 </t:plantilla_general>
+
+<t:modal idModal="modalRechazarLote" titulo="Rechazar Lote de Producción">
+    <jsp:attribute name="form">
+        <div class="widget-content" id="class-rechazar-lote">
+            <form class="form-horizontal" id="rechazarLote" autocomplete="off" method="get" action="Lote">
+                <input hidden="true" name="accion" value="Rechazar">
+                <input hidden="true" id='id_lote' name='id_lote' value="">
+                <label for="label" class="control-label">¿Está seguro que desea rechazar el Lote de Producción?</label>
+                <div class="form-group">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i>  Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Rechazar Lote</button>            </div>
+                </div>
+            </form>
+        </div>
+
+    </jsp:attribute>
+</t:modal>

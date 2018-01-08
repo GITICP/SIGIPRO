@@ -24,7 +24,7 @@
                             <a href="/SIGIPRO/ControlCalidad/Resultado?accion=vermultiple&id_analisis=${analisis.getId_analisis()}&id_ags=${resultado.getAgs().getId_analisis_grupo_solicitud()}&id_solicitud=${solicitud.getId_solicitud()}&numero_solicitud=${solicitud.getNumero_solicitud()}">Resultados</a>
                         </li>
                         <li> 
-                            <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}">Resultado #${resultado.getId_resultado()}</a>
+                            <a href="/SIGIPRO/ControlCalidad/Resultado?accion=ver&id_resultado=${resultado.getId_resultado()}&id_analisis=${analisis.getId_analisis()}">Resultado #${resultado.getId_resultado()}</a>
                         </li>
                         <li class="active"> Editar Resultado</li>
 

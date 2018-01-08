@@ -177,7 +177,7 @@ public class ResultadoDAO extends DAO {
 
         try {
             consulta = getConexion().prepareStatement(
-                    " SELECT r.*, ags.id_analisis, a.nombre, s.id_solicitud, s.numero_solicitud, m.identificador, tm.nombre AS nombre_tipo_muestra "
+                    " SELECT r.*, ags.id_analisis, a.nombre, a.machote, s.id_solicitud, s.numero_solicitud, m.identificador, tm.nombre AS nombre_tipo_muestra "
                     + " FROM control_calidad.resultados r "
                     + "     INNER JOIN control_calidad.analisis_grupo_solicitud ags ON ags.id_analisis_grupo_solicitud = r.id_analisis_grupo_solicitud "
                     + "     INNER JOIN control_calidad.analisis as a ON a.id_analisis = ags.id_analisis "
@@ -206,6 +206,7 @@ public class ResultadoDAO extends DAO {
                 Analisis a = new Analisis();
                 a.setId_analisis(rs.getInt("id_analisis"));
                 a.setNombre(rs.getString("nombre"));
+                a.setMachote(rs.getString("machote"));
                 ags.setAnalisis(a);
                 SolicitudCC s = new SolicitudCC();
                 s.setId_solicitud(rs.getInt("id_solicitud"));
