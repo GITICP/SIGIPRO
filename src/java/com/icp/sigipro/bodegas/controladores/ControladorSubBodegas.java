@@ -319,10 +319,7 @@ public class ControladorSubBodegas extends SIGIPROServlet {
             List<ProductoInterno> productos = new ArrayList<>();
             for (InventarioSubBodega i : inventario) {
                 if (i.getCantidad() > 0) {
-                    ProductoInterno pi = i.getProducto();
-                    System.out.println(i.getNumero_lote());
-                    pi.setNumero_lote(i.getNumero_lote());
-                    productos.add(pi);
+                    productos.add(i.getProducto());
                 }
             }
             Gson gson = new Gson();
