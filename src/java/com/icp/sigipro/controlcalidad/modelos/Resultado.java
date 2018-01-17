@@ -260,7 +260,13 @@ public class Resultado extends IModelo
     }
     
     public String getFecha_reportado_formateada() {
-        return helper_fechas.formatearTimestamp(fecha_reportado);
+        if (fecha_reportado != null) {
+            return helper_fechas.formatearTimestamp(fecha_reportado);
+        }
+        else {
+            return "Sin fecha registrada.";
+        }
+        
     }
     
     public void setFecha_reportado(Timestamp fecha_reportado) {
