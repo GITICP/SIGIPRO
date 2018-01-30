@@ -41,10 +41,10 @@
               <c:forEach items="${tipos}" var="tipo">
                 <c:choose>
                   <c:when test="${salida.getTipo() == tipo}" >
-                    <option value=${tipo} selected> ${tipo}</option>
+                    <option value="${tipo}" selected> ${tipo}</option>
                   </c:when>
                   <c:otherwise>
-                    <option value=${tipo}> ${tipo}</option>
+                    <option value="${tipo}"> ${tipo}</option>
                   </c:otherwise>
                 </c:choose>
               </c:forEach>

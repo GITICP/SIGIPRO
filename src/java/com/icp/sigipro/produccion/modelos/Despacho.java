@@ -26,6 +26,15 @@ public class Despacho {
  private Date fecha_regente;
  private boolean estado_regente;
  private int total;
+ private String tipo;
+
+  public String getTipo() {
+    return tipo;
+  }
+
+  public void setTipo(String tipo) {
+    this.tipo = tipo;
+  }
  
  //Parsea a JSON la clase de forma automatica y estandarizada para todas las clases
     public String parseJSON(){

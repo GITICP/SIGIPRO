@@ -93,7 +93,7 @@
                           </td>
                           <td>${inventario.getProducto().getNombre()}</td>
                           <td>${inventario.getCantidad()}</td>
-                          <td>${inventario.getCantidad_disponible()}(${inventario.getReservado()})</td>
+                          <td>${inventario.getCantidad_disponible()} (Más ${inventario.getReservado()} reservada)</td>
                           <td>${inventario.getFecha_vencimiento_S()}</td>
                           <td>
                             <a class="btn btn-warning btn-sm boton-accion" href="/SIGIPRO/Produccion/Inventario_PT?accion=editar_inventario&id_inventario_pt=${inventario.getId_inventario_pt()}">Editar</a>
@@ -222,6 +222,7 @@
                         <th>Firma de Coordinador</th>
                         <th>Firma de Regente</th>
                         <th>Cantidad Total a Despachar</th>
+                        <th>Tipo</th>
                         <th>Cambio de Estado </th>
                       </tr>
                     </thead>
@@ -277,6 +278,7 @@
                           </c:choose>
                           </td>
                           <td>${despacho.getTotal()}</td>
+                          <td>${despacho.getTipo()}</td>
                           <c:choose>
                             <c:when test="${!(despacho.isEstado_coordinador()) and !(despacho.isEstado_regente()) and admin}">
                               <td>

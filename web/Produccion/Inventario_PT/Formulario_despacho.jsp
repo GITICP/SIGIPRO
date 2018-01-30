@@ -33,6 +33,26 @@
                     onchange="setCustomValidity('')">    </div>
         </div>
       </div>
+      <label for="tipo" class="control-label">*Tipo de Despacho</label>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="input-group">
+            <select id="tipo" class="select2" name="tipo" required
+                    oninvalid="setCustomValidity('Este campo es requerido')" style='background-color: #fff;' onchange="setCustomValidity('')">
+              <c:forEach items="${tipos_despachos}" var="tipo">
+                <c:choose>
+                  <c:when test="${despacho.getTipo() == tipo}" >
+                    <option value="${tipo}" selected> ${tipo}</option>
+                  </c:when>
+                  <c:otherwise>
+                    <option value="${tipo}"> ${tipo}</option>
+                  </c:otherwise>
+                </c:choose>
+              </c:forEach>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="widget widget-table">

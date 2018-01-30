@@ -98,10 +98,18 @@ public class ControladorInventario_PT extends SIGIPROServlet {
     };
     protected final List<String> tipos_salidas = new ArrayList<String>() {
         {
-            add("Pérdida");
-            add("Destrucción");
+            add("Merma");
+            add("Descarte");
+            add("Control de Calidad");
             add("Uso Interno");
-            add("Otro");
+            add("Otros");
+            add("Sedetec");
+        }
+    };
+    protected final List<String> tipos_despachos = new ArrayList<String>() {
+        {
+            add("Para uso humano");
+            add("Para uso veterinario");
         }
     };
 
@@ -179,6 +187,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
         String redireccion = "Inventario_PT/Agregar_despacho.jsp";
         Despacho despacho = new Despacho();
         List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
+        request.setAttribute("tipos_despachos", tipos_despachos);
         request.setAttribute("lotes", lotes);
         request.setAttribute("despacho", despacho);
         request.setAttribute("accion", "agregar_despacho");
@@ -242,6 +251,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
         int id_despacho = Integer.parseInt(request.getParameter("id_despacho"));
         request.setAttribute("accion", "Editar_despacho");
         try {
+            request.setAttribute("tipos_despachos", tipos_despachos);
             Despacho despacho = despacho_dao.obtenerDespacho(id_despacho);
             request.setAttribute("despacho", despacho);
             List<Inventario_PT> lotes = dao.obtenerInventario_PTs();
@@ -735,6 +745,7 @@ public class ControladorInventario_PT extends SIGIPROServlet {
         despacho.setId_despacho(id_despacho);
         despacho.setDestino(request.getParameter("destino"));
         String fecha = request.getParameter("fecha");
+        despacho.setTipo(request.getParameter("tipo"));
 
         try {
             HelperFechas helper_fechas = HelperFechas.getSingletonHelperFechas();
