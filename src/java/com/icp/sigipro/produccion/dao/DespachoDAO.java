@@ -31,15 +31,15 @@ public class DespachoDAO extends DAO {
     int resultado = 0;
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, estado_coordinador, estado_regente, total)"
-              + " VALUES (?,?,?,?,?) RETURNING id_despacho");
+      PreparedStatement consulta = getConexion().prepareStatement(" INSERT INTO produccion.despacho (fecha, destino, estado_coordinador, estado_regente, total, tipo)"
+              + " VALUES (?,?,?,?,?,?) RETURNING id_despacho");
 
       consulta.setDate(1, p.getFecha());
       consulta.setString(2, p.getDestino());
       consulta.setBoolean(3, false);
       consulta.setBoolean(4, false);
       consulta.setInt(5,0);
-      
+      consulta.setString(6, p.getTipo());
       ResultSet resultadoConsulta = consulta.executeQuery();
       if (resultadoConsulta.next()) {
         resultado = resultadoConsulta.getInt("id_despacho");
@@ -62,13 +62,14 @@ public class DespachoDAO extends DAO {
     try {
       PreparedStatement consulta = getConexion().prepareStatement(
               " UPDATE produccion.despacho "
-              + " SET  destino=?, fecha=?"
+              + " SET  destino=?, fecha=?, tipo=?"
               + " WHERE id_despacho=?; "
       );
 
      consulta.setString(1, p.getDestino());
      consulta.setDate(2, p.getFecha());
-     consulta.setInt(3, p.getId_despacho());
+     consulta.setString(3, p.getTipo());
+     consulta.setInt(4, p.getId_despacho());
 
       if (consulta.executeUpdate() == 1) {
         resultado = true;
@@ -113,7 +114,7 @@ public class DespachoDAO extends DAO {
     Despacho despacho = new Despacho();
 
     try {
-      PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, "
+      PreparedStatement consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, d.tipo, "
               + " d.fecha_coordinador, d.fecha_regente, d.total,"
               + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador, "
               + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
@@ -135,6 +136,7 @@ public class DespachoDAO extends DAO {
         despacho.setEstado_coordinador(rs.getBoolean("estado_coordinador"));
         despacho.setFecha_regente(rs.getDate("fecha_regente"));
         despacho.setFecha_coordinador(rs.getDate("fecha_coordinador"));
+        despacho.setTipo(rs.getString("tipo"));
         Usuario c = new Usuario();
         Usuario r = new Usuario();
         c.setId_usuario(rs.getInt("id_coordinador"));
@@ -160,7 +162,7 @@ public class DespachoDAO extends DAO {
 
     try {
       PreparedStatement consulta;
-      consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, "
+      consulta = getConexion().prepareStatement("SELECT d.id_despacho, d.fecha, d.destino, d.estado_coordinador, d.estado_regente, d.tipo, "
               + " d.fecha_coordinador, d.fecha_regente, d.total, "
               + "u.id_usuario AS id_coordinador, u.nombre_usuario AS coordinador, "
               + "s.id_usuario AS id_regente, s.nombre_usuario AS regente "
@@ -180,6 +182,7 @@ public class DespachoDAO extends DAO {
         despacho.setEstado_coordinador(rs.getBoolean("estado_coordinador"));
         despacho.setFecha_regente(rs.getDate("fecha_regente"));
         despacho.setFecha_coordinador(rs.getDate("fecha_coordinador"));
+        despacho.setTipo(rs.getString("tipo"));
         Usuario c = new Usuario();
         Usuario r = new Usuario();
         c.setId_usuario(rs.getInt("id_coordinador"));

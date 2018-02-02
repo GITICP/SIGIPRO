@@ -54,6 +54,7 @@
                 <tr><td> <strong>Fecha:</strong> <td>${despacho.getFecha_S()} </td></tr>
                 <tr><td> <strong>Destino:</strong> <td>${despacho.getDestino()} </td></tr>
                 <tr><td> <strong>Total:</strong> <td>${despacho.getTotal()} </td></tr>
+                <tr><td> <strong>Tipo:</strong> <td>${despacho.getTipo()} </td></tr>
                 <tr><td> <strong>Firma del Coordinador: </strong> <td> <c:choose>
                               <c:when test="${despacho.isEstado_coordinador()}">
                                 Firmado
