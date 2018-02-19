@@ -78,7 +78,7 @@ public class HelperParseXML extends SIGIPROServlet {
     public HelperParseXML(List<FileItem> parametros) {
         this.parametros = parametros;
     }
-
+    //Transforma del Formulario a un XML
     public HashMap<Integer, HashMap> parseFormularioXML(List<FileItem> items, Paso p, Actividad_Apoyo aa) {
         //Se crea un diccionario con los elementos del Formulario Dinamico
         HashMap<Integer, HashMap> diccionario_formulario = new HashMap<Integer, HashMap>();
@@ -411,7 +411,7 @@ public class HelperParseXML extends SIGIPROServlet {
     }
 
     private void crearCampo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("[^a-zA-Z0-9]+","") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("valor", "", campo);
@@ -435,7 +435,7 @@ public class HelperParseXML extends SIGIPROServlet {
     }
 
     private void crearSubbodega(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("[^a-zA-Z0-9]+","") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("tipo", "subbodega", campo);
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
@@ -453,7 +453,7 @@ public class HelperParseXML extends SIGIPROServlet {
     }
 
     private void crearActividadApoyo(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("[^a-zA-Z0-9]+","") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("tipo", "aa", campo);
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
@@ -464,7 +464,7 @@ public class HelperParseXML extends SIGIPROServlet {
     }
 
     private void crearUsuario(HelperXML xml, HashMap<String, String> hash, Element campo) {
-        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("nombre").replaceAll(" ", "").replaceAll("[^a-zA-Z0-9]+","") + "_" + this.nombre_campo, campo);
         this.nombre_campo++;
         xml.agregarSubelemento("etiqueta", hash.get("nombre"), campo);
         xml.agregarSubelemento("tipo", "usuario", campo);
@@ -475,7 +475,7 @@ public class HelperParseXML extends SIGIPROServlet {
 
     private void crearSeleccion(HelperXML xml, HashMap<String, String> hash, Element campo) {
         xml.agregarSubelemento("tipo", "seleccion", campo);
-        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ", "").replaceAll("_", "") + "_" + this.nombre_campo, campo);
+        xml.agregarSubelemento("nombre-campo", hash.get("snombre").replaceAll(" ", "").replaceAll("[^a-zA-Z0-9]+","") + "_" + this.nombre_campo, campo);
         xml.agregarSubelemento("etiqueta", hash.get("snombre"), campo);
         this.nombre_campo++;
         Element opciones = xml.agregarElemento("opciones", campo);

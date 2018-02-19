@@ -193,7 +193,9 @@ function crear_cantidad(e, element) {
     fila += "               </div>";
     fila += "           </div> </div>";
 
-    var cantidad = $("." + id + "_cant");
+    var id_cantidad="." + id + "_cant";
+    id_cantidad = id_cantidad.replace("(","\\(").replace(")","\\)");
+    var cantidad = $(id_cantidad);
 
     cantidad.append(fila);
 
@@ -255,7 +257,9 @@ function generar_select_sangria(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -275,7 +279,9 @@ function generar_select_lote(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -297,7 +303,9 @@ function generar_select_cc(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -319,7 +327,9 @@ function generar_select_usuarios(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -340,7 +350,9 @@ function generar_select_actividades(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -360,7 +372,9 @@ function generar_select_subbodegas(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
