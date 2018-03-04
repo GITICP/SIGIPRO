@@ -258,7 +258,7 @@ function generar_select_sangria(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -280,7 +280,7 @@ function generar_select_lote(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -304,7 +304,7 @@ function generar_select_cc(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -328,7 +328,7 @@ function generar_select_usuarios(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -351,7 +351,7 @@ function generar_select_actividades(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -373,7 +373,7 @@ function generar_select_subbodegas(datos, element) {
     }
     var nombre = $(element).attr("name");
     var id = "." + nombre + "_id > input";
-    id = id.replace("(","\\(").replace(")","\\)");
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
     var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
@@ -409,6 +409,9 @@ function remover_link_sangria(e, element) {
 
 function generar_link_lote() {
     var div = ($(this).prop("name"));
+    div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
 
     var elemento = $("." + div + " .ver");
 
@@ -421,6 +424,10 @@ function generar_link_lote() {
 
 function generar_link_cc() {
     var div = ($(this).prop("name"));
+    div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
+    
     var elemento = $("." + div + " .ver");
     var id = ($(this).val());
 
@@ -431,6 +438,9 @@ function generar_link_cc() {
 
 function generar_link_aa() {
     var div = ($(this).prop("name"));
+    div = div.replace("(","\\(");
+    div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
 
     var elemento = $("." + div + " .ver");
 
