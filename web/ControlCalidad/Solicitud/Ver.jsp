@@ -174,14 +174,21 @@
                                                                             Análisis no se realizará.
                                                                         </c:when>
                                                                         <c:when test="${ags.getResultados() == null}">
-                                                                            <a class="btn btn-primary btn-sm boton-accion" 
-                                                                               href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
-                                                                                Realizar
-                                                                            </a>
-                                                                            <a class="btn btn-warning btn-sm boton-accion" 
-                                                                               onclick="abrirModalNoRealizar(${ags.getId_analisis_grupo_solicitud()}, '${ags.getAnalisis().getNombre()}')">
-                                                                                No Realizar
-                                                                            </a>
+                                                                            <c:choose>
+                                                                                <c:when test="${!solicitud.getEstado().equals('Completada')}">
+                                                                                    <a class="btn btn-primary btn-sm boton-accion" 
+                                                                                       href="/SIGIPRO/ControlCalidad/Analisis?accion=realizar&id_analisis=${ags.getAnalisis().getId_analisis()}&id_ags=${ags.getId_analisis_grupo_solicitud()}${(ags.getAnalisis().getId_analisis() == 2147483647) ? "&identificadores=" += ags.getGrupo().getGrupos_muestras_Sring() : "" }">
+                                                                                        Realizar
+                                                                                    </a>
+                                                                                    <a class="btn btn-warning btn-sm boton-accion" 
+                                                                                       onclick="abrirModalNoRealizar(${ags.getId_analisis_grupo_solicitud()}, '${ags.getAnalisis().getNombre()}')">
+                                                                                        No Realizar
+                                                                                    </a>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    No se registraron resultados para esta muestra.
+                                                                                </c:otherwise>
+                                                                            </c:choose>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <c:if test="${!solicitud.getEstado().equals('Completada')}">
@@ -288,27 +295,24 @@
                                                         <tbody>
                                                             <c:forEach items="${solicitud.getAnalisis_solicitud()}" var="ags">
                                                                 <c:if test="${!ags.isRealizar()}">
-
-                                                                <td>
-                                                                    <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
-                                                                        ${muestra.getIdentificador()}<br>
-                                                                    </c:forEach>
-
-                                                                </td>
-
-                                                                <td>
-                                                                    ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
-                                                                </td>
-                                                                <td>
-                                                                    ${ags.getAnalisis().getNombre()}
-                                                                </td>
-
-                                                                <td>
-                                                                    ${ags.getObservaciones_no_realizar()}
-                                                                </td>
-
-                                                            </c:if>
-                                                        </c:forEach>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <c:forEach items="${ags.getGrupo().getGrupos_muestras()}" var="muestra">
+                                                                                ${muestra.getIdentificador()}<br>
+                                                                            </c:forEach>
+                                                                        </td>
+                                                                        <td>
+                                                                            ${ags.getGrupo().getGrupos_muestras().get(0).getTipo_muestra().getNombre()}
+                                                                        </td>
+                                                                        <td>
+                                                                            ${ags.getAnalisis().getNombre()}
+                                                                        </td>
+                                                                        <td>
+                                                                            ${ags.getObservaciones_no_realizar()}
+                                                                        </td>
+                                                                    </tr>
+                                                                </c:if>
+                                                            </c:forEach>
                                                         </tbody>
                                                     </table>
                                                 </div>
