@@ -435,7 +435,7 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega> {
         ResultSet rs = null;
 
         try {
-            consulta = getConexion().prepareStatement(" SELECT sb.id_sub_bodega, isb.id_inventario_sub_bodega, isb.cantidad, ci.id_producto, ci.nombre as nombre_producto, isb.numero_lote "
+            consulta = getConexion().prepareStatement(" SELECT sb.id_sub_bodega, isb.id_inventario_sub_bodega, isb.cantidad, ci.id_producto, ci.nombre as nombre_producto "
                     + " FROM bodega.sub_bodegas sb "
                     + "  INNER JOIN seguridad.usuarios u on sb.id_usuario = u.id_usuario "
                     + "  INNER JOIN seguridad.secciones s on sb.id_seccion = s.id_seccion "
@@ -455,7 +455,6 @@ public class SubBodegaDAO extends DAOEspecial<SubBodega> {
                     if (id_inventario_sub_bodega != 0) {
                         inventario_sb.setId_inventario_sub_bodega(id_inventario_sub_bodega);
                         inventario_sb.setCantidad(rs.getInt("cantidad"));
-                        inventario_sb.setNumero_lote(rs.getString("numero_lote"));
                         ProductoInterno p = new ProductoInterno();
 
                         p.setId_producto(rs.getInt("id_producto"));

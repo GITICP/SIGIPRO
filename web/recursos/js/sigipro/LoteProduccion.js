@@ -190,7 +190,9 @@ function crear_cantidad(e, element) {
     fila += "               </div>";
     fila += "           </div> </div>";
 
-    var cantidad = $("." + id + "_cant");
+    var id_cantidad="." + id + "_cant";
+    id_cantidad = id_cantidad.replace("(","\\(").replace(")","\\)");
+    var cantidad = $(id_cantidad);
 
     cantidad.append(fila);
 
@@ -263,7 +265,9 @@ function generar_select_sangria(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -283,7 +287,9 @@ function generar_select_lote(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -305,7 +311,9 @@ function generar_select_cc(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -327,7 +335,9 @@ function generar_select_usuarios(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -348,7 +358,9 @@ function generar_select_actividades(datos, element) {
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -363,17 +375,14 @@ function generar_select_subbodegas(datos, element) {
         var elemento = datos[i];
         var opcion_string = "<option value=\"" + elemento.id_producto + "\">";
         var opcion = $(opcion_string);
-        if (elemento.numero_lote !== undefined){
-            opcion.text(elemento.nombre+" (Lote: "+elemento.numero_lote+")");
-        }else{
-            opcion.text(elemento.nombre);
-        }
-        
+        opcion.text(elemento.nombre);
 
         $(element).append(opcion);
     }
     var nombre = $(element).attr("name");
-    var ids = $("." + nombre + "_id > input");
+    var id = "." + nombre + "_id > input";
+    id = id.replace("(","\\(").replace(")","\\)").replace(",","\\,");;
+    var ids = $(id);
     var lista = [];
     $.each(ids, function (datos, elemento) {
         lista[lista.length] = $(elemento).val();
@@ -410,6 +419,7 @@ function generar_link_lote() {
     var div = ($(this).prop("name"));
 div = div.replace("(","\\(");
     div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
     var elemento = $("." + div + " .ver");
 
     var id = ($(this).val());
@@ -423,6 +433,7 @@ function generar_link_cc() {
     var div = ($(this).prop("name"));
     div = div.replace("(","\\(");
     div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
     var elemento = $("." + div + " .ver");
     var id = ($(this).val());
 
@@ -433,11 +444,10 @@ function generar_link_cc() {
 
 function generar_link_aa() {
     var div = ($(this).prop("name"));
-    
     div = div.replace("(","\\(");
     div = div.replace(")","\\)");
+    div = div.replace(",","\\,");
     var elemento = $("." + div + " .ver");
-
     var id = ($(this).val());
 
     $("." + div + " .ver > a").remove();

@@ -336,57 +336,6 @@ public class SolicitudDAO extends DAO {
         return resultado;
     }
 
-    public List<SolicitudCC> obtenerTodasSolicitudesAjax() {
-        List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
-        PreparedStatement consulta = null;
-        ResultSet rs = null;
-        try {
-            consulta = getConexion().prepareStatement(
-                    " SELECT DISTINCT s.id_solicitud, s.numero_solicitud, s.fecha_solicitud, s.id_usuario_solicitante, u.nombre_completo, s.estado, s.descripcion, tm.nombre AS nombre_muestra, tm.id_tipo_muestra AS id_tipo_muestra "
-                    + " FROM control_calidad.solicitudes s "
-                    + "     INNER JOIN control_calidad.grupos g ON g.id_solicitud = s.id_solicitud "
-                    + "     INNER JOIN control_calidad.grupos_muestras gm ON gm.id_grupo = g.id_grupo "
-                    + "     INNER JOIN control_calidad.muestras m ON m.id_muestra = gm.id_muestra "
-                    + "     INNER JOIN control_calidad.tipos_muestras tm ON tm.id_tipo_muestra = m.id_tipo_muestra "
-                    + "     INNER JOIN seguridad.usuarios as u ON u.id_usuario = s.id_usuario_solicitante "
-                    + " ORDER BY s.id_solicitud DESC ; ");
-            rs = consulta.executeQuery();
-
-            SolicitudCC solicitud = new SolicitudCC();
-
-            while (rs.next()) {
-
-                int id_solicitud = rs.getInt("id_solicitud");
-
-                if (id_solicitud != solicitud.getId_solicitud()) {
-                    solicitud = new SolicitudCC();
-                    solicitud.setId_solicitud(id_solicitud);
-                    solicitud.setNumero_solicitud(rs.getString("numero_solicitud"));
-                    solicitud.setFecha_solicitud(rs.getTimestamp("fecha_solicitud"));
-                    Usuario usuario = new Usuario();
-                    usuario.setId_usuario(rs.getInt("id_usuario_solicitante"));
-                    usuario.setNombre_completo(rs.getString("nombre_completo"));
-                    solicitud.setUsuario_solicitante(usuario);
-                    solicitud.setEstado(rs.getString("estado"));
-                    solicitud.setDescripcion(rs.getString("descripcion"));
-                    resultado.add(solicitud);
-                }
-                TipoMuestra tm = new TipoMuestra();
-                tm.setId_tipo_muestra(rs.getInt("id_tipo_muestra"));
-                tm.setNombre(rs.getString("nombre_muestra"));
-                solicitud.agregarMuestra(tm);
-
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            cerrarSilencioso(rs);
-            cerrarSilencioso(consulta);
-            cerrarConexion();
-        }
-        return resultado;
-    }
-    
     public List<SolicitudCC> obtenerSeccionSolicitudes(int id_usuario) {
         List<SolicitudCC> resultado = new ArrayList<SolicitudCC>();
         PreparedStatement consulta = null;

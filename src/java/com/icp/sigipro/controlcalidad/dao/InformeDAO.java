@@ -11,7 +11,6 @@ import com.icp.sigipro.controlcalidad.modelos.SolicitudCC;
 import com.icp.sigipro.core.DAO;
 import com.icp.sigipro.core.SIGIPROException;
 import com.icp.sigipro.seguridad.modelos.Usuario;
-import com.icp.sigipro.utilidades.HelperFechas;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,7 +96,7 @@ public class InformeDAO extends DAO {
                 String campo = "id_resultado";
                 String campo_id_cambio_fecha = "id_resultado";
                 String tabla = "resultados";
-                if (rs_ags.getInt("id_analisis") == Integer.MAX_VALUE) {
+                if (rs_ags.getInt("id_analisis") == Integer.MAX_VALUE || rs_ags.getInt("id_analisis") == 2147483647) {
                     campo = "id_resultado_sp";
                     campo_id_cambio_fecha = "id_resultado_analisis_sp";
                     tabla = "resultados_analisis_sangrias_prueba";
@@ -190,12 +189,14 @@ public class InformeDAO extends DAO {
         boolean resultado_resultados = false;
         boolean resultado_solicitud = false;
 
+        PreparedStatement consulta_ags_resultados = null;
         PreparedStatement consulta_update_informe = null;
         int rs_informe;
         PreparedStatement consulta_eliminacion_resultados = null;
         PreparedStatement consulta_resultados = null;
         PreparedStatement consulta_resultados_fecha = null;
         PreparedStatement update_solicitud = null;
+        ResultSet rs_ags = null;
 
         try {
             getConexion().setAutoCommit(false);
@@ -222,42 +223,72 @@ public class InformeDAO extends DAO {
 
             consulta_eliminacion_resultados.setInt(1, informe.getId_informe());
             consulta_eliminacion_resultados.executeUpdate();
+                
+            String ids_resultados = "";
+            
+            for(Resultado r : informe.getResultados()) {
+                ids_resultados += r.getId_resultado() + ",";
+            }
+            
+            ids_resultados = ids_resultados.substring(0, ids_resultados.length() - 1);
+            
+            String str_consulta_ags_resultados = 
+                      " SELECT * "
+                    + " FROM control_calidad.analisis_grupo_solicitud ags "
+                    + "         inner join control_calidad.grupos g on ags.id_grupo = g.id_grupo "
+                    + "         inner join ( "
+                    + "                 select id_resultado, id_analisis_grupo_solicitud as id_ags "
+                    + "                 from control_calidad.resultados "
+                    + "                 UNION "
+                    + "                 select id_resultado_analisis_sp as id_resultado, id_ags "
+                    + "                 from control_calidad.resultados_analisis_sangrias_prueba "
+                    + "                 ) as resultados "
+                    + "                 on ags.id_analisis_grupo_solicitud = resultados.id_ags "
+                    + " WHERE id_solicitud = ? AND id_resultado IN (" + ids_resultados + ");";
 
-            String campo_id_resultado = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_sp";
-            String campo_id_resultado_fecha = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "id_resultado" : "id_resultado_analisis_sp";
-            String tabla = (!informe.getSolicitud().getTipoAsociacionString().equals("sangria_prueba")) ? "resultados" : "resultados_analisis_sangrias_prueba";
-
-            consulta_resultados = getConexion().prepareStatement(
-                    " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
+            consulta_ags_resultados = getConexion().prepareStatement(
+                    str_consulta_ags_resultados
             );
 
-            for (Resultado r : informe.getResultados()) {
+            consulta_ags_resultados.setInt(1, informe.getSolicitud().getId_solicitud());
+
+            rs_ags = consulta_ags_resultados.executeQuery();
+            
+            List<PreparedStatement> insert_resultados = new ArrayList<>();
+            
+            while(rs_ags.next()) {
+                String campo_id_resultado = "id_resultado";
+                String campo_id_resultado_fecha = "id_resultado";
+                String tabla = "resultados";
+                if (rs_ags.getInt("id_analisis") == Integer.MAX_VALUE || rs_ags.getInt("id_analisis") == 2147483647) {
+                    campo_id_resultado = "id_resultado_sp";
+                    campo_id_resultado_fecha = "id_resultado_analisis_sp";
+                    tabla = "resultados_analisis_sangrias_prueba";
+                }
+                
+                consulta_resultados = getConexion().prepareStatement(
+                        " INSERT INTO control_calidad.resultados_informes(id_informe, " + campo_id_resultado + ") VALUES (?,?);"
+                );
+                
+                int id_resultado = rs_ags.getInt("id_resultado");
                 consulta_resultados.setInt(1, informe.getId_informe());
-                consulta_resultados.setInt(2, r.getId_resultado());
-                consulta_resultados.addBatch();
+                consulta_resultados.setInt(2, id_resultado);
+                insert_resultados.add(consulta_resultados);
+                
+                consulta_resultados_fecha = getConexion().prepareStatement(
+                        " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
+                                + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
+                                + " WHERE " + campo_id_resultado_fecha + " = ? "
+                );
+                
+                consulta_resultados_fecha.setInt(1, id_resultado);
+                insert_resultados.add(consulta_resultados_fecha);
+                
             }
             
-            consulta_resultados_fecha = getConexion().prepareStatement(
-                    " UPDATE control_calidad." + tabla + " res SET fecha_reportado = "
-                            + " CASE WHEN res.fecha_reportado is null THEN current_timestamp ELSE res.fecha_reportado END "
-                            + " WHERE " + campo_id_resultado_fecha + " = ? "
-            );
-            
-            for (Resultado r : informe.getResultados()) {
-                consulta_resultados_fecha.setInt(1, r.getId_resultado());
-                consulta_resultados_fecha.addBatch();
-            }
-
-            int[] contadores_resultados = consulta_resultados.executeBatch();
-            int[] contadores_resultados_fecha = consulta_resultados_fecha.executeBatch();
-            
-            int[] contadores_final = new int[contadores_resultados.length + contadores_resultados_fecha.length];
-            System.arraycopy(contadores_resultados, 0, contadores_final, 0, contadores_resultados.length);
-            System.arraycopy(contadores_resultados_fecha, 0, contadores_final, contadores_resultados.length, contadores_resultados_fecha.length);
-
             boolean iteracion_completa = true;
-            for (int i : contadores_final) {
-                if (i != 1) {
+            for (PreparedStatement ps_resultado : insert_resultados) {
+                if (ps_resultado.executeUpdate() != 1) {
                     iteracion_completa = false;
                 }
             }
@@ -302,7 +333,9 @@ public class InformeDAO extends DAO {
             } catch (SQLException sql_ex) {
                 throw new SIGIPROException("Error de comunicación con la base datos. Notifique al administrador del sistema.");
             }
-
+            
+            cerrarSilencioso(rs_ags);
+            cerrarSilencioso(consulta_ags_resultados);
             cerrarSilencioso(consulta_update_informe);
             cerrarSilencioso(consulta_eliminacion_resultados);
             cerrarSilencioso(consulta_resultados);
